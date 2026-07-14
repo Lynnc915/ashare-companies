@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A股上市企业信息查询（2022年至今）</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --hover: #f1f5f9;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    header h1 { margin: 0 0 0.5rem; font-size: 1.75rem; }
+    header p { margin: 0; opacity: 0.9; }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+    }
+
+    .toolbar {
+      background: var(--card);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .toolbar input, .toolbar select {
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .toolbar input:focus, .toolbar select:focus {
+      border-color: var(--primary);
+    }
+
+    .toolbar input[type="text"] { min-width: 150px; flex: 1 1 150px; }
+    .toolbar input[type="date"] { width: 145px; }
+    .toolbar select { min-width: 120px; }
+
+    .toolbar .spacer { flex: 1 1 auto; }
+
+    .btn {
+      padding: 0.55rem 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      text-decoration: none;
+    }
+
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-sm { padding: 0.35rem 0.65rem; font-size: 0.85rem; }
+    .btn-outline { background: white; border: 1px solid var(--border); color: var(--text); }
+    .btn-outline:hover { background: var(--hover); }
+    .btn:active { transform: translateY(1px); }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .table-wrap {
+      background: var(--card);
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      padding: 0.8rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--hover);
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    th:hover { background: #e2e8f0; }
+    th .sort-indicator { margin-left: 0.35rem; color: var(--muted); font-size: 0.8rem; }
+    th.sorted .sort-indicator { color: var(--primary); }
+
+    tbody tr.main-row { cursor: pointer; }
+    tbody tr.main-row:hover { background: var(--hover); }
+    tbody tr.expanded { background: #eff6ff; }
+    tbody tr.detail-row { background: #fafafa; }
+    tbody tr.detail-row td { border-bottom: 1px solid var(--border); padding: 0; }
+    tbody tr:last-child td { border-bottom: none; }
+
+    .code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 600; }
+    .tag {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      background: #dbeafe;
+      color: var(--primary-dark);
+      white-space: nowrap;
+    }
+    .tag-kcb { background: #ede9fe; color: #7c3aed; }
+    .tag-cyb { background: #fce7f3; color: #be185d; }
+    .tag-bj { background: #d1fae5; color: #047857; }
+    .tag-sz { background: #fef3c7; color: #b45309; }
+    .tag-sh { background: #dbeafe; color: #1e40af; }
+
+    .expand-icon {
+      display: inline-block;
+      width: 1rem;
+      text-align: center;
+      margin-right: 0.25rem;
+      color: var(--muted);
+      transition: transform 0.2s;
+    }
+    .expanded .expand-icon { transform: rotate(90deg); }
+
+    .detail-panel {
+      padding: 1rem 1.25rem;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .finance-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.85rem;
+    }
+
+    .finance-card h4 {
+      margin: 0 0 0.5rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .finance-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.35rem 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.9rem;
+    }
+    .finance-row:last-child { border-bottom: none; }
+
+    .finance-value { font-weight: 600; font-family: ui-monospace, monospace; }
+    .finance-value.empty { color: var(--muted); font-weight: normal; }
+
+    .detail-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .detail-actions .hint {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--muted);
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .pagination button {
+      padding: 0.4rem 0.8rem;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 0.4rem;
+      cursor: pointer;
+    }
+
+    .pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .pagination button.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    .page-size { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--muted); }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .loading, .error {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    .error { color: #dc2626; }
+    .success { color: var(--success); }
+
+    @media (max-width: 768px) {
+      header h1 { font-size: 1.4rem; }
+      th, td { padding: 0.65rem 0.5rem; font-size: 0.85rem; }
+      .toolbar input[type="text"], .toolbar input[type="date"], .toolbar select { width: 100%; }
+      .detail-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>A股上市企业信息查询</h1>
+    <p>2022年至今 · 板块细分 · 财务数据 · 招股说明书链接</p>
+  </header>
+
+  <div class="container">
+    <div class="toolbar">
+      <input type="text" id="searchCode" placeholder="股票代码" />
+      <input type="text" id="searchName" placeholder="企业名称" />
+      <input type="text" id="searchIndustry" placeholder="所属行业" />
+      <select id="filterBoard">
+        <option value="">全部板块</option>
+      </select>
+      <input type="date" id="dateFrom" placeholder="上市日期起" />
+      <input type="date" id="dateTo" placeholder="上市日期止" />
+      <div class="spacer"></div>
+      <button class="btn btn-primary" id="refreshBtn">🔄 刷新数据</button>
+    </div>
+
+    <div class="stats">
+      <span id="updateTime">正在加载数据…</span>
+      <span id="resultCount"></span>
+      <div class="page-size">
+        <label for="pageSize">每页</label>
+        <select id="pageSize">
+          <option value="50">50</option>
+          <option value="100" selected>100</option>
+          <option value="200">200</option>
+          <option value="500">500</option>
+        </select>
+        <span>条</span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <div id="content">
+        <div class="loading">正在加载数据，请稍候…</div>
+      </div>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+  <footer>
+    数据来源：akshare · 财务数据单位：亿元/万元 · 本页面仅供学习参考，不构成投资建议
+  </footer>
+
+  <script>
+    // 全局状态
+    const state = {
+      allData: [],
+      filteredData: [],
+      currentPage: 1,
+      pageSize: 100,
+      sortKey: 'list_date',
+      sortDesc: true,
+      expanded: new Set(),
+      years: ['2022', '2023', '2024'],
+    };
+
+    const contentEl = document.getElementById('content');
+    const paginationEl = document.getElementById('pagination');
+    const updateTimeEl = document.getElementById('updateTime');
+    const resultCountEl = document.getElementById('resultCount');
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      bindEvents();
+      loadData();
+    });
+
+    function bindEvents() {
+      ['searchCode', 'searchName', 'searchIndustry', 'filterBoard', 'dateFrom', 'dateTo'].forEach(id => {
+        document.getElementById(id).addEventListener('input', applyFilters);
+      });
+
+      document.getElementById('pageSize').addEventListener('change', (e) => {
+        state.pageSize = parseInt(e.target.value, 10);
+        state.currentPage = 1;
+        render();
+      });
+
+      document.getElementById('refreshBtn').addEventListener('click', () => {
+        loadData(true);
+      });
+    }
+
+    async function loadData(force = false) {
+      contentEl.innerHTML = '<div class="loading">正在加载数据，请稍候…</div>';
+      try {
+        const url = 'data/data.json' + (force ? '?t=' + Date.now() : '');
+        const res = await fetch(url);
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        const payload = await res.json();
+        state.allData = payload.data || [];
+        state.updateTime = payload.update_time || '未知';
+        state.years = payload.years || ['2022', '2023', '2024'];
+        state.expanded.clear();
+        populateBoardFilter();
+        applyFilters();
+        updateTimeEl.textContent = '数据更新时间：' + formatDateTime(state.updateTime);
+      } catch (err) {
+        contentEl.innerHTML = `
+          <div class="error">
+            <p>加载数据失败：${err.message}</p>
+            <p>请先在项目目录运行 <code>python update_data.py</code> 生成 data/data.json。</p>
+          </div>
+        `;
+        updateTimeEl.textContent = '数据加载失败';
+        resultCountEl.textContent = '';
+        paginationEl.innerHTML = '';
+      }
+    }
+
+    function populateBoardFilter() {
+      const select = document.getElementById('filterBoard');
+      const current = select.value;
+      const boards = new Set(state.allData.map(r => r.board || '未知').filter(Boolean));
+      const sorted = Array.from(boards).sort();
+      select.innerHTML = '<option value="">全部板块</option>' +
+        sorted.map(e => `<option value="${escapeHtml(e)}">${escapeHtml(e)}</option>`).join('');
+      select.value = current;
+    }
+
+    function applyFilters() {
+      const code = document.getElementById('searchCode').value.trim().toLowerCase();
+      const name = document.getElementById('searchName').value.trim().toLowerCase();
+      const industry = document.getElementById('searchIndustry').value.trim().toLowerCase();
+      const board = document.getElementById('filterBoard').value;
+      const dateFrom = document.getElementById('dateFrom').value;
+      const dateTo = document.getElementById('dateTo').value;
+
+      state.filteredData = state.allData.filter(item => {
+        if (code && !String(item.code).toLowerCase().includes(code)) return false;
+        if (name && !String(item.name).toLowerCase().includes(name)) return false;
+        if (industry && !String(item.industry || '').toLowerCase().includes(industry)) return false;
+        if (board && item.board !== board) return false;
+        if (dateFrom && item.list_date && item.list_date < dateFrom) return false;
+        if (dateTo && item.list_date && item.list_date > dateTo) return false;
+        return true;
+      });
+
+      sortData();
+      state.currentPage = 1;
+      render();
+    }
+
+    function sortData() {
+      const key = state.sortKey;
+      state.filteredData.sort((a, b) => {
+        let va = a[key];
+        let vb = b[key];
+
+        // 处理空值
+        if (va === null || va === undefined || va === '-') va = '';
+        if (vb === null || vb === undefined || vb === '-') vb = '';
+
+        // 按日期比较
+        if (key === 'list_date') {
+          const da = va || '0000-00-00';
+          const db = vb || '0000-00-00';
+          return state.sortDesc ? db.localeCompare(da) : da.localeCompare(db);
+        }
+
+        // 按字符串比较
+        const sa = String(va).toLowerCase();
+        const sb = String(vb).toLowerCase();
+        return state.sortDesc ? sb.localeCompare(sa) : sa.localeCompare(sb);
+      });
+    }
+
+    function setSort(key) {
+      if (state.sortKey === key) {
+        state.sortDesc = !state.sortDesc;
+      } else {
+        state.sortKey = key;
+        state.sortDesc = true;
+      }
+      sortData();
+      state.currentPage = 1;
+      render();
+    }
+
+    function toggleRow(code) {
+      if (state.expanded.has(code)) {
+        state.expanded.delete(code);
+      } else {
+        state.expanded.add(code);
+      }
+      render();
+    }
+
+    function render() {
+      const total = state.filteredData.length;
+      const totalPages = Math.max(1, Math.ceil(total / state.pageSize));
+      if (state.currentPage > totalPages) state.currentPage = totalPages;
+      if (state.currentPage < 1) state.currentPage = 1;
+
+      const start = (state.currentPage - 1) * state.pageSize;
+      const pageData = state.filteredData.slice(start, start + state.pageSize);
+
+      resultCountEl.textContent = `共 ${total.toLocaleString()} 条记录`;
+
+      if (total === 0) {
+        contentEl.innerHTML = '<div class="empty">没有找到匹配的企业</div>';
+        paginationEl.innerHTML = '';
+        return;
+      }
+
+      const latestYear = state.years[state.years.length - 1];
+      const headers = [
+        { key: 'code', label: '股票代码' },
+        { key: 'name', label: '企业名称' },
+        { key: 'list_date', label: '上市日期' },
+        { key: 'board', label: '板块' },
+        { key: 'industry', label: '所属行业' },
+        { key: `finance_${latestYear}_revenue`, label: `${latestYear}营收`, sortable: false },
+        { key: `finance_${latestYear}_profit`, label: `${latestYear}净利润`, sortable: false },
+      ];
+
+      let html = '<table><thead><tr>';
+      headers.forEach(h => {
+        const active = state.sortKey === h.key;
+        const indicator = active ? (state.sortDesc ? '▼' : '▲') : '⇅';
+        const onclick = h.sortable !== false ? `onclick="setSort('${h.key}')"` : '';
+        const cls = active ? 'sorted' : '';
+        html += `<th class="${cls}" ${onclick}>${h.label}${h.sortable !== false ? `<span class="sort-indicator">${indicator}</span>` : ''}</th>`;
+      });
+      html += '</tr></thead><tbody>';
+
+      pageData.forEach(item => {
+        const isExpanded = state.expanded.has(item.code);
+        const latestFin = (item.finance && item.finance[latestYear]) || {};
+        const tagClass = getTagClass(item.board);
+
+        html += `
+          <tr class="main-row ${isExpanded ? 'expanded' : ''}" onclick="toggleRow('${item.code}')">
+            <td class="code"><span class="expand-icon">▶</span>${escapeHtml(item.code)}</td>
+            <td>${escapeHtml(item.name)}</td>
+            <td>${escapeHtml(item.list_date || '-')}</td>
+            <td><span class="tag ${tagClass}">${escapeHtml(item.board || '-')}</span></td>
+            <td>${escapeHtml(item.industry || '-')}</td>
+            <td>${formatMoney(latestFin.revenue)}</td>
+            <td>${formatMoney(latestFin.profit)}</td>
+          </tr>
+        `;
+
+        if (isExpanded) {
+          html += `
+            <tr class="detail-row">
+              <td colspan="7">
+                <div class="detail-panel">
+                  ${renderDetailPanel(item)}
+                </div>
+              </td>
+            </tr>
+          `;
+        }
+      });
+
+      html += '</tbody></table>';
+      contentEl.innerHTML = html;
+      renderPagination(totalPages);
+    }
+
+    function renderDetailPanel(item) {
+      const years = state.years;
+      let financeHtml = '';
+      years.forEach(year => {
+        const fin = (item.finance && item.finance[year]) || {};
+        financeHtml += `
+          <div class="finance-card">
+            <h4>${year} 年度</h4>
+            <div class="finance-row">
+              <span>营业总收入</span>
+              <span class="finance-value ${fin.revenue == null ? 'empty' : ''}">${formatMoney(fin.revenue)}</span>
+            </div>
+            <div class="finance-row">
+              <span>净利润</span>
+              <span class="finance-value ${fin.profit == null ? 'empty' : ''}">${formatMoney(fin.profit)}</span>
+            </div>
+          </div>
+        `;
+      });
+
+      const searchKeyword = `${item.code} ${item.name} 招股说明书`;
+      const searchUrl = item.prospectus_url || 'https://www.cninfo.com.cn/new/commonUrl/pageOfSearch?url=disclosure/list/search';
+
+      return `
+        <div class="detail-grid">${financeHtml}</div>
+        <div class="detail-actions">
+          <a class="btn btn-primary btn-sm" href="${escapeHtml(searchUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+            📄 查找招股说明书
+          </a>
+          <span class="hint">搜索关键词：${escapeHtml(searchKeyword)}</span>
+        </div>
+      `;
+    }
+
+    function getTagClass(board) {
+      if (!board) return '';
+      if (board.includes('科创板')) return 'tag-kcb';
+      if (board.includes('创业板')) return 'tag-cyb';
+      if (board.includes('北交所')) return 'tag-bj';
+      if (board.includes('深市')) return 'tag-sz';
+      if (board.includes('沪市')) return 'tag-sh';
+      return '';
+    }
+
+    function renderPagination(totalPages) {
+      if (totalPages <= 1) {
+        paginationEl.innerHTML = '';
+        return;
+      }
+
+      let html = `
+        <button onclick="goPage(1)" ${state.currentPage === 1 ? 'disabled' : ''}>首页</button>
+        <button onclick="goPage(${state.currentPage - 1})" ${state.currentPage === 1 ? 'disabled' : ''}>上一页</button>
+      `;
+
+      const maxButtons = 7;
+      let startPage = Math.max(1, state.currentPage - Math.floor(maxButtons / 2));
+      let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+      if (endPage - startPage + 1 < maxButtons) {
+        startPage = Math.max(1, endPage - maxButtons + 1);
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="${i === state.currentPage ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
+      }
+
+      html += `
+        <button onclick="goPage(${state.currentPage + 1})" ${state.currentPage === totalPages ? 'disabled' : ''}>下一页</button>
+        <button onclick="goPage(${totalPages})" ${state.currentPage === totalPages ? 'disabled' : ''}>末页</button>
+        <span style="color: var(--muted); font-size: 0.9rem;">第 ${state.currentPage} / ${totalPages} 页</span>
+      `;
+
+      paginationEl.innerHTML = html;
+    }
+
+    function goPage(page) {
+      state.currentPage = page;
+      render();
+    }
+
+    function formatMoney(value) {
+      if (value === null || value === undefined || value === '') {
+        return '—';
+      }
+      const num = parseFloat(value);
+      if (isNaN(num)) return '—';
+
+      // 单位：亿元 / 万元
+      if (Math.abs(num) >= 1e8) {
+        return (num / 1e8).toFixed(2) + ' 亿';
+      }
+      if (Math.abs(num) >= 1e4) {
+        return (num / 1e4).toFixed(2) + ' 万';
+      }
+      return num.toFixed(2);
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function formatDateTime(iso) {
+      if (!iso || iso === '未知') return '未知';
+      try {
+        const d = new Date(iso);
+        return d.toLocaleString('zh-CN', { hour12: false });
+      } catch {
+        return iso;
+      }
+    }
+
+    // 暴露给 HTML 内联事件使用
+    window.setSort = setSort;
+    window.goPage = goPage;
+    window.toggleRow = toggleRow;
+  </script>
+</body>
+</html>
