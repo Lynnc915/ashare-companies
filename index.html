@@ -147,6 +147,12 @@
     tbody tr:last-child td { border-bottom: none; }
 
     .code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 600; }
+    .col-business {
+      max-width: 280px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     .tag {
       display: inline-block;
       padding: 0.15rem 0.5rem;
@@ -490,6 +496,7 @@
         { key: 'list_date', label: '上市日期' },
         { key: 'board', label: '板块' },
         { key: 'industry', label: '所属行业' },
+        { key: 'main_business', label: '主营业务', sortable: false },
         { key: `finance_${latestYear}_revenue`, label: `${latestYear}营收`, sortable: false },
         { key: `finance_${latestYear}_profit`, label: `${latestYear}净利润`, sortable: false },
       ];
@@ -516,6 +523,7 @@
             <td>${escapeHtml(item.list_date || '-')}</td>
             <td><span class="tag ${tagClass}">${escapeHtml(item.board || '-')}</span></td>
             <td>${escapeHtml(item.industry || '-')}</td>
+            <td class="col-business" title="${escapeHtml(item.main_business || '')}">${escapeHtml(item.main_business || '-')}</td>
             <td>${formatMoney(latestFin.revenue)}</td>
             <td>${formatMoney(latestFin.profit)}</td>
           </tr>
@@ -524,7 +532,7 @@
         if (isExpanded) {
           html += `
             <tr class="detail-row">
-              <td colspan="7">
+              <td colspan="8">
                 <div class="detail-panel">
                   ${renderDetailPanel(item)}
                 </div>
@@ -561,8 +569,14 @@
 
       const searchKeyword = `${item.code} ${item.name} 招股说明书`;
       const searchUrl = item.prospectus_url || 'https://www.cninfo.com.cn/new/commonUrl/pageOfSearch?url=disclosure/list/search';
+      const businessInfo = item.main_business && item.main_business !== '-' ? `
+        <div style="margin-bottom: 1rem; padding: 0.85rem; background: white; border: 1px solid var(--border); border-radius: 0.5rem;">
+          <strong>主营业务：</strong>${escapeHtml(item.main_business)}
+        </div>
+      ` : '';
 
       return `
+        ${businessInfo}
         <div class="detail-grid">${financeHtml}</div>
         <div class="detail-actions">
           <a class="btn btn-primary btn-sm" href="${escapeHtml(searchUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">

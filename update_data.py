@@ -10,6 +10,7 @@ A 股上市企业信息数据更新脚本（增强版）
 """
 
 import argparse
+import concurrent.futures
 import json
 import sys
 import time
@@ -288,8 +289,45 @@ def build_finance_data(codes: list[str]) -> dict[str, dict]:
     return result
 
 
-def build_records(df: pd.DataFrame, since: str, finance_data: dict) -> list[dict]:
+def fetch_main_business_single(code: str) -> tuple[str, str]:
+    """单个企业抓取主营业务，返回 (code, business)。"""
+    code = code.zfill(6)
+    try:
+        df = ak.stock_profile_cninfo(symbol=code)
+        if df.empty or "主营业务" not in df.columns:
+            return code, None
+        business = str(df.iloc[0]["主营业务"]).strip()
+        if business and business.lower() not in {"-", "none", "nan", "null"}:
+            return code, business
+    except Exception:
+        pass
+    return code, None
+
+
+def fetch_main_business(codes: list[str], max_workers: int = 8) -> dict[str, str]:
+    """
+    并发抓取每个企业的主营业务。
+    优先满足沪市主板和科创板，其他板块有数据也会补充。
+    返回 {code: business}。
+    """
+    codes = sorted(set(c.zfill(6) for c in codes))
+    result = {}
+    print(f"[*] 开始抓取 {len(codes)} 家企业的主营业务...")
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_code = {executor.submit(fetch_main_business_single, c): c for c in codes}
+        for i, future in enumerate(concurrent.futures.as_completed(future_to_code), 1):
+            code, business = future.result()
+            if business:
+                result[code] = business
+            if i % 50 == 0 or i == len(codes):
+                print(f"  进度 {i}/{len(codes)}，已获取 {len(result)} 条主营业务")
+    print(f"[OK] 主营业务抓取完成，共 {len(result)} 条")
+    return result
+
+
+def build_records(df: pd.DataFrame, since: str, finance_data: dict, main_business: dict = None) -> list[dict]:
     """清洗数据、过滤上市日期、返回前端可用的字典列表。"""
+    main_business = main_business or {}
     # 确保必要字段存在
     for col in ["code", "name"]:
         if col not in df.columns:
@@ -330,6 +368,7 @@ def build_records(df: pd.DataFrame, since: str, finance_data: dict) -> list[dict
             "market": market,
             "board": board,
             "industry": str(row["industry"]).strip() or "-",
+            "main_business": main_business.get(code, "-"),
             "finance": fin,
             "prospectus_url": "https://www.cninfo.com.cn/new/commonUrl/pageOfSearch?url=disclosure/list/search",
         })
@@ -366,9 +405,9 @@ def main():
         help="不过滤上市日期，抓取全部 A 股企业",
     )
     parser.add_argument(
-        "--no-finance",
+        "--no-business",
         action="store_true",
-        help="跳过财务数据抓取，仅更新企业基础信息",
+        help="跳过主营业务抓取",
     )
     args = parser.parse_args()
 
@@ -386,7 +425,13 @@ def main():
     else:
         print("[*] 跳过财务数据抓取")
 
-    records = build_records(df, since, finance_data)
+    main_business = {}
+    if not args.no_business:
+        main_business = fetch_main_business(codes)
+    else:
+        print("[*] 跳过主营业务抓取")
+
+    records = build_records(df, since, finance_data, main_business)
     save_data(records)
     print("[*] 完成")
 
