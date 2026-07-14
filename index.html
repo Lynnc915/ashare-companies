@@ -494,7 +494,7 @@
 
     <div class="summary-panel" id="summaryPanel" style="display: none;">
       <div class="summary-card full-width">
-        <h4>主营业务概览</h4>
+        <h4>行业分布</h4>
         <div class="value small" id="summaryBusiness">-</div>
       </div>
       <div class="summary-card">
@@ -688,20 +688,23 @@
         })
         .filter(v => !isNaN(v) && v !== null && v !== undefined);
 
-      // 主营业务概览：合并所有主营业务，去重后展示
-      const businesses = data
-        .map(item => item.main_business)
-        .filter(b => b && b !== '-')
-        .slice(0, 20);
+      // 按所属行业统计公司数量
+      const industryCount = {};
+      data.forEach(item => {
+        const industry = item.industry && item.industry !== '-' ? item.industry : '未分类';
+        industryCount[industry] = (industryCount[industry] || 0) + 1;
+      });
+      const sortedIndustries = Object.entries(industryCount)
+        .sort((a, b) => b[1] - a[1]);
 
-      let businessText = '-';
-      if (businesses.length > 0) {
-        // 简单按常见业务关键词提取（仅用于概览展示）
-        const unique = [...new Set(businesses)].join('； ');
-        businessText = unique.length > 200 ? unique.slice(0, 200) + '…' : unique;
+      let industryText = '-';
+      if (sortedIndustries.length > 0) {
+        industryText = sortedIndustries
+          .map(([name, count]) => `${name} ${count}家`)
+          .join('，');
       }
 
-      document.getElementById('summaryBusiness').textContent = businessText;
+      document.getElementById('summaryBusiness').textContent = industryText;
 
       if (revenues.length > 0) {
         const min = Math.min(...revenues);
