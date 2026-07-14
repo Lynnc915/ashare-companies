@@ -328,7 +328,6 @@
       border: none;
       box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
       cursor: pointer;
-      font-size: 1.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -541,16 +540,27 @@
 
   <!-- AI 助手浮窗 -->
   <div class="ai-float">
-    <button class="ai-toggle" id="aiToggle" title="AI 助手">🤖</button>
+    <button class="ai-toggle" id="aiToggle" title="AI 助手">
+      <svg viewBox="0 0 64 64" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="34" r="24" fill="#FFD1DC" stroke="#FF9AAE" stroke-width="3"/>
+        <polygon points="14,18 22,8 30,18" fill="#FFD1DC" stroke="#FF9AAE" stroke-width="3" stroke-linejoin="round"/>
+        <polygon points="34,18 42,8 50,18" fill="#FFD1DC" stroke="#FF9AAE" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="24" cy="32" r="3" fill="#4A4A4A"/>
+        <circle cx="40" cy="32" r="3" fill="#4A4A4A"/>
+        <ellipse cx="32" cy="40" rx="4" ry="3" fill="#FF9AAE"/>
+        <path d="M26 44 Q32 50 38 44" stroke="#4A4A4A" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <circle cx="48" cy="28" r="5" fill="#B5EAD7" stroke="#7FD8C0" stroke-width="2"/>
+      </svg>
+    </button>
   </div>
 
   <div class="ai-chat" id="aiChat">
     <div class="ai-header">
-      <h3>🤖 AI 投资助手</h3>
+      <h3>🐱 喵喵投资助手</h3>
       <button id="aiClose">×</button>
     </div>
     <div class="ai-messages" id="aiMessages">
-      <div class="ai-message bot">你好！我可以基于当前筛选出的企业数据回答你的问题。如果站长已配置 AI 代理服务，你可以直接提问；否则需要在下方输入自己的 Claude API Key。</div>
+      <div class="ai-message bot">喵～我可以基于当前筛选出的企业数据回答你的问题！如果站长已配置 AI 代理服务，你可以直接提问；否则需要在下方输入自己的 Claude API Key 哦～</div>
     </div>
     <div class="ai-suggestions" id="aiSuggestions">
       <button data-q="这些公司主要从事什么业务？">主要从事什么业务？</button>
