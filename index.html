@@ -550,7 +550,7 @@
       <button id="aiClose">×</button>
     </div>
     <div class="ai-messages" id="aiMessages">
-      <div class="ai-message bot">你好！我可以基于当前筛选出的企业数据回答你的问题。请先输入 Claude API Key 再开始提问。</div>
+      <div class="ai-message bot">你好！我可以基于当前筛选出的企业数据回答你的问题。如果站长已配置 AI 代理服务，你可以直接提问；否则需要在下方输入自己的 Claude API Key。</div>
     </div>
     <div class="ai-suggestions" id="aiSuggestions">
       <button data-q="这些公司主要从事什么业务？">主要从事什么业务？</button>
@@ -562,9 +562,13 @@
       <button class="btn btn-primary btn-sm" id="aiSend">发送</button>
     </div>
     <div class="ai-settings">
-      <label>Claude API Key（仅存储在浏览器本地）</label>
+      <label>AI 代理服务地址（可选）</label>
+      <input type="url" id="aiProxy" placeholder="https://你的-worker.workers.dev" />
+      <div style="margin-top: 0.35rem; font-size: 0.8rem;">填写后访客无需输入 API Key。没有代理？也可直接在下方输入 Claude API Key。</div>
+
+      <label style="margin-top: 0.75rem; display: block;">Claude API Key（未填代理时必填，仅存在浏览器本地）</label>
       <input type="password" id="aiKey" placeholder="sk-ant-api03-..." />
-      <div style="margin-top: 0.35rem;">没有 Key？可前往 <a href="https://console.anthropic.com/" target="_blank" rel="noopener">Anthropic 控制台</a> 申请</div>
+      <div style="margin-top: 0.35rem;">没有 Key？可前往 <a href="https://console.anthropic.com/" target="_blank" rel="noopener">Anthropic 控制台</a> 申请，或用 <a href="https://workers.cloudflare.com/" target="_blank" rel="noopener">Cloudflare Worker</a> 自建代理。</div>
     </div>
   </div>
 
@@ -977,11 +981,14 @@
       const aiSend = document.getElementById('aiSend');
       const aiMessages = document.getElementById('aiMessages');
       const aiKey = document.getElementById('aiKey');
+      const aiProxy = document.getElementById('aiProxy');
       const aiSuggestions = document.getElementById('aiSuggestions');
 
-      // 从 localStorage 读取 API key
+      // 从 localStorage 读取配置
       const savedKey = localStorage.getItem('ashare_ai_key');
       if (savedKey) aiKey.value = savedKey;
+      const savedProxy = localStorage.getItem('ashare_ai_proxy');
+      if (savedProxy) aiProxy.value = savedProxy;
 
       function toggleChat() {
         aiChat.classList.toggle('open');
@@ -1055,11 +1062,16 @@ ${top10}`;
         if (!text) return;
 
         const apiKey = aiKey.value.trim();
-        if (!apiKey) {
-          addMessage('请先输入 Claude API Key。', 'error');
+        const proxyUrl = aiProxy.value.trim();
+
+        // 保存配置
+        if (apiKey) localStorage.setItem('ashare_ai_key', apiKey);
+        if (proxyUrl) localStorage.setItem('ashare_ai_proxy', proxyUrl);
+
+        if (!proxyUrl && !apiKey) {
+          addMessage('请填写 AI 代理服务地址，或输入 Claude API Key。', 'error');
           return;
         }
-        localStorage.setItem('ashare_ai_key', apiKey);
 
         addMessage(text, 'user');
         aiInput.value = '';
@@ -1068,23 +1080,34 @@ ${top10}`;
         addMessage('正在思考…', 'bot');
         const thinkingMsg = aiMessages.lastElementChild;
 
+        const payload = {
+          model: 'claude-3-5-haiku-20241022',
+          max_tokens: 1024,
+          system: '你是 A 股投资分析助手。请基于用户提供的筛选企业数据回答问题，回答要简洁、专业、有数据支撑。不要给出投资建议，仅作信息整理。',
+          messages: [
+            { role: 'user', content: `以下是我当前筛选出的企业数据：\n${context}\n\n用户问题：${text}` }
+          ],
+        };
+
         try {
-          const res = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-api-key': apiKey,
-              'anthropic-version': '2023-06-01',
-            },
-            body: JSON.stringify({
-              model: 'claude-3-5-haiku-20241022',
-              max_tokens: 1024,
-              system: '你是 A 股投资分析助手。请基于用户提供的筛选企业数据回答问题，回答要简洁、专业、有数据支撑。不要给出投资建议，仅作信息整理。',
-              messages: [
-                { role: 'user', content: `以下是我当前筛选出的企业数据：\n${context}\n\n用户问题：${text}` }
-              ],
-            }),
-          });
+          let res;
+          if (proxyUrl) {
+            res = await fetch(proxyUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload),
+            });
+          } else {
+            res = await fetch('https://api.anthropic.com/v1/messages', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': apiKey,
+                'anthropic-version': '2023-06-01',
+              },
+              body: JSON.stringify(payload),
+            });
+          }
 
           thinkingMsg.remove();
 
