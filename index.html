@@ -498,6 +498,19 @@
       }
     }
   </style>
+  <script>
+    // 全局错误捕获：如果页面加载过程中出现 JS 错误，显示在页面上便于排查
+    window.onerror = function(message, source, lineno, colno, error) {
+      const el = document.getElementById('pageError');
+      if (el) {
+        el.style.display = 'block';
+        el.innerHTML = '<p><strong>页面运行出错：</strong>' + message + '</p>' +
+          '<p>位置：' + source + ' 第 ' + lineno + ' 行</p>' +
+          '<p>请尝试按 Ctrl+F5 / Cmd+Shift+R 强制刷新，或换用 Chrome/Safari/Edge 浏览器。</p>';
+      }
+      console.error(message, error);
+    };
+  </script>
 </head>
 <body>
   <header>
@@ -505,7 +518,15 @@
     <p>2022年至今 · 报告期+最新年度财务数据 · 板块细分 · 招股说明书链接</p>
   </header>
 
+  <noscript>
+    <div style="background: #fee2e2; color: #991b1b; padding: 1rem; text-align: center; border-bottom: 1px solid #fecaca;">
+      ⚠️ 请启用 JavaScript 以使用本页面。本页面需要 JavaScript 加载企业数据。
+    </div>
+  </noscript>
+
   <div class="container">
+    <div id="pageError" class="error" style="display: none;"></div>
+
     <div class="toolbar">
       <input type="text" id="searchCode" placeholder="股票代码" />
       <input type="text" id="searchName" placeholder="企业名称" />
@@ -630,8 +651,17 @@
 
     // 初始化
     document.addEventListener('DOMContentLoaded', () => {
-      bindEvents();
-      loadData();
+      try {
+        bindEvents();
+        loadData();
+      } catch (err) {
+        console.error('初始化失败:', err);
+        const el = document.getElementById('pageError');
+        if (el) {
+          el.style.display = 'block';
+          el.innerHTML = '<p><strong>页面初始化失败：</strong>' + err.message + '</p><p>请尝试强制刷新或换用其他浏览器。</p>';
+        }
+      }
     });
 
     function bindEvents() {
@@ -653,7 +683,7 @@
     async function loadData(force = false) {
       contentEl.innerHTML = '<div class="loading">正在加载数据，请稍候…</div>';
       try {
-        const url = 'data/data.json' + (force ? '?t=' + Date.now() : '');
+        const url = './data/data.json' + (force ? '?t=' + Date.now() : '');
         const res = await fetch(url);
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}: ${res.statusText}`);
@@ -667,10 +697,16 @@
         applyFilters();
         updateTimeEl.textContent = '数据更新时间：' + formatDateTime(state.updateTime);
       } catch (err) {
+        console.error('加载数据失败:', err);
         contentEl.innerHTML = `
           <div class="error">
             <p>加载数据失败：${err.message}</p>
-            <p>请先在项目目录运行 <code>python update_data.py</code> 生成 data/data.json。</p>
+            <p>请检查：</p>
+            <ul style="text-align: left; display: inline-block;">
+              <li>是否在项目目录运行了 <code>python3 update_data.py</code> 生成 data/data.json</li>
+              <li>本地服务器是否在运行（<code>python3 -m http.server 8080</code>）</li>
+              <li>浏览器是否阻止了本地请求（尝试换浏览器或无痕模式）</li>
+            </ul>
           </div>
         `;
         updateTimeEl.textContent = '数据加载失败';
