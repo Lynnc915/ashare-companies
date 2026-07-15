@@ -245,6 +245,12 @@
       margin-top: 0.5rem;
     }
 
+    .ipo-keyword {
+      margin-top: 0.35rem;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
     .ipo-empty {
       color: var(--muted);
       font-size: 0.9rem;
@@ -974,9 +980,7 @@
       }
 
       const cards = filtered.slice(0, 20).map(item => {
-        const prospectusLink = item.prospectus_url
-          ? `<a class="btn btn-primary btn-sm" href="${escapeHtml(item.prospectus_url)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">📄 招股说明书</a>`
-          : '';
+        const keyword = `${item.name} 招股说明书`;
         return `
           <div class="ipo-card">
             <div class="ipo-card-name">${escapeHtml(item.name)}</div>
@@ -1001,8 +1005,11 @@
               <span>${escapeHtml(item.sponsor || '-')}</span>
             </div>
             <div class="ipo-card-actions">
-              ${prospectusLink}
+              <a class="btn btn-primary btn-sm" href="https://www.cninfo.com.cn/new/commonUrl/pageOfSearch?url=disclosure/list/search" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+                📄 查找招股说明书
+              </a>
             </div>
+            <div class="ipo-keyword">搜索关键词：${escapeHtml(keyword)}</div>
           </div>
         `;
       }).join('');
