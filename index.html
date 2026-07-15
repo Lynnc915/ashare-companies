@@ -496,6 +496,9 @@
         max-width: 280px;
         scroll-snap-align: start;
       }
+
+      .finance-card h4 { font-size: 0.85rem; }
+      .finance-row { font-size: 0.85rem; }
     }
   </style>
   <script>
@@ -962,7 +965,8 @@
       const hasLatest = item.finance && item.finance[latestYear] &&
         (item.finance[latestYear].revenue != null || item.finance[latestYear].profit != null);
 
-      const searchUrl = `https://www.cninfo.com.cn/new/disclosure/stock?stockCode=${item.code}`;
+      const searchKeyword = `${item.code} ${item.name} 招股说明书`;
+      const searchUrl = 'https://www.cninfo.com.cn/new/commonUrl/pageOfSearch?url=disclosure/list/search';
       const businessInfo = item.main_business && item.main_business !== '-' ? `
         <div style="margin-bottom: 1rem; padding: 0.85rem; background: white; border: 1px solid var(--border); border-radius: 0.5rem;">
           <strong>主营业务：</strong>${escapeHtml(item.main_business)}
@@ -993,7 +997,7 @@
           <a class="btn btn-primary btn-sm" href="${escapeHtml(searchUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
             📄 查找招股说明书
           </a>
-          <span class="hint">跳转至巨潮资讯网查看该公司公告（含招股说明书）</span>
+          <span class="hint">搜索关键词：${escapeHtml(searchKeyword)}</span>
         </div>
       `;
     }
