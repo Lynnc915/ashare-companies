@@ -24,6 +24,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 DATA_FILE = DATA_DIR / "data.json"
+IPO_ACCEPTED_FILE = DATA_DIR / "ipo_accepted.json"
 
 # 默认只保留 2022 年及以后上市的企业
 DEFAULT_SINCE = "2022-01-01"
@@ -378,6 +379,65 @@ def build_records(df: pd.DataFrame, since: str, finance_data: dict, main_busines
     return records
 
 
+def fetch_ipo_accepted(since: str = None) -> list[dict]:
+    """
+    抓取 IPO 获得受理的企业数据。
+    使用 akshare 的 stock_register_all_em（来源：东方财富）。
+    返回字段：name, status, accept_date, exchange, industry, reg_address, sponsor, prospectus_url
+    """
+    print("[*] 正在抓取 IPO 获得受理企业数据...")
+    try:
+        df = ak.stock_register_all_em()
+    except Exception as e:
+        print(f"[WARN] IPO 受理数据抓取失败: {e}")
+        return []
+
+    # 只保留已受理状态
+    df = df[df["最新状态"] == "已受理"].copy()
+
+    if since:
+        try:
+            since_dt = datetime.strptime(since, "%Y-%m-%d").date()
+            df["受理日期_dt"] = pd.to_datetime(df["受理日期"], errors="coerce").dt.date
+            df = df[df["受理日期_dt"].apply(lambda d: d is not None and d >= since_dt)]
+        except Exception as e:
+            print(f"[WARN] 受理日期过滤失败: {e}")
+
+    # 字段映射
+    records = []
+    for _, row in df.iterrows():
+        records.append({
+            "name": str(row.get("企业名称", "")).strip(),
+            "status": str(row.get("最新状态", "")).strip(),
+            "accept_date": str(row.get("受理日期", "")).strip(),
+            "exchange": str(row.get("拟上市地点", "")).strip(),
+            "industry": str(row.get("行业", "")).strip() or "-",
+            "reg_address": str(row.get("注册地", "")).strip() or "-",
+            "sponsor": str(row.get("保荐机构", "")).strip() or "-",
+            "prospectus_url": str(row.get("招股说明书", "")).strip() or "",
+        })
+
+    # 按受理日期降序
+    records.sort(key=lambda x: x["accept_date"] or "0000-00-00", reverse=True)
+    print(f"[OK] IPO 获得受理企业共 {len(records)} 条")
+    return records
+
+
+def save_ipo_accepted(records: list[dict]) -> None:
+    """保存 IPO 受理企业数据到 data/ipo_accepted.json。"""
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "update_time": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
+        "count": len(records),
+        "source_name": "东方财富 IPO 数据中心",
+        "source_url": "https://data.eastmoney.com/xg/ipo/",
+        "data": records,
+    }
+    with open(IPO_ACCEPTED_FILE, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+    print(f"[OK] 已保存 {len(records)} 条 IPO 受理企业记录到 {IPO_ACCEPTED_FILE}")
+
+
 def save_data(records: list[dict]) -> None:
     """保存数据到 data/data.json。"""
     DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -438,6 +498,11 @@ def main():
 
     records = build_records(df, since, finance_data, main_business)
     save_data(records)
+
+    # 抓取 IPO 获得受理企业数据（使用相同 since 过滤受理日期）
+    ipo_accepted = fetch_ipo_accepted(since)
+    save_ipo_accepted(ipo_accepted)
+
     print("[*] 完成")
 
 

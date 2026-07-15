@@ -1,5 +1,5 @@
 {
-  "update_time": "2026-07-15T09:04:56+08:00",
+  "update_time": "2026-07-15T11:24:41+08:00",
   "count": 1033,
   "years": [
     "2019",
@@ -658,7 +658,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "特种光纤的研发、生产及销售。",
       "finance": {
         "2019": {
           "revenue": null,
@@ -778,7 +778,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "制冷设备的研发、生产及销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": null,
@@ -1338,7 +1338,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "中段硅片加工、晶圆级封装、芯粒多芯片集成封装等晶圆级先进封测服务。",
       "finance": {
         "2019": {
           "revenue": null,
@@ -1898,7 +1898,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "高端绿色电解成套装备、钛电极以及金属玻璃封接制品的研发、设计、生产及销售。",
       "finance": {
         "2019": {
           "revenue": null,
@@ -2578,7 +2578,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "电能源产品及系统的研发、生产、销售及服务。",
       "finance": {
         "2019": {
           "revenue": null,
@@ -2698,7 +2698,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "G 运输仓储",
-      "main_business": "提供包括运输服务、仓储及管理服务、关务服务在内的全方位、一体化综合物流服务。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 372892100.0,
@@ -3098,7 +3098,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "C 制造业",
-      "main_business": "高性能特种功能材料研发、生产及销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": null,
@@ -3258,7 +3258,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "M 科研服务",
-      "main_business": "排水管网系统的智慧诊断与健康评估、病害治理以及运营维护。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 340269587.06,
@@ -3498,7 +3498,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "光通信前端收发电芯片的研发、设计与销售。",
       "finance": {
         "2019": {
           "revenue": null,
@@ -3538,7 +3538,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "橡胶履带类产品的研发、生产、销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 678650238.3,
@@ -3858,7 +3858,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "巨型全钢工程机械子午线轮胎的研发、生产与销售，以及矿用轮胎运营管理业务。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": null,
@@ -5218,7 +5218,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "M 科研服务",
-      "main_business": "-",
+      "main_business": "建设工程领域的检验检测技术服务。",
       "finance": {
         "2019": {
           "revenue": 1649044455.32,
@@ -5338,7 +5338,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "C 制造业",
-      "main_business": "为全球知名音频品牌客户提供高性能音频、创新音频等产品的研发、设计、制造一体化服务。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": null,
@@ -5418,7 +5418,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "家居五金及户外家具等产品的研发、设计、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 802479153.74,
@@ -5498,7 +5498,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "C 制造业",
-      "main_business": "-",
+      "main_business": "电网智能监测领域和新能源领域相关产品的研发、制造、销售和服务。",
       "finance": {
         "2019": {
           "revenue": null,
@@ -5538,7 +5538,7 @@
       "market": "上交所",
       "board": "沪市主板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "风力发电、太阳能发电为主的新能源项目的开发、投资和运营。",
       "finance": {
         "2019": {
           "revenue": 15162054909.0,
@@ -5578,7 +5578,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "C 制造业",
-      "main_business": "电子树脂的研发、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 278443535.54,
@@ -6418,7 +6418,7 @@
       "market": "上交所",
       "board": "沪市主板",
       "industry": "-",
-      "main_business": "季铵（鏻）化合物产品研发、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 465571387.87,
@@ -6858,7 +6858,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "电线电缆研发、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": null,
@@ -7378,7 +7378,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "湿电子化学品的研发、生产和销售。",
       "finance": {
         "2019": {
           "revenue": null,
@@ -7458,7 +7458,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "三维视觉数字化产品及系统的研发、生产和销售。",
       "finance": {
         "2019": {
           "revenue": null,
@@ -7618,7 +7618,7 @@
       "market": "上交所",
       "board": "沪市主板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "烧结钕铁硼、烧结钐钴等高性能稀土永磁材料研发、生产、销售。",
       "finance": {
         "2019": {
           "revenue": 900967552.01,
@@ -8098,7 +8098,7 @@
       "market": "北交所",
       "board": "北交所",
       "industry": "橡胶和塑料制品业",
-      "main_business": "-",
+      "main_business": "液压组合密封件和液压软管等橡塑新材料产品的研发、生产和销售以及煤矿辅助运输设备的整车设计、生产、销售和维修。",
       "finance": {
         "2019": {
           "revenue": null,
@@ -9938,7 +9938,7 @@
       "market": "上交所",
       "board": "沪市主板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "电动两轮车电驱动系统研发、生产及销售。",
       "finance": {
         "2019": {
           "revenue": 541593467.7,
@@ -10498,7 +10498,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "印制电路板的研发、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 1334425883.12,
@@ -10578,7 +10578,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "云母绝缘材料、玻纤布和新能源绝缘材料的研发、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 668167309.99,
@@ -10898,7 +10898,7 @@
       "market": "上交所",
       "board": "沪市主板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "智能产品研发设计、生产制造、综合服务。",
       "finance": {
         "2019": {
           "revenue": 9973944597.29,
@@ -10978,7 +10978,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "上海合晶是中国少数具备从晶体成长、衬底成型到外延生长全流程生产能力的半导体硅外延片一体化制造商，主要产品为半导体硅外延片。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 1113569188.84,
@@ -11538,7 +11538,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "冰箱和商用展示柜的研发、生产与销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 1626538600.0,
@@ -11578,7 +11578,7 @@
       "market": "北交所",
       "board": "北交所",
       "industry": "软件和信息技术服务业",
-      "main_business": "-",
+      "main_business": "智慧交通系统集成业务、智慧交通技术服务业务和商品销售及其他业务等。",
       "finance": {
         "2019": {
           "revenue": null,
@@ -11978,7 +11978,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "有机胺类精细化学品的研发、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 311054400.42,
@@ -12098,7 +12098,7 @@
       "market": "北交所",
       "board": "北交所",
       "industry": "专用设备制造业",
-      "main_business": "-",
+      "main_business": "计量配料、混合及输送等自动化物料处理系统设备的研发、生产和销售。",
       "finance": {
         "2019": {
           "revenue": 71674854.67,
@@ -12298,7 +12298,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "大型专用设备金属结构件的设计、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 403331020.97,
@@ -12978,7 +12978,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "公司专注于中、大功率LED照明产品的研发、生产与销售，产品主要应用于户外、工业照明领域，并持续向植物照明、体育照明、防爆照明等特种照明领域拓展。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 523928175.38,
@@ -13018,7 +13018,7 @@
       "market": "北交所",
       "board": "北交所",
       "industry": "通用设备制造业",
-      "main_business": "-",
+      "main_business": "精密机械零部件研发、生产和销售。",
       "finance": {
         "2019": {
           "revenue": null,
@@ -13298,7 +13298,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "功能薄膜和功能母料的研发、生产与销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 1058294842.99,
@@ -14138,7 +14138,7 @@
       "market": "北交所",
       "board": "北交所",
       "industry": "化学原料和化学制品制造业",
-      "main_business": "-",
+      "main_business": "主要生产和销售油品添加剂、石油炼剂、油田化学品以及其他精细化工产品。",
       "finance": {
         "2019": {
           "revenue": 367597465.32,
@@ -14498,7 +14498,7 @@
       "market": "北交所",
       "board": "北交所",
       "industry": "计算机、通信和其他电子设备制造业",
-      "main_business": "-",
+      "main_business": "智能家居、可视对讲等智能化设备和液晶显示屏及模组的研发设计、生产制造和销售以及配套技术服务。",
       "finance": {
         "2019": {
           "revenue": 156556196.43,
@@ -15578,7 +15578,7 @@
       "market": "北交所",
       "board": "北交所",
       "industry": "电气机械和器材制造业",
-      "main_business": "-",
+      "main_business": "电饭煲、慢炖锅、压力锅及烘烤产品等小家电的研发、生产和销售。",
       "finance": {
         "2019": {
           "revenue": 354406636.69,
@@ -16458,7 +16458,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "M 科研服务",
-      "main_business": "主要从事规划设计、工程设计、工程总承包及管理、智慧城市业务。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 309465965.49,
@@ -17778,7 +17778,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "C 制造业",
-      "main_business": "-",
+      "main_business": "农药原药、中间体、制剂的研发、生产和销售。",
       "finance": {
         "2019": {
           "revenue": 434774423.75,
@@ -17938,7 +17938,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "I 信息技术",
-      "main_business": "软件开发、运维服务、系统集成、软件产品销售及服务。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 191041315.18,
@@ -18818,7 +18818,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "新型显示领域各类薄膜器件的研发、生产、精密加工和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 694792005.51,
@@ -19178,7 +19178,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "汽车锻造零部件的研发、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 530472292.34,
@@ -20578,7 +20578,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "C 制造业",
-      "main_business": "非金属复合材料的性能研究、工艺结构设计和应用技术为核心的军用车辆配套装备的研发、设计、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 156621279.28,
@@ -21578,7 +21578,7 @@
       "market": "北交所",
       "board": "北交所",
       "industry": "非金属矿物制品业",
-      "main_business": "-",
+      "main_business": "以镁质耐火材料为主的镁制品的研发、生产、销售。",
       "finance": {
         "2019": {
           "revenue": 573840888.7,
@@ -21818,7 +21818,7 @@
       "market": "北交所",
       "board": "北交所",
       "industry": "计算机、通信和其他电子设备制造业",
-      "main_business": "磷酸铁、磷酸铁锂的研发、生产、销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 153600087.65,
@@ -22098,7 +22098,7 @@
       "market": "上交所",
       "board": "沪市主板",
       "industry": "-",
-      "main_business": "涤纶面料、无缝成衣和涤纶长丝的研发、生产和销售及染整受托加工。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 865227653.48,
@@ -22338,7 +22338,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "体育户外、家居生活、健康护理等消费品的研发、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 583269807.3,
@@ -22578,7 +22578,7 @@
       "market": "北交所",
       "board": "北交所",
       "industry": "化学原料和化学制品制造业",
-      "main_business": "-",
+      "main_business": "贵金属催化材料的研发、生产和销售，也提供贵金属加工以及失效贵金属催化材料回收服务。",
       "finance": {
         "2019": {
           "revenue": 2036129048.34,
@@ -22738,7 +22738,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "B 采矿业",
-      "main_business": "金矿的采选及销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 378459264.03,
@@ -24538,7 +24538,7 @@
       "market": "北交所",
       "board": "北交所",
       "industry": "通用设备制造业",
-      "main_business": "高压清洗机相关产品的研发、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 230938402.71,
@@ -25218,7 +25218,7 @@
       "market": "北交所",
       "board": "北交所",
       "industry": "电气机械和器材制造业",
-      "main_business": "-",
+      "main_business": "家用电器专用配件及模具研发、生产和销售。",
       "finance": {
         "2019": {
           "revenue": 510939883.26,
@@ -25698,7 +25698,7 @@
       "market": "北交所",
       "board": "北交所",
       "industry": "食品制造业",
-      "main_business": "运动营养、健康营养食品研发与制造、数字化体育科技服务。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 359742151.01,
@@ -25938,7 +25938,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "生活用纸智能装备的研发、生产、销售与服务。",
+      "main_business": "胡甫晟",
       "finance": {
         "2019": {
           "revenue": 226208291.5,
@@ -26218,7 +26218,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "光电侦察设备和军用机器人的研发、生产和销售。",
       "finance": {
         "2019": {
           "revenue": 110354188.18,
@@ -28138,7 +28138,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "操作系统产品研发及技术服务。",
       "finance": {
         "2019": {
           "revenue": 141312864.04,
@@ -28538,7 +28538,7 @@
       "market": "上交所",
       "board": "沪市主板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "猪饲料的研发、生产和销售。",
       "finance": {
         "2019": {
           "revenue": 1004665232.64,
@@ -29218,7 +29218,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "电气绝缘材料等高分子复合材料的研发、生产与销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 194881562.35,
@@ -30018,7 +30018,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "创新药的研发、生产及商业化。",
       "finance": {
         "2019": {
           "revenue": 1247012.57,
@@ -30098,7 +30098,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "C 制造业",
-      "main_business": "精密功能件和结构件的设计研发、生产及销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 607410518.19,
@@ -30618,7 +30618,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "生命科学与生物技术领域，以仪器设备、试剂耗材等相关产品的研发、生产和销售。",
       "finance": {
         "2019": {
           "revenue": 1091311962.19,
@@ -32338,7 +32338,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "教育办公类、消费类、网络设备类、网络安全类、零售类及其他电子设备产品的研发、生产、销售及服务。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 1397229043.92,
@@ -32658,7 +32658,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "专业视听产品的研发、生产、销售及应用。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 122074153.52,
@@ -32738,7 +32738,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "I 信息技术",
-      "main_business": "供热节能产品与相关技术服务的研发、推广及应用，一站式提供智慧供热全面解决方案。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 304286339.29,
@@ -32898,7 +32898,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "J 金融业",
-      "main_business": "期货经纪、资产管理、大宗商品交易及风险管理。",
+      "main_business": "储开荣",
       "finance": {
         "2019": {
           "revenue": 645241561.19,
@@ -33498,7 +33498,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "废气恶臭治理设备的研发、设计、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 258205816.04,
@@ -34578,7 +34578,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "精密机械零部件的研发、生产及销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 343432400.77,
@@ -34818,7 +34818,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "健康睡眠系统的研发、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 3862094511.61,
@@ -34938,7 +34938,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "工程机械零部件及总成研发、设计、生产、销售与服务。",
+      "main_business": "徐杨顺",
       "finance": {
         "2019": {
           "revenue": 559175035.51,
@@ -34978,7 +34978,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "C 制造业",
-      "main_business": "香料的研发、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 510865538.23,
@@ -35578,7 +35578,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "研发与制造智能仓储物流设备、开发智能仓储物流软件，为下游客户提供智能仓储物流系统。",
       "finance": {
         "2019": {
           "revenue": 299787973.95,
@@ -36178,7 +36178,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "I 信息技术",
-      "main_business": "支付电子化解决方案、财政预算管理一体化解决方案、预算单位财务服务平台和运维服务等。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 393476173.99,
@@ -36698,7 +36698,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "N 公共环保",
-      "main_business": "在农村生活环境、生态环境和生产环境治理三大领域提供投融资、咨询设计、工程承包、装备制造及销售、药剂和修复类植物生产及销售、运营等全产业链系统服务。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 440313822.49,
@@ -37378,7 +37378,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "流体控制设备、等离子设备、固化及组装设备等智能制造装备的研发、生产和销售。",
       "finance": {
         "2019": {
           "revenue": 362865456.84,
@@ -37898,7 +37898,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "创新型生物药的发现、开发、生产以及商业化。",
       "finance": {
         "2019": {
           "revenue": 4824769.08,
@@ -37938,7 +37938,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "研发、生产和销售以RNA实时荧光恒温扩增技术(SAT)平台为基础的分子诊断试剂和设备一体化产品。",
       "finance": {
         "2019": {
           "revenue": 99168053.15,
@@ -38378,7 +38378,7 @@
       "market": "上交所",
       "board": "科创板",
       "industry": "-",
-      "main_business": "-",
+      "main_business": "成套定制化装配与检测智能制造装备及数字化软件的研发、生产、销售和服务。",
       "finance": {
         "2019": {
           "revenue": 2193098543.65,
@@ -38418,7 +38418,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "Q 卫生",
-      "main_business": "向眼病患者提供眼科专科诊疗服务和视光服务。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 745563781.46,
@@ -38658,7 +38658,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "智能显示产品的研发、生产以及销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 7031373659.7,
@@ -39378,7 +39378,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "C 制造业",
-      "main_business": "智能电控产品及智能电控总成的研发、生产、销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 249387705.59,
@@ -39458,7 +39458,7 @@
       "market": "北交所",
       "board": "北交所",
       "industry": "计算机、通信和其他电子设备制造业",
-      "main_business": "-",
+      "main_business": "高精度电子线组件以及微型电声器件的设计、研发、生产和销售。",
       "finance": {
         "2019": {
           "revenue": 314049513.12,
@@ -39498,7 +39498,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "C 制造业",
-      "main_business": "化学药品原料药及制剂的研发、生产、销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 324914216.37,
@@ -39738,7 +39738,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "C 制造业",
-      "main_business": "-",
+      "main_business": "人用疫苗研发、生产、销售。",
       "finance": {
         "2019": {
           "revenue": 1048988237.2,
@@ -40058,7 +40058,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "C 制造业",
-      "main_business": "定制化液晶专显产品的研发、设计、生产和销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 451130693.09,
@@ -40498,7 +40498,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "D 水电煤气",
-      "main_business": "-",
+      "main_business": "风电场的设计、开发、建设、管理和运营。同时，还经营火电、太阳能、潮汐、生物质、地热等其他发电项目；向风电场提供咨询、维修、保养、培训及其他专业服务。",
       "finance": {
         "2019": {
           "revenue": 27579204226.63,
@@ -40738,7 +40738,7 @@
       "market": "深交所",
       "board": "深市主板",
       "industry": "J 金融业",
-      "main_business": "（一）吸收公众存款；（二）发放短期、中期和长期贷款；（三）办理国内结算、票据承兑与贴现；（四）发行金融债券；（五）代理发行、代理兑付、承销政府债券；（六）买卖政府债券；（七）从事同业拆借；（八）提供担保；（九）代理收付款项及代理保险；（十）提供保管箱；（十一）办理地方财政信用周转使用资金的委托存贷款；（十二）从事银行卡业务；（十三）外汇存款、外汇贷款、外汇汇款、外币兑换、办理结汇、售汇业务；（十四）国际结算等外汇业务；（十五）基金销售业务；（十六）经中国银行业监督管理委员会批准的其他业务。",
+      "main_business": "许建平",
       "finance": {
         "2019": {
           "revenue": 7617739162.65,
@@ -40898,7 +40898,7 @@
       "market": "深交所",
       "board": "创业板",
       "industry": "C 制造业",
-      "main_business": "高分子合成材料聚苯乙烯(PS)研发、生产与销售。",
+      "main_business": "-",
       "finance": {
         "2019": {
           "revenue": 1214542533.39,

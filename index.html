@@ -150,6 +150,107 @@
       grid-column: 1 / -1;
     }
 
+    .ipo-panel {
+      background: var(--card);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .ipo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .ipo-header h3 {
+      margin: 0 0 0.35rem;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .ipo-source {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .ipo-source a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .ipo-source a:hover {
+      text-decoration: underline;
+    }
+
+    .ipo-count {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+
+    .ipo-list {
+      display: flex;
+      overflow-x: auto;
+      gap: 0.75rem;
+      padding-bottom: 0.5rem;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .ipo-card {
+      flex: 0 0 280px;
+      max-width: 85%;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.85rem;
+      font-size: 0.85rem;
+    }
+
+    .ipo-card-name {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .ipo-card-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.25rem 0;
+      color: var(--muted);
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .ipo-card-row:last-child {
+      border-bottom: none;
+    }
+
+    .ipo-card-row span:first-child {
+      color: var(--muted);
+    }
+
+    .ipo-card-row span:last-child {
+      color: var(--text);
+      text-align: right;
+    }
+
+    .ipo-card-actions {
+      margin-top: 0.5rem;
+    }
+
+    .ipo-empty {
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 0.5rem 0;
+    }
+
     .table-wrap {
       background: var(--card);
       border-radius: 0.75rem;
@@ -562,7 +663,19 @@
       </div>
     </div>
 
-    <div class="stats">
+    <div class="ipo-panel" id="ipoAcceptedPanel" style="display: none;">
+      <div class="ipo-header">
+        <div>
+          <h3>📋 获得受理的 IPO 企业</h3>
+          <p class="ipo-source">
+            数据来源：<a href="https://data.eastmoney.com/xg/ipo/" target="_blank" rel="noopener">东方财富 IPO 数据中心</a>
+            · 仅统计状态为“已受理”的企业
+          </p>
+        </div>
+        <div class="ipo-count" id="ipoAcceptedCount">0 家</div>
+      </div>
+      <div class="ipo-list" id="ipoAcceptedList"></div>
+    </div>
       <span id="updateTime">正在加载数据…</span>
       <span id="resultCount"></span>
       <div class="page-size">
@@ -639,6 +752,7 @@
     const state = {
       allData: [],
       filteredData: [],
+      ipoAcceptedData: [],
       currentPage: 1,
       pageSize: 100,
       sortKey: 'list_date',
@@ -651,6 +765,9 @@
     const paginationEl = document.getElementById('pagination');
     const updateTimeEl = document.getElementById('updateTime');
     const resultCountEl = document.getElementById('resultCount');
+    const ipoAcceptedPanelEl = document.getElementById('ipoAcceptedPanel');
+    const ipoAcceptedCountEl = document.getElementById('ipoAcceptedCount');
+    const ipoAcceptedListEl = document.getElementById('ipoAcceptedList');
 
     // 初始化
     document.addEventListener('DOMContentLoaded', () => {
@@ -686,15 +803,28 @@
     async function loadData(force = false) {
       contentEl.innerHTML = '<div class="loading">正在加载数据，请稍候…</div>';
       try {
-        const url = './data/data.json?_=' + Date.now();
-        const res = await fetch(url);
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        const suffix = force ? '?_=' + Date.now() : '';
+        const [listedRes, ipoRes] = await Promise.all([
+          fetch('./data/data.json' + suffix),
+          fetch('./data/ipo_accepted.json' + suffix),
+        ]);
+
+        if (!listedRes.ok) {
+          throw new Error(`上市企业数据 HTTP ${listedRes.status}: ${listedRes.statusText}`);
         }
-        const payload = await res.json();
-        state.allData = payload.data || [];
-        state.updateTime = payload.update_time || '未知';
-        state.years = payload.years || ['2022', '2023', '2024'];
+        const listedPayload = await listedRes.json();
+        state.allData = listedPayload.data || [];
+        state.updateTime = listedPayload.update_time || '未知';
+        state.years = listedPayload.years || ['2022', '2023', '2024'];
+
+        if (ipoRes.ok) {
+          const ipoPayload = await ipoRes.json();
+          state.ipoAcceptedData = ipoPayload.data || [];
+        } else {
+          console.warn('IPO 受理数据加载失败:', ipoRes.status);
+          state.ipoAcceptedData = [];
+        }
+
         state.expanded.clear();
         populateBoardFilter();
         applyFilters();
@@ -749,6 +879,7 @@
       sortData();
       state.currentPage = 1;
       renderSummary();
+      renderIPOAcceptedPanel(board, dateFrom, dateTo);
       render();
     }
 
@@ -799,6 +930,88 @@
         document.getElementById('summaryMaxRevenue').textContent = '—';
         document.getElementById('summaryAvgRevenue').textContent = '—';
       }
+    }
+
+    function mapExchangeToBoard(exchange) {
+      const map = {
+        '科创板': '科创板',
+        '创业板': '创业板',
+        '沪主板': '沪市主板',
+        '深主板': '深市主板',
+        '北交所': '北交所',
+      };
+      return map[exchange] || exchange;
+    }
+
+    function renderIPOAcceptedPanel(board, dateFrom, dateTo) {
+      // 只有在用户选择了板块或时间范围时才显示
+      const hasFilter = board || dateFrom || dateTo;
+      if (!hasFilter) {
+        ipoAcceptedPanelEl.style.display = 'none';
+        return;
+      }
+
+      let filtered = state.ipoAcceptedData || [];
+
+      if (board) {
+        filtered = filtered.filter(item => mapExchangeToBoard(item.exchange) === board);
+      }
+
+      if (dateFrom) {
+        filtered = filtered.filter(item => item.accept_date && item.accept_date >= dateFrom);
+      }
+
+      if (dateTo) {
+        filtered = filtered.filter(item => item.accept_date && item.accept_date <= dateTo);
+      }
+
+      ipoAcceptedPanelEl.style.display = 'block';
+      ipoAcceptedCountEl.textContent = `${filtered.length} 家`;
+
+      if (filtered.length === 0) {
+        ipoAcceptedListEl.innerHTML = '<div class="ipo-empty">当前筛选条件下暂无获得受理的企业</div>';
+        return;
+      }
+
+      const cards = filtered.slice(0, 20).map(item => {
+        const prospectusLink = item.prospectus_url
+          ? `<a class="btn btn-primary btn-sm" href="${escapeHtml(item.prospectus_url)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">📄 招股说明书</a>`
+          : '';
+        return `
+          <div class="ipo-card">
+            <div class="ipo-card-name">${escapeHtml(item.name)}</div>
+            <div class="ipo-card-row">
+              <span>受理日期</span>
+              <span>${escapeHtml(item.accept_date || '-')}</span>
+            </div>
+            <div class="ipo-card-row">
+              <span>拟上市板块</span>
+              <span>${escapeHtml(mapExchangeToBoard(item.exchange) || '-')}</span>
+            </div>
+            <div class="ipo-card-row">
+              <span>行业</span>
+              <span>${escapeHtml(item.industry || '-')}</span>
+            </div>
+            <div class="ipo-card-row">
+              <span>注册地</span>
+              <span>${escapeHtml(item.reg_address || '-')}</span>
+            </div>
+            <div class="ipo-card-row">
+              <span>保荐机构</span>
+              <span>${escapeHtml(item.sponsor || '-')}</span>
+            </div>
+            <div class="ipo-card-actions">
+              ${prospectusLink}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const moreHint = filtered.length > 20
+        ? `<div class="ipo-empty" style="flex: 0 0 auto; align-self: center; padding: 0 1rem;">还有 ${filtered.length - 20} 家未显示，<a href="https://data.eastmoney.com/xg/ipo/" target="_blank" rel="noopener">去东方财富查看全部 →</a></div>`
+        : '';
+
+      ipoAcceptedListEl.innerHTML = cards + moreHint;
     }
 
     function sortData() {
