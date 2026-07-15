@@ -246,14 +246,6 @@
       padding-left: 0.25rem;
     }
 
-    .swipe-hint {
-      display: none;
-      color: var(--muted);
-      font-size: 0.8rem;
-      margin-bottom: 0.5rem;
-      padding-left: 0.25rem;
-    }
-
     .finance-card {
       background: white;
       border: 1px solid var(--border);
@@ -504,8 +496,6 @@
         max-width: 280px;
         scroll-snap-align: start;
       }
-
-      .swipe-hint { display: block; }
     }
   </style>
 </head>
@@ -948,7 +938,6 @@
         ${businessInfo}
         <div class="detail-section">
           <div class="detail-section-title">📊 报告期财务数据</div>
-          <div class="swipe-hint">← 左右滑动查看更多 →</div>
           <div class="detail-grid">
             ${availableReportingYears.length
               ? renderFinanceCards(availableReportingYears, item)
@@ -958,7 +947,6 @@
         </div>
         <div class="detail-section">
           <div class="detail-section-title">🆕 最新年度财务数据</div>
-          <div class="swipe-hint">← 左右滑动查看更多 →</div>
           <div class="detail-grid">
             ${hasLatest
               ? renderFinanceCards([latestYear], item)
