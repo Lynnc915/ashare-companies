@@ -155,10 +155,13 @@
       border-radius: 0.75rem;
       box-shadow: var(--shadow);
       overflow: hidden;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     table {
       width: 100%;
+      min-width: 900px;
       border-collapse: collapse;
       font-size: 0.92rem;
     }
@@ -229,6 +232,26 @@
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 1rem;
       margin-bottom: 1rem;
+    }
+
+    .detail-section {
+      margin-bottom: 1.25rem;
+    }
+
+    .detail-section-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      padding-left: 0.25rem;
+    }
+
+    .swipe-hint {
+      display: none;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+      padding-left: 0.25rem;
     }
 
     .finance-card {
@@ -467,14 +490,29 @@
       header h1 { font-size: 1.4rem; }
       th, td { padding: 0.65rem 0.5rem; font-size: 0.85rem; }
       .toolbar input[type="text"], .toolbar input[type="date"], .toolbar select { width: 100%; }
-      .detail-grid { grid-template-columns: 1fr; }
+
+      .detail-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 0.75rem;
+        padding-bottom: 0.5rem;
+      }
+
+      .finance-card {
+        flex: 0 0 85%;
+        max-width: 280px;
+        scroll-snap-align: start;
+      }
+
+      .swipe-hint { display: block; }
     }
   </style>
 </head>
 <body>
   <header>
     <h1>A股上市企业信息查询</h1>
-    <p>2022年至今 · 板块细分 · 财务数据 · 招股说明书链接</p>
+    <p>2022年至今 · 报告期+最新年度财务数据 · 板块细分 · 招股说明书链接</p>
   </header>
 
   <div class="container">
@@ -854,12 +892,22 @@
       renderPagination(totalPages);
     }
 
-    function renderDetailPanel(item) {
-      const years = state.years;
-      let financeHtml = '';
-      years.forEach(year => {
+    function getReportingYears(listDate) {
+      if (!listDate) return [];
+      const year = parseInt(String(listDate).split('-')[0], 10);
+      if (isNaN(year)) return [];
+      return [year - 3, year - 2, year - 1].map(String);
+    }
+
+    function getLatestYear() {
+      return '2025';
+    }
+
+    function renderFinanceCards(years, item) {
+      if (!years.length) return '<p style="color: var(--muted); font-size: 0.9rem;">无可用数据</p>';
+      return years.map(year => {
         const fin = (item.finance && item.finance[year]) || {};
-        financeHtml += `
+        return `
           <div class="finance-card">
             <h4>${year} 年度</h4>
             <div class="finance-row">
@@ -872,7 +920,21 @@
             </div>
           </div>
         `;
-      });
+      }).join('');
+    }
+
+    function renderDetailPanel(item) {
+      const reportingYears = getReportingYears(item.list_date);
+      const latestYear = getLatestYear();
+
+      // 过滤出实际有数据的报告期年份
+      const availableReportingYears = reportingYears.filter(year =>
+        item.finance && item.finance[year] &&
+        (item.finance[year].revenue != null || item.finance[year].profit != null)
+      );
+
+      const hasLatest = item.finance && item.finance[latestYear] &&
+        (item.finance[latestYear].revenue != null || item.finance[latestYear].profit != null);
 
       const searchKeyword = `${item.code} ${item.name} 招股说明书`;
       const searchUrl = item.prospectus_url || 'https://www.cninfo.com.cn/new/commonUrl/pageOfSearch?url=disclosure/list/search';
@@ -884,7 +946,26 @@
 
       return `
         ${businessInfo}
-        <div class="detail-grid">${financeHtml}</div>
+        <div class="detail-section">
+          <div class="detail-section-title">📊 报告期财务数据</div>
+          <div class="swipe-hint">← 左右滑动查看更多 →</div>
+          <div class="detail-grid">
+            ${availableReportingYears.length
+              ? renderFinanceCards(availableReportingYears, item)
+              : '<p style="color: var(--muted); font-size: 0.9rem;">报告期数据未披露</p>'
+            }
+          </div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">🆕 最新年度财务数据</div>
+          <div class="swipe-hint">← 左右滑动查看更多 →</div>
+          <div class="detail-grid">
+            ${hasLatest
+              ? renderFinanceCards([latestYear], item)
+              : '<p style="color: var(--muted); font-size: 0.9rem;">最新年度数据未披露</p>'
+            }
+          </div>
+        </div>
         <div class="detail-actions">
           <a class="btn btn-primary btn-sm" href="${escapeHtml(searchUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
             📄 查找招股说明书

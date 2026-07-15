@@ -5,7 +5,7 @@ A 股上市企业信息数据更新脚本（增强版）
 功能：
 1. 抓取 A 股上市企业基础信息（代码、名称、上市日期等）
 2. 根据代码细分板块（沪市主板、科创板、深市主板、创业板、北交所等）
-3. 抓取最近 3 年（2022-2024）年度营业总收入和净利润
+3. 抓取 2019-2025 年年度营业总收入和净利润，用于展示报告期及最新年度财务数据
 4. 生成前端可用的 data.json
 """
 
@@ -28,8 +28,8 @@ DATA_FILE = DATA_DIR / "data.json"
 # 默认只保留 2022 年及以后上市的企业
 DEFAULT_SINCE = "2022-01-01"
 
-# 财务报表年份
-FINANCE_YEARS = [2022, 2023, 2024]
+# 财务报表年份：覆盖 2022 年前及以后上市企业的报告期，以及最新年度 2025
+FINANCE_YEARS = [2019, 2020, 2021, 2022, 2023, 2024, 2025]
 
 # 字段映射：把 akshare 的不同列名统一为前端使用的名称
 COLUMN_MAP = {
@@ -245,7 +245,7 @@ def fetch_finance_single(stock_prefix: str, code: str) -> dict[str, dict]:
 
 def build_finance_data(codes: list[str]) -> dict[str, dict]:
     """
-    为所有企业构建最近 3 年财务数据。
+    为所有企业构建 2019-2025 年财务数据。
     优先使用批量接口，缺失的再用单企业接口补全。
     """
     finance_by_year = {}
@@ -408,6 +408,11 @@ def main():
         "--no-business",
         action="store_true",
         help="跳过主营业务抓取",
+    )
+    parser.add_argument(
+        "--no-finance",
+        action="store_true",
+        help="跳过财务数据抓取",
     )
     args = parser.parse_args()
 
