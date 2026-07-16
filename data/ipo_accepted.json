@@ -1,6 +1,6 @@
 {
-  "update_time": "2026-07-15T11:24:47+08:00",
-  "count": 131,
+  "update_time": "2026-07-16T09:11:00+08:00",
+  "count": 120,
   "source_name": "东方财富 IPO 数据中心",
   "source_url": "https://data.eastmoney.com/xg/ipo/",
   "data": [
@@ -155,16 +155,6 @@
       "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606301826611699_1.pdf"
     },
     {
-      "name": "江苏神州半导体科技股份有限公司",
-      "status": "已受理",
-      "accept_date": "2026-06-30",
-      "exchange": "科创板",
-      "industry": "专用设备制造业",
-      "reg_address": "江苏",
-      "sponsor": "国泰海通证券股份有限公司",
-      "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606301826591653_1.pdf"
-    },
-    {
       "name": "常州中源技术股份有限公司",
       "status": "已受理",
       "accept_date": "2026-06-30",
@@ -183,16 +173,6 @@
       "reg_address": "广东省 肇庆市",
       "sponsor": "天风证券股份有限公司",
       "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606301826611692_1.pdf"
-    },
-    {
-      "name": "苏州冠礼科技股份有限公司",
-      "status": "已受理",
-      "accept_date": "2026-06-30",
-      "exchange": "创业板",
-      "industry": "专用设备制造业",
-      "reg_address": "江苏",
-      "sponsor": "东吴证券股份有限公司",
-      "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606301826605871_1.pdf"
     },
     {
       "name": "苏州美昱新材料股份有限公司",
@@ -485,16 +465,6 @@
       "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606291826550586_1.pdf"
     },
     {
-      "name": "武汉中科创新技术股份有限公司",
-      "status": "已受理",
-      "accept_date": "2026-06-29",
-      "exchange": "科创板",
-      "industry": "仪器仪表制造业",
-      "reg_address": "湖北",
-      "sponsor": "东吴证券股份有限公司",
-      "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606291826542508_1.pdf"
-    },
-    {
       "name": "山东泰丰智能控制股份有限公司",
       "status": "已受理",
       "accept_date": "2026-06-29",
@@ -653,16 +623,6 @@
       "reg_address": "江苏省 苏州市",
       "sponsor": "国泰海通证券股份有限公司",
       "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606291826551148_1.pdf"
-    },
-    {
-      "name": "北京术锐机器人股份有限公司",
-      "status": "已受理",
-      "accept_date": "2026-06-29",
-      "exchange": "科创板",
-      "industry": "专用设备制造业",
-      "reg_address": "北京",
-      "sponsor": "中信证券股份有限公司",
-      "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606291826549539_1.pdf"
     },
     {
       "name": "铁岭贵鑫环保科技股份有限公司",
@@ -1005,16 +965,6 @@
       "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606251823858872_1.pdf"
     },
     {
-      "name": "深圳市裕富照明股份有限公司",
-      "status": "已受理",
-      "accept_date": "2026-06-25",
-      "exchange": "北交所",
-      "industry": "电气机械和器材制造业",
-      "reg_address": "广东省 深圳市",
-      "sponsor": "招商证券股份有限公司",
-      "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606251823859199_1.pdf"
-    },
-    {
       "name": "江苏超力电器股份有限公司",
       "status": "已受理",
       "accept_date": "2026-06-25",
@@ -1035,16 +985,6 @@
       "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606251823858874_1.pdf"
     },
     {
-      "name": "无锡华光汽车部件科技股份有限公司",
-      "status": "已受理",
-      "accept_date": "2026-06-25",
-      "exchange": "北交所",
-      "industry": "汽车制造业",
-      "reg_address": "江苏省 无锡市",
-      "sponsor": "国联民生证券承销保荐有限公司",
-      "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606251823858885_1.pdf"
-    },
-    {
       "name": "深圳市时创意电子股份有限公司",
       "status": "已受理",
       "accept_date": "2026-06-25",
@@ -1063,46 +1003,6 @@
       "reg_address": "广东省 珠海市",
       "sponsor": "招商证券股份有限公司",
       "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606251823858952_1.pdf"
-    },
-    {
-      "name": "山东高速信联科技股份有限公司",
-      "status": "已受理",
-      "accept_date": "2026-06-25",
-      "exchange": "创业板",
-      "industry": "软件和信息技术服务业",
-      "reg_address": "山东",
-      "sponsor": "中泰证券股份有限公司",
-      "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606251823862033_1.pdf"
-    },
-    {
-      "name": "萍乡德博科技股份有限公司",
-      "status": "已受理",
-      "accept_date": "2026-06-24",
-      "exchange": "北交所",
-      "industry": "汽车制造业",
-      "reg_address": "江西省 萍乡市",
-      "sponsor": "国信证券股份有限公司",
-      "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606241823817876_1.pdf"
-    },
-    {
-      "name": "北京爱思益普生物科技股份有限公司",
-      "status": "已受理",
-      "accept_date": "2026-06-24",
-      "exchange": "北交所",
-      "industry": "研究和试验发展",
-      "reg_address": "北京市 通州区",
-      "sponsor": "国联民生证券承销保荐有限公司",
-      "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606241823817965_1.pdf"
-    },
-    {
-      "name": "安徽国电电缆股份有限公司",
-      "status": "已受理",
-      "accept_date": "2026-06-24",
-      "exchange": "北交所",
-      "industry": "电气机械和器材制造业",
-      "reg_address": "安徽省 芜湖市",
-      "sponsor": "招商证券股份有限公司",
-      "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606241823817968_1.pdf"
     },
     {
       "name": "巨力自动化设备(浙江)股份有限公司",
@@ -1153,16 +1053,6 @@
       "reg_address": "浙江",
       "sponsor": "中信证券股份有限公司",
       "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606231823777563_1.pdf"
-    },
-    {
-      "name": "广东金鼎光学技术股份有限公司",
-      "status": "已受理",
-      "accept_date": "2026-06-22",
-      "exchange": "创业板",
-      "industry": "专用设备制造业",
-      "reg_address": "广东",
-      "sponsor": "国投证券股份有限公司",
-      "prospectus_url": "https://pdf.dfcfw.com/pdf/H2_AN202606221823744104_1.pdf"
     },
     {
       "name": "山东汇川精密科技股份有限公司",

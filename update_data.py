@@ -9,12 +9,16 @@ A 股上市企业信息数据更新脚本（增强版）
 4. 生成前端可用的 data.json
 """
 
+from __future__ import annotations
+
 import argparse
 import concurrent.futures
 import json
+import re
 import sys
 import time
 from datetime import datetime, timezone
+from difflib import SequenceMatcher
 from pathlib import Path
 
 import akshare as ak
@@ -57,6 +61,54 @@ COLUMN_MAP = {
     "行业": "industry",
     "所处行业": "industry",
 }
+
+
+def normalize_company_name(name: str) -> str:
+    """对企业名称做规范化，用于模糊匹配保荐机构。"""
+    name = str(name).strip()
+    name = re.sub(r"^[NC]\s*", "", name)
+    name = re.sub(r"[（(].*?[）)]", "", name)
+    for suffix in ("股份有限公司", "有限公司", "集团公司", "集团", "股份"):
+        name = name.replace(suffix, "")
+    return name.strip()
+
+
+def is_valid_sponsor(value: str) -> bool:
+    if not value:
+        return False
+    v = str(value).strip().lower()
+    return v not in {"-", "none", "nan", "null", ""}
+
+
+def find_sponsor(
+    name: str,
+    exact_map: dict[str, str],
+    normalized_entries: list[tuple[str, str]],
+    threshold: float = 0.8,
+) -> str | None:
+    """先精确匹配，再按规范化名称做模糊匹配。"""
+    if not name:
+        return None
+
+    if name in exact_map:
+        return exact_map[name]
+
+    norm_name = normalize_company_name(name)
+    if not norm_name or not normalized_entries:
+        return None
+
+    best_orig = None
+    best_ratio = 0.0
+    for norm_entry, orig_entry in normalized_entries:
+        ratio = SequenceMatcher(None, norm_name, norm_entry).ratio()
+        if ratio > best_ratio:
+            best_ratio = ratio
+            best_orig = orig_entry
+
+    if best_orig and best_ratio >= threshold:
+        return exact_map.get(best_orig)
+
+    return None
 
 
 def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
@@ -326,9 +378,16 @@ def fetch_main_business(codes: list[str], max_workers: int = 8) -> dict[str, str
     return result
 
 
-def build_records(df: pd.DataFrame, since: str, finance_data: dict, main_business: dict = None) -> list[dict]:
+def build_records(
+    df: pd.DataFrame,
+    since: str,
+    finance_data: dict,
+    main_business: dict | None = None,
+    sponsor_index: tuple[dict[str, str], list[tuple[str, str]]] | None = None,
+) -> list[dict]:
     """清洗数据、过滤上市日期、返回前端可用的字典列表。"""
     main_business = main_business or {}
+    sponsor_exact_map, sponsor_entries = sponsor_index or ({}, [])
     # 确保必要字段存在
     for col in ["code", "name"]:
         if col not in df.columns:
@@ -361,17 +420,18 @@ def build_records(df: pd.DataFrame, since: str, finance_data: dict, main_busines
         code = str(row["code"]).strip().zfill(6)
         market, board = classify_board(code)
         fin = finance_data.get(code, {str(y): {"revenue": None, "profit": None} for y in FINANCE_YEARS})
+        name = str(row["name"]).strip()
 
         records.append({
             "code": code,
-            "name": str(row["name"]).strip(),
+            "name": name,
             "list_date": row["list_date"],
             "market": market,
             "board": board,
             "industry": str(row["industry"]).strip() or "-",
             "main_business": main_business.get(code, "-"),
+            "sponsor": find_sponsor(name, sponsor_exact_map, sponsor_entries) or "-",
             "finance": fin,
-            "prospectus_url": "https://www.cninfo.com.cn/new/commonUrl/pageOfSearch?url=disclosure/list/search",
         })
 
     # 默认按上市日期降序（最新的在前面）
@@ -379,17 +439,42 @@ def build_records(df: pd.DataFrame, since: str, finance_data: dict, main_busines
     return records
 
 
-def fetch_ipo_accepted(since: str = None) -> list[dict]:
+def fetch_register_all_em() -> pd.DataFrame | None:
+    """抓取东方财富 IPO 审核全量数据，供保荐机构匹配和 IPO 受理企业筛选复用。"""
+    try:
+        df = ak.stock_register_all_em()
+        return df
+    except Exception as e:
+        print(f"[WARN] IPO 审核数据抓取失败: {e}")
+        return None
+
+
+def build_sponsor_index(df: pd.DataFrame | None) -> tuple[dict[str, str], list[tuple[str, str]]]:
+    """从 IPO 审核数据中构建保荐机构索引（精确 + 规范化模糊匹配）。"""
+    if df is None or df.empty:
+        return {}, []
+    exact_map = {}
+    normalized_entries = []
+    for _, row in df.iterrows():
+        name = str(row.get("企业名称", "")).strip()
+        sponsor = str(row.get("保荐机构", "")).strip()
+        if not name:
+            continue
+        if is_valid_sponsor(sponsor):
+            exact_map[name] = sponsor
+        normalized_entries.append((normalize_company_name(name), name))
+    print(f"[OK] 保荐机构索引共 {len(normalized_entries)} 条，精确映射 {len(exact_map)} 条")
+    return exact_map, normalized_entries
+
+
+def fetch_ipo_accepted(df: pd.DataFrame | None, since: str = None) -> list[dict]:
     """
     抓取 IPO 获得受理的企业数据。
     使用 akshare 的 stock_register_all_em（来源：东方财富）。
     返回字段：name, status, accept_date, exchange, industry, reg_address, sponsor, prospectus_url
     """
     print("[*] 正在抓取 IPO 获得受理企业数据...")
-    try:
-        df = ak.stock_register_all_em()
-    except Exception as e:
-        print(f"[WARN] IPO 受理数据抓取失败: {e}")
+    if df is None or df.empty:
         return []
 
     # 只保留已受理状态
@@ -496,11 +581,15 @@ def main():
     else:
         print("[*] 跳过主营业务抓取")
 
-    records = build_records(df, since, finance_data, main_business)
+    # 抓取 IPO 审核数据，复用于保荐机构匹配和 IPO 受理企业
+    register_df = fetch_register_all_em()
+    sponsor_index = build_sponsor_index(register_df)
+
+    records = build_records(df, since, finance_data, main_business, sponsor_index)
     save_data(records)
 
     # 抓取 IPO 获得受理企业数据（使用相同 since 过滤受理日期）
-    ipo_accepted = fetch_ipo_accepted(since)
+    ipo_accepted = fetch_ipo_accepted(register_df, since)
     save_ipo_accepted(ipo_accepted)
 
     print("[*] 完成")

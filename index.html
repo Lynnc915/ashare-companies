@@ -257,6 +257,352 @@
       padding: 0.5rem 0;
     }
 
+    .board-overview {
+      background: var(--card);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .overview-title {
+      margin: 0 0 1rem;
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .overview-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.85rem 1rem;
+    }
+
+    .overview-card h4 {
+      margin: 0 0 0.5rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .overview-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .overview-content {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .overview-metric {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.25rem 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .overview-metric:last-child {
+      border-bottom: none;
+    }
+
+    .overview-metric span:first-child {
+      color: var(--muted);
+    }
+
+    .overview-metric span:last-child {
+      font-weight: 500;
+      font-family: ui-monospace, monospace;
+    }
+
+    .overview-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .overview-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.6rem;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.8rem;
+    }
+
+    .overview-tag .count {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .overview-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .overview-list-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.65rem 0.75rem;
+    }
+
+    .overview-list-item h5 {
+      margin: 0 0 0.35rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .overview-list-item ul {
+      margin: 0;
+      padding-left: 1rem;
+      font-size: 0.8rem;
+    }
+
+    .overview-list-item li {
+      margin-bottom: 0.2rem;
+    }
+
+    .overview-standard {
+      font-size: 0.8rem;
+      line-height: 1.7;
+    }
+
+    .overview-standard p {
+      margin: 0.35rem 0;
+    }
+
+    /* 行业概览 */
+    .industry-overview {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .industry-block {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .industry-header {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr 0.8fr 1.2fr;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 0.7rem 0.9rem;
+      cursor: pointer;
+      background: #f8fafc;
+      transition: background 0.15s;
+    }
+
+    .industry-header:hover {
+      background: #f1f5f9;
+    }
+
+    .industry-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .industry-title .expand-icon {
+      margin-right: 0;
+      font-size: 0.75rem;
+    }
+
+    .industry-count {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .industry-metric {
+      font-size: 0.82rem;
+      color: var(--text);
+    }
+
+    .industry-metric span {
+      color: var(--muted);
+    }
+
+    .industry-standout {
+      font-size: 0.8rem;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .industry-body {
+      display: none;
+      padding: 0.75rem 0.9rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .industry-block.open .industry-body {
+      display: block;
+    }
+
+    .industry-block.open .industry-header .expand-icon {
+      transform: rotate(90deg);
+    }
+
+    .industry-company-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .industry-company-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0.5rem;
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      color: var(--text);
+    }
+
+    .industry-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .industry-detail-item {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 0.4rem;
+      padding: 0.6rem 0.75rem;
+    }
+
+    .industry-detail-item h5 {
+      margin: 0 0 0.35rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .industry-detail-item p {
+      margin: 0.15rem 0;
+      font-size: 0.82rem;
+    }
+
+    /* 详情页上市标准 */
+    .standard-section {
+      margin-top: 1rem;
+      padding: 0.85rem;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+    }
+
+    .standard-section-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .standard-list {
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin: 0.35rem 0;
+    }
+
+    .standard-hint {
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.65rem;
+      background: #eff6ff;
+      border-left: 3px solid var(--primary);
+      border-radius: 0.3rem;
+      font-size: 0.82rem;
+      color: var(--text);
+    }
+
+    .standard-hint strong {
+      color: var(--primary-dark);
+    }
+
+    .standard-disclaimer {
+      margin-top: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 768px) {
+      .industry-header {
+        grid-template-columns: 1fr;
+        gap: 0.35rem;
+      }
+
+      .industry-metric, .industry-standout {
+        white-space: normal;
+      }
+    }
+      height: 1px;
+      background: var(--border);
+      margin: 1.5rem 0;
+    }
+
+    .ipo-section {
+      margin-bottom: 1rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .section-title {
+      margin: 0 0 0.35rem;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .section-source {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .section-source a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .section-source a:hover {
+      text-decoration: underline;
+    }
+
+    .section-count {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+
     .table-wrap {
       background: var(--card);
       border-radius: 0.75rem;
@@ -606,6 +952,10 @@
 
       .finance-card h4 { font-size: 0.85rem; }
       .finance-row { font-size: 0.85rem; }
+
+      .overview-grid { grid-template-columns: 1fr; }
+      .overview-list { grid-template-columns: 1fr; }
+      .section-header { flex-direction: column; gap: 0.5rem; }
     }
   </style>
   <script>
@@ -650,38 +1000,32 @@
       <button class="btn btn-primary" id="refreshBtn">🔄 刷新数据</button>
     </div>
 
-    <div class="summary-panel" id="summaryPanel" style="display: none;">
-      <div class="summary-card full-width">
-        <h4>行业分布</h4>
-        <div class="value small" id="summaryBusiness">-</div>
-      </div>
-      <div class="summary-card">
-        <h4>最低营业收入</h4>
-        <div class="value" id="summaryMinRevenue">-</div>
-      </div>
-      <div class="summary-card">
-        <h4>最高营业收入</h4>
-        <div class="value" id="summaryMaxRevenue">-</div>
-      </div>
-      <div class="summary-card">
-        <h4>平均营业收入</h4>
-        <div class="value" id="summaryAvgRevenue">-</div>
-      </div>
-    </div>
-
-    <div class="ipo-panel" id="ipoAcceptedPanel" style="display: none;">
-      <div class="ipo-header">
-        <div>
-          <h3>📋 获得受理的 IPO 企业</h3>
-          <p class="ipo-source">
-            数据来源：<a href="https://data.eastmoney.com/xg/ipo/" target="_blank" rel="noopener">东方财富 IPO 数据中心</a>
-            · 仅统计状态为“已受理”的企业
-          </p>
+    <div class="board-overview" id="boardOverview" style="display: none;">
+      <h3 class="overview-title">📊 板块行业概览</h3>
+      <div class="overview-grid">
+        <div class="overview-card full-width">
+          <h4>上市标准</h4>
+          <div class="overview-content" id="overviewListingStandard">-</div>
         </div>
-        <div class="ipo-count" id="ipoAcceptedCount">0 家</div>
+        <div class="overview-card full-width">
+          <h4>实际财务门槛参考</h4>
+          <div class="overview-content" id="overviewThresholds">-</div>
+        </div>
+        <div class="overview-card full-width">
+          <h4>行业概览</h4>
+          <div class="overview-content" id="overviewIndustries">-</div>
+        </div>
+        <div class="overview-card">
+          <h4>增长与质量</h4>
+          <div class="overview-content" id="overviewQuality">-</div>
+        </div>
+        <div class="overview-card">
+          <h4>上市节奏</h4>
+          <div class="overview-content" id="overviewTimeline">-</div>
+        </div>
       </div>
-      <div class="ipo-list" id="ipoAcceptedList"></div>
     </div>
+    <div class="stats">
       <span id="updateTime">正在加载数据…</span>
       <span id="resultCount"></span>
       <div class="page-size">
@@ -703,6 +1047,27 @@
     </div>
 
     <div class="pagination" id="pagination"></div>
+
+    <div class="section-divider"></div>
+
+    <div class="ipo-section" id="ipoSection" style="display: none;">
+      <div class="section-header">
+        <div>
+          <h3 class="section-title">📋 获得受理的 IPO 企业</h3>
+          <p class="section-source">
+            数据来源：<a href="https://data.eastmoney.com/xg/ipo/" target="_blank" rel="noopener">东方财富 IPO 数据中心</a>
+            · 仅统计状态为“已受理”的企业
+          </p>
+        </div>
+        <div class="section-count" id="ipoAcceptedCount">0 家</div>
+      </div>
+      <div class="table-wrap">
+        <div id="ipoContent">
+          <div class="empty">暂无数据</div>
+        </div>
+      </div>
+      <div class="pagination" id="ipoPagination"></div>
+    </div>
   </div>
 
   <footer>
@@ -759,11 +1124,17 @@
       allData: [],
       filteredData: [],
       ipoAcceptedData: [],
+      ipoFilteredData: [],
       currentPage: 1,
       pageSize: 100,
+      ipoCurrentPage: 1,
+      ipoPageSize: 50,
       sortKey: 'list_date',
       sortDesc: true,
+      ipoSortKey: 'accept_date',
+      ipoSortDesc: true,
       expanded: new Set(),
+      ipoExpanded: new Set(),
       years: ['2022', '2023', '2024'],
     };
 
@@ -771,9 +1142,11 @@
     const paginationEl = document.getElementById('pagination');
     const updateTimeEl = document.getElementById('updateTime');
     const resultCountEl = document.getElementById('resultCount');
-    const ipoAcceptedPanelEl = document.getElementById('ipoAcceptedPanel');
+    const boardOverviewEl = document.getElementById('boardOverview');
+    const ipoSectionEl = document.getElementById('ipoSection');
+    const ipoContentEl = document.getElementById('ipoContent');
+    const ipoPaginationEl = document.getElementById('ipoPagination');
     const ipoAcceptedCountEl = document.getElementById('ipoAcceptedCount');
-    const ipoAcceptedListEl = document.getElementById('ipoAcceptedList');
 
     // 初始化
     document.addEventListener('DOMContentLoaded', () => {
@@ -882,60 +1255,264 @@
         return true;
       });
 
+      // 同步过滤 IPO 受理企业（仅按板块和受理日期）
+      state.ipoFilteredData = state.ipoAcceptedData.filter(item => {
+        if (board && mapExchangeToBoard(item.exchange) !== board) return false;
+        if (dateFrom && item.accept_date && item.accept_date < dateFrom) return false;
+        if (dateTo && item.accept_date && item.accept_date > dateTo) return false;
+        return true;
+      });
+
       sortData();
+      sortIPOData();
       state.currentPage = 1;
-      renderSummary();
-      renderIPOAcceptedPanel(board, dateFrom, dateTo);
+      state.ipoCurrentPage = 1;
+      renderBoardOverview();
       render();
+      renderIPOAcceptedTable();
     }
 
-    function renderSummary() {
-      const panel = document.getElementById('summaryPanel');
+    function median(arr) {
+      if (!arr || arr.length === 0) return null;
+      const sorted = [...arr].sort((a, b) => a - b);
+      const mid = Math.floor(sorted.length / 2);
+      return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+    }
+
+    function percentile(arr, p) {
+      if (!arr || arr.length === 0) return null;
+      const sorted = [...arr].sort((a, b) => a - b);
+      const idx = (sorted.length - 1) * p;
+      const lower = Math.floor(idx);
+      const upper = Math.ceil(idx);
+      if (lower === upper) return sorted[lower];
+      return sorted[lower] * (upper - idx) + sorted[upper] * (idx - lower);
+    }
+
+    function safeNum(v) {
+      if (v === null || v === undefined || v === '' || isNaN(parseFloat(v))) return null;
+      return parseFloat(v);
+    }
+
+    function getLatestFin(item, year) {
+      return (item.finance && item.finance[year]) || {};
+    }
+
+    function calcGrowth(now, prev) {
+      const n = safeNum(now);
+      const p = safeNum(prev);
+      if (n === null || p === null || p === 0) return null;
+      return (n - p) / p;
+    }
+
+    function formatPct(v) {
+      if (v === null || v === undefined || isNaN(v)) return '—';
+      return (v * 100).toFixed(2) + '%';
+    }
+
+    function getBoardListingStandard(board) {
+      const standards = {
+        '科创板': '科创板上市标准（五选一）：\n标准一：预计市值≥10亿元；最近两年净利润均为正且累计≥5000万元，或最近一年净利润为正且营收≥1亿元。\n标准二：预计市值≥15亿元；最近一年营收≥2亿元，且最近三年研发投入占营收比例累计≥15%。\n标准三：预计市值≥20亿元；最近一年营收≥3亿元，且最近三年经营活动现金流净额累计≥1亿元。\n标准四：预计市值≥30亿元；最近一年营收≥3亿元。\n标准五：预计市值≥40亿元；主要业务或产品需经国家有关部门批准，市场空间大，已取得阶段性成果（医药企业需至少一项核心产品进入二期临床）。\n\n具体企业使用哪一套标准，请查看其招股说明书。',
+        '创业板': '创业板上市标准（三选一）：\n标准一：最近两年净利润均为正，累计净利润≥1亿元，且最近一年净利润≥6000万元。\n标准二：预计市值≥15亿元；最近一年净利润为正且营收≥4亿元。\n标准三：预计市值≥50亿元；最近一年营收≥3亿元。\n\n具体企业使用哪一套标准，请查看其招股说明书。',
+        '北交所': '北交所上市标准（四选一）：\n标准一：预计市值≥2亿元；最近两年净利润均≥1500万元，或最近一年净利润≥2500万元；且最近两年加权平均净资产收益率平均≥8%。\n标准二：预计市值≥4亿元；最近两年营收平均≥1亿元，且最近一年营收增长率≥30%，最近一年经营活动现金流净额为正。\n标准三：预计市值≥8亿元；最近一年营收≥2亿元，且最近两年研发投入合计占营收比例≥8%。\n标准四：预计市值≥15亿元；最近两年研发投入合计≥5000万元。\n\n具体企业使用哪一套标准，请查看其招股说明书。',
+        '沪市主板': '沪市主板上市标准（三选一）：\n标准一：最近三年净利润均为正，且累计≥2亿元；最近一年净利润≥1亿元；最近三年经营活动现金流净额累计≥2亿元或营收累计≥15亿元。\n标准二：预计市值≥50亿元；最近一年净利润为正；最近三年经营活动现金流净额累计≥2.5亿元；最近一年营收≥6亿元。\n标准三：预计市值≥100亿元；最近一年净利润为正；最近一年营收≥10亿元。\n\n具体企业适用标准请查看招股说明书。',
+        '深市主板': '深市主板上市标准（三选一）：\n标准一：最近三年净利润均为正，且累计≥2亿元；最近一年净利润≥1亿元；最近三年经营活动现金流净额累计≥2亿元或营收累计≥15亿元。\n标准二：预计市值≥50亿元；最近一年净利润为正；最近三年经营活动现金流净额累计≥2.5亿元；最近一年营收≥6亿元。\n标准三：预计市值≥100亿元；最近一年净利润为正；最近一年营收≥10亿元。\n\n具体企业适用标准请查看招股说明书。',
+      };
+      return standards[board] || '各板块上市标准均为公开规则，具体企业使用哪一套标准，请查看其招股说明书。';
+    }
+
+    function renderBoardOverview() {
       const data = state.filteredData;
       if (data.length === 0) {
-        panel.style.display = 'none';
+        boardOverviewEl.style.display = 'none';
         return;
       }
-      panel.style.display = 'grid';
+      boardOverviewEl.style.display = 'block';
 
       const latestYear = state.years[state.years.length - 1];
-      const revenues = data
-        .map(item => {
-          const fin = item.finance && item.finance[latestYear];
-          return fin ? parseFloat(fin.revenue) : NaN;
-        })
-        .filter(v => !isNaN(v) && v !== null && v !== undefined);
+      const prevYear = state.years[state.years.length - 2];
+      const prev2Year = state.years[state.years.length - 3];
 
-      // 按所属行业统计公司数量
-      const industryCount = {};
+      // 行业概览
+      const industryHtml = renderIndustryOverview(data, latestYear, prevYear);
+
+      // 实际财务门槛参考
+      const board = document.getElementById('filterBoard').value;
+      const thresholdHtml = renderThresholdOverview(data, latestYear, prevYear, prev2Year, board);
+
+      // 增长与质量
+      const revGrowths = data.map(item => calcGrowth(getLatestFin(item, latestYear).revenue, getLatestFin(item, prevYear).revenue)).filter(v => v !== null);
+      const profits = data.map(item => safeNum(getLatestFin(item, latestYear).profit)).filter(v => v !== null);
+      const profitGrowths = data.map(item => calcGrowth(getLatestFin(item, latestYear).profit, getLatestFin(item, prevYear).profit)).filter(v => v !== null);
+      const lossCount = profits.filter(v => v < 0).length;
+      const lossRatio = profits.length > 0 ? (lossCount / profits.length * 100).toFixed(1) : null;
+
+      const qualityHtml = `
+        <div class="overview-metric"><span>营收增速（平均）</span><span>${formatPct(revGrowths.length > 0 ? revGrowths.reduce((a,b)=>a+b,0)/revGrowths.length : null)}</span></div>
+        <div class="overview-metric"><span>营收增速（中位数）</span><span>${formatPct(revGrowths.length > 0 ? median(revGrowths) : null)}</span></div>
+        <div class="overview-metric"><span>净利润增速（平均）</span><span>${formatPct(profitGrowths.length > 0 ? profitGrowths.reduce((a,b)=>a+b,0)/profitGrowths.length : null)}</span></div>
+        <div class="overview-metric"><span>净利润增速（中位数）</span><span>${formatPct(profitGrowths.length > 0 ? median(profitGrowths) : null)}</span></div>
+        <div class="overview-metric"><span>亏损企业占比</span><span>${lossRatio !== null ? lossRatio+'% ('+lossCount+'家)' : '—'}</span></div>
+      `;
+
+      // 上市节奏
+      const quarterCount = {};
+      data.forEach(item => {
+        if (!item.list_date) return;
+        const d = new Date(item.list_date);
+        const q = `${d.getFullYear()}-Q${Math.floor(d.getMonth()/3)+1}`;
+        quarterCount[q] = (quarterCount[q] || 0) + 1;
+      });
+      const sortedQuarters = Object.entries(quarterCount).sort((a, b) => a[0].localeCompare(b[0]));
+      const timelineHtml = sortedQuarters.length > 0
+        ? `<div class="overview-tags">` + sortedQuarters.map(([q, count]) =>
+            `<span class="overview-tag">${q} <span class="count">${count}家</span></span>`
+          ).join('') + `</div>`
+        : '<p class="overview-empty">—</p>';
+
+      // 上市标准
+      const standardHtml = board ? getBoardListingStandard(board).replace(/\n/g, '<br>') : '请选择具体板块查看对应上市标准。';
+
+      document.getElementById('overviewListingStandard').innerHTML = `<div class="overview-standard">${standardHtml}</div>`;
+      document.getElementById('overviewThresholds').innerHTML = thresholdHtml;
+      document.getElementById('overviewIndustries').innerHTML = industryHtml;
+      document.getElementById('overviewQuality').innerHTML = qualityHtml;
+      document.getElementById('overviewTimeline').innerHTML = timelineHtml;
+    }
+
+    function renderThresholdOverview(data, latestYear, prevYear, prev2Year, board) {
+      if (!data.length) return '<p class="overview-empty">—</p>';
+
+      const profits = data.map(item => safeNum(getLatestFin(item, latestYear).profit)).filter(v => v !== null);
+      const revenues = data.map(item => safeNum(getLatestFin(item, latestYear).revenue)).filter(v => v !== null);
+
+      const profitMin = profits.length ? Math.min(...profits) : null;
+      const profitP25 = profits.length ? percentile(profits, 0.25) : null;
+      const profitMed = profits.length ? median(profits) : null;
+      const profitPositive = profits.length ? profits.filter(v => v > 0).length / profits.length : null;
+
+      const revenueMin = revenues.length ? Math.min(...revenues) : null;
+      const revenueP25 = revenues.length ? percentile(revenues, 0.25) : null;
+      const revenueMed = revenues.length ? median(revenues) : null;
+
+      const twoYearProfitable = data.filter(item => {
+        const p1 = safeNum(getLatestFin(item, latestYear).profit);
+        const p2 = safeNum(getLatestFin(item, prevYear).profit);
+        return p1 !== null && p2 !== null && p1 > 0 && p2 > 0;
+      }).length / data.length;
+
+      let mainBoardHtml = '';
+      if (board === '沪市主板' || board === '深市主板') {
+        const profit3 = data.map(item => {
+          const p1 = safeNum(getLatestFin(item, latestYear).profit);
+          const p2 = safeNum(getLatestFin(item, prevYear).profit);
+          const p3 = safeNum(getLatestFin(item, prev2Year).profit);
+          return [p1, p2, p3].every(v => v !== null) ? p1 + p2 + p3 : null;
+        }).filter(v => v !== null);
+        const revenue3 = data.map(item => {
+          const r1 = safeNum(getLatestFin(item, latestYear).revenue);
+          const r2 = safeNum(getLatestFin(item, prevYear).revenue);
+          const r3 = safeNum(getLatestFin(item, prev2Year).revenue);
+          return [r1, r2, r3].every(v => v !== null) ? r1 + r2 + r3 : null;
+        }).filter(v => v !== null);
+        mainBoardHtml = `
+          <div class="overview-metric"><span>近三年累计净利润（最低 / 中位数）</span><span>${profit3.length ? `${formatMoney(Math.min(...profit3))} / ${formatMoney(median(profit3))}` : '—'}</span></div>
+          <div class="overview-metric"><span>近三年累计营收（最低 / 中位数）</span><span>${revenue3.length ? `${formatMoney(Math.min(...revenue3))} / ${formatMoney(median(revenue3))}` : '—'}</span></div>
+        `;
+      }
+
+      return `
+        <div class="overview-metric"><span>最近一年净利润 · 最低 / 25%分位 / 中位数</span><span>${profits.length ? `${formatMoney(profitMin)} / ${formatMoney(profitP25)} / ${formatMoney(profitMed)}` : '—'}</span></div>
+        <div class="overview-metric"><span>最近一年营收 · 最低 / 25%分位 / 中位数</span><span>${revenues.length ? `${formatMoney(revenueMin)} / ${formatMoney(revenueP25)} / ${formatMoney(revenueMed)}` : '—'}</span></div>
+        <div class="overview-metric"><span>盈利企业占比（最近一年净利润 > 0）</span><span>${profitPositive !== null ? (profitPositive * 100).toFixed(1) + '%' : '—'}</span></div>
+        <div class="overview-metric"><span>连续两年盈利企业占比</span><span>${(twoYearProfitable * 100).toFixed(1)}%</span></div>
+        ${mainBoardHtml}
+        <p class="standard-disclaimer" style="margin-top:0.5rem;">注：以上为已上市企业实际财务表现，供判断项目申报可行性参考，不代表交易所官方门槛。</p>
+      `;
+    }
+
+    function renderIndustryOverview(data, latestYear, prevYear) {
+      if (!data.length) return '<p class="overview-empty">—</p>';
+
+      const groups = {};
       data.forEach(item => {
         const industry = item.industry && item.industry !== '-' ? item.industry : '未分类';
-        industryCount[industry] = (industryCount[industry] || 0) + 1;
+        if (!groups[industry]) groups[industry] = [];
+        groups[industry].push(item);
       });
-      const sortedIndustries = Object.entries(industryCount)
-        .sort((a, b) => b[1] - a[1]);
 
-      let industryText = '-';
-      if (sortedIndustries.length > 0) {
-        industryText = sortedIndustries
-          .map(([name, count]) => `${name} ${count}家`)
-          .join('，');
-      }
+      const industries = Object.keys(groups).sort((a, b) => groups[b].length - groups[a].length);
 
-      document.getElementById('summaryBusiness').textContent = industryText;
+      const formatRange = (values) => {
+        if (!values.length) return '—';
+        const min = Math.min(...values);
+        const max = Math.max(...values);
+        const med = median(values);
+        return `${formatMoney(min)} ~ ${formatMoney(max)} · 中位数 ${formatMoney(med)}`;
+      };
 
-      if (revenues.length > 0) {
-        const min = Math.min(...revenues);
-        const max = Math.max(...revenues);
-        const avg = revenues.reduce((a, b) => a + b, 0) / revenues.length;
-        document.getElementById('summaryMinRevenue').textContent = formatMoney(min);
-        document.getElementById('summaryMaxRevenue').textContent = formatMoney(max);
-        document.getElementById('summaryAvgRevenue').textContent = formatMoney(avg);
-      } else {
-        document.getElementById('summaryMinRevenue').textContent = '—';
-        document.getElementById('summaryMaxRevenue').textContent = '—';
-        document.getElementById('summaryAvgRevenue').textContent = '—';
-      }
+      const blocks = industries.map((industry, idx) => {
+        const items = groups[industry];
+        const revenues = items.map(i => safeNum(getLatestFin(i, latestYear).revenue)).filter(v => v !== null);
+        const profits = items.map(i => safeNum(getLatestFin(i, latestYear).profit)).filter(v => v !== null);
+        const revGrowths = items.map(i => calcGrowth(getLatestFin(i, latestYear).revenue, getLatestFin(i, prevYear).revenue)).filter(v => v !== null);
+
+        const sortedByRev = [...items].sort((a, b) => safeNum(getLatestFin(b, latestYear).revenue) - safeNum(getLatestFin(a, latestYear).revenue));
+        const sortedByProfit = [...items].sort((a, b) => safeNum(getLatestFin(b, latestYear).profit) - safeNum(getLatestFin(a, latestYear).profit));
+        const sortedByDate = [...items].filter(i => i.list_date).sort((a, b) => b.list_date.localeCompare(a.list_date));
+
+        const topRev = sortedByRev[0];
+        const topProfit = sortedByProfit[0];
+        const fastest = revGrowths.length ? [...items].filter(i => calcGrowth(getLatestFin(i, latestYear).revenue, getLatestFin(i, prevYear).revenue) !== null)
+          .sort((a, b) => calcGrowth(getLatestFin(b, latestYear).revenue, getLatestFin(b, prevYear).revenue) - calcGrowth(getLatestFin(a, latestYear).revenue, getLatestFin(a, prevYear).revenue))[0] : null;
+        const recent = sortedByDate[0] || null;
+
+        const companyTags = items.slice(0, 8).map(item =>
+          `<span class="industry-company-tag" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</span>`
+        ).join('');
+        const more = items.length > 8 ? `<span class="industry-company-tag" style="background:#f1f5f9;border-color:#e2e8f0;color:var(--muted);">等 ${items.length - 8} 家</span>` : '';
+
+        const standoutParts = [];
+        if (topRev) standoutParts.push(`营收最高：<strong>${escapeHtml(topRev.name)}</strong> ${formatMoney(getLatestFin(topRev, latestYear).revenue)}`);
+        if (topProfit && safeNum(getLatestFin(topProfit, latestYear).profit) > 0) standoutParts.push(`净利润最高：<strong>${escapeHtml(topProfit.name)}</strong> ${formatMoney(getLatestFin(topProfit, latestYear).profit)}`);
+        if (fastest) standoutParts.push(`营收增速最快：<strong>${escapeHtml(fastest.name)}</strong> ${formatPct(calcGrowth(getLatestFin(fastest, latestYear).revenue, getLatestFin(fastest, prevYear).revenue))}`);
+        if (recent) standoutParts.push(`最近上市：<strong>${escapeHtml(recent.name)}</strong> ${recent.list_date}`);
+
+        return `
+          <div class="industry-block" id="industryBlock_${idx}" onclick="toggleIndustryBlock(${idx})">
+            <div class="industry-header">
+              <div class="industry-title"><span class="expand-icon">▶</span>${escapeHtml(industry)}</div>
+              <div class="industry-count">${items.length} 家</div>
+              <div class="industry-metric"><span>营收</span> ${formatRange(revenues)}</div>
+              <div class="industry-standout">${standoutParts.join(' · ') || '—'}</div>
+            </div>
+            <div class="industry-body" onclick="event.stopPropagation();">
+              <div class="industry-company-list">${companyTags}${more}</div>
+              <div class="industry-detail-grid">
+                <div class="industry-detail-item">
+                  <h5>营收区间（${latestYear}）</h5>
+                  <p>${formatRange(revenues)}</p>
+                </div>
+                <div class="industry-detail-item">
+                  <h5>净利润区间（${latestYear}）</h5>
+                  <p>${formatRange(profits)}</p>
+                </div>
+                <div class="industry-detail-item">
+                  <h5>营收增速区间</h5>
+                  <p>${revGrowths.length ? `${formatPct(Math.min(...revGrowths))} ~ ${formatPct(Math.max(...revGrowths))} · 中位数 ${formatPct(median(revGrowths))}` : '—'}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      return `<div class="industry-overview">${blocks}</div>`;
+    }
+
+    function toggleIndustryBlock(idx) {
+      const el = document.getElementById(`industryBlock_${idx}`);
+      if (el) el.classList.toggle('open');
     }
 
     function mapExchangeToBoard(exchange) {
@@ -949,76 +1526,171 @@
       return map[exchange] || exchange;
     }
 
-    function renderIPOAcceptedPanel(board, dateFrom, dateTo) {
-      // 只有在用户选择了板块或时间范围时才显示
-      const hasFilter = board || dateFrom || dateTo;
-      if (!hasFilter) {
-        ipoAcceptedPanelEl.style.display = 'none';
+    function sortIPOData() {
+      const key = state.ipoSortKey;
+      state.ipoFilteredData.sort((a, b) => {
+        let va = a[key];
+        let vb = b[key];
+        if (va === null || va === undefined || va === '-') va = '';
+        if (vb === null || vb === undefined || vb === '-') vb = '';
+
+        if (key === 'accept_date') {
+          const da = va || '0000-00-00';
+          const db = vb || '0000-00-00';
+          return state.ipoSortDesc ? db.localeCompare(da) : da.localeCompare(db);
+        }
+
+        const sa = String(va).toLowerCase();
+        const sb = String(vb).toLowerCase();
+        return state.ipoSortDesc ? sb.localeCompare(sa) : sa.localeCompare(sb);
+      });
+    }
+
+    function setIPOSort(key) {
+      if (state.ipoSortKey === key) {
+        state.ipoSortDesc = !state.ipoSortDesc;
+      } else {
+        state.ipoSortKey = key;
+        state.ipoSortDesc = true;
+      }
+      sortIPOData();
+      state.ipoCurrentPage = 1;
+      renderIPOAcceptedTable();
+    }
+
+    function toggleIPORow(name) {
+      if (state.ipoExpanded.has(name)) {
+        state.ipoExpanded.delete(name);
+      } else {
+        state.ipoExpanded.add(name);
+      }
+      renderIPOAcceptedTable();
+    }
+
+    function renderIPOAcceptedTable() {
+      const data = state.ipoFilteredData;
+      const total = data.length;
+
+      ipoSectionEl.style.display = total > 0 ? 'block' : 'none';
+      ipoAcceptedCountEl.textContent = `${total} 家`;
+
+      const totalPages = Math.max(1, Math.ceil(total / state.ipoPageSize));
+      if (state.ipoCurrentPage > totalPages) state.ipoCurrentPage = totalPages;
+      if (state.ipoCurrentPage < 1) state.ipoCurrentPage = 1;
+
+      const start = (state.ipoCurrentPage - 1) * state.ipoPageSize;
+      const pageData = data.slice(start, start + state.ipoPageSize);
+
+      if (total === 0) {
+        ipoContentEl.innerHTML = '<div class="empty">当前筛选条件下暂无获得受理的企业</div>';
+        ipoPaginationEl.innerHTML = '';
         return;
       }
 
-      let filtered = state.ipoAcceptedData || [];
+      const headers = [
+        { key: 'name', label: '企业名称' },
+        { key: 'accept_date', label: '受理日期' },
+        { key: 'exchange', label: '拟上市板块' },
+        { key: 'industry', label: '所属行业' },
+        { key: 'reg_address', label: '注册地' },
+        { key: 'sponsor', label: '保荐机构' },
+      ];
 
-      if (board) {
-        filtered = filtered.filter(item => mapExchangeToBoard(item.exchange) === board);
-      }
+      let html = '<table><thead><tr>';
+      headers.forEach(h => {
+        const active = state.ipoSortKey === h.key;
+        const indicator = active ? (state.ipoSortDesc ? '▼' : '▲') : '⇅';
+        html += `<th class="${active ? 'sorted' : ''}" onclick="setIPOSort('${h.key}')">${h.label}<span class="sort-indicator">${indicator}</span></th>`;
+      });
+      html += '</tr></thead><tbody>';
 
-      if (dateFrom) {
-        filtered = filtered.filter(item => item.accept_date && item.accept_date >= dateFrom);
-      }
-
-      if (dateTo) {
-        filtered = filtered.filter(item => item.accept_date && item.accept_date <= dateTo);
-      }
-
-      ipoAcceptedPanelEl.style.display = 'block';
-      ipoAcceptedCountEl.textContent = `${filtered.length} 家`;
-
-      if (filtered.length === 0) {
-        ipoAcceptedListEl.innerHTML = '<div class="ipo-empty">当前筛选条件下暂无获得受理的企业</div>';
-        return;
-      }
-
-      const cards = filtered.slice(0, 20).map(item => {
-        const keyword = `${item.name} 招股说明书`;
-        return `
-          <div class="ipo-card">
-            <div class="ipo-card-name">${escapeHtml(item.name)}</div>
-            <div class="ipo-card-row">
-              <span>受理日期</span>
-              <span>${escapeHtml(item.accept_date || '-')}</span>
-            </div>
-            <div class="ipo-card-row">
-              <span>拟上市板块</span>
-              <span>${escapeHtml(mapExchangeToBoard(item.exchange) || '-')}</span>
-            </div>
-            <div class="ipo-card-row">
-              <span>行业</span>
-              <span>${escapeHtml(item.industry || '-')}</span>
-            </div>
-            <div class="ipo-card-row">
-              <span>注册地</span>
-              <span>${escapeHtml(item.reg_address || '-')}</span>
-            </div>
-            <div class="ipo-card-row">
-              <span>保荐机构</span>
-              <span>${escapeHtml(item.sponsor || '-')}</span>
-            </div>
-            <div class="ipo-card-actions">
-              <a class="btn btn-primary btn-sm" href="https://data.eastmoney.com/xg/ipo/" target="_blank" rel="noopener" onclick="event.stopPropagation();">
-                📄 去东方财富查找
-              </a>
-            </div>
-            <div class="ipo-keyword">搜索关键词：${escapeHtml(keyword)}</div>
-          </div>
+      pageData.forEach(item => {
+        const isExpanded = state.ipoExpanded.has(item.name);
+        html += `
+          <tr class="main-row ${isExpanded ? 'expanded' : ''}" onclick="toggleIPORow(decodeURIComponent('${encodeURIComponent(item.name)}'))">
+            <td><span class="expand-icon">▶</span>${escapeHtml(item.name)}</td>
+            <td>${escapeHtml(item.accept_date || '-')}</td>
+            <td>${escapeHtml(mapExchangeToBoard(item.exchange) || '-')}</td>
+            <td>${escapeHtml(item.industry || '-')}</td>
+            <td>${escapeHtml(item.reg_address || '-')}</td>
+            <td>${escapeHtml(item.sponsor || '-')}</td>
+          </tr>
         `;
-      }).join('');
 
-      const moreHint = filtered.length > 20
-        ? `<div class="ipo-empty" style="flex: 0 0 auto; align-self: center; padding: 0 1rem;">还有 ${filtered.length - 20} 家未显示，<a href="https://data.eastmoney.com/xg/ipo/" target="_blank" rel="noopener">去东方财富查看全部 →</a></div>`
-        : '';
+        if (isExpanded) {
+          html += `
+            <tr class="detail-row">
+              <td colspan="6">
+                <div class="detail-panel">
+                  ${renderIPOStandardSection(item)}
+                </div>
+              </td>
+            </tr>
+          `;
+        }
+      });
 
-      ipoAcceptedListEl.innerHTML = cards + moreHint;
+      html += '</tbody></table>';
+      ipoContentEl.innerHTML = html;
+      renderIPOPagination(totalPages);
+    }
+
+    function renderIPOStandardSection(item) {
+      const board = mapExchangeToBoard(item.exchange);
+      const prospectusUrl = item.prospectus_url || `https://www.cninfo.com.cn/new/commonUrl/pageOfSearch?url=disclosure/list/search`;
+
+      return `
+        <div class="standard-section">
+          <div class="standard-section-title">📋 上市标准预测（${escapeHtml(board)}）</div>
+          <div class="standard-hint">
+            <strong>预测适用标准：</strong>IPO 申报企业暂无公开财务数据，无法预测具体适用哪套标准，请以招股说明书披露为准。
+          </div>
+          <div class="detail-actions" style="margin-top:0.75rem;">
+            <a class="btn btn-primary btn-sm" href="${escapeHtml(prospectusUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+              📄 查看招股说明书
+            </a>
+            <a class="btn btn-outline btn-sm" href="https://data.eastmoney.com/xg/ipo/" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+              🔍 东方财富 IPO 数据中心
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderIPOPagination(totalPages) {
+      if (totalPages <= 1) {
+        ipoPaginationEl.innerHTML = '';
+        return;
+      }
+
+      let html = `
+        <button onclick="goIPOPage(1)" ${state.ipoCurrentPage === 1 ? 'disabled' : ''}>首页</button>
+        <button onclick="goIPOPage(${state.ipoCurrentPage - 1})" ${state.ipoCurrentPage === 1 ? 'disabled' : ''}>上一页</button>
+      `;
+
+      const maxButtons = 7;
+      let startPage = Math.max(1, state.ipoCurrentPage - Math.floor(maxButtons / 2));
+      let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+      if (endPage - startPage + 1 < maxButtons) {
+        startPage = Math.max(1, endPage - maxButtons + 1);
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="${i === state.ipoCurrentPage ? 'active' : ''}" onclick="goIPOPage(${i})">${i}</button>`;
+      }
+
+      html += `
+        <button onclick="goIPOPage(${state.ipoCurrentPage + 1})" ${state.ipoCurrentPage === totalPages ? 'disabled' : ''}>下一页</button>
+        <button onclick="goIPOPage(${totalPages})" ${state.ipoCurrentPage === totalPages ? 'disabled' : ''}>末页</button>
+        <span style="color: var(--muted); font-size: 0.9rem;">第 ${state.ipoCurrentPage} / ${totalPages} 页</span>
+      `;
+
+      ipoPaginationEl.innerHTML = html;
+    }
+
+    function goIPOPage(page) {
+      state.ipoCurrentPage = page;
+      renderIPOAcceptedTable();
     }
 
     function sortData() {
@@ -1090,7 +1762,6 @@
         { key: 'list_date', label: '上市日期' },
         { key: 'board', label: '板块' },
         { key: 'industry', label: '所属行业' },
-        { key: 'main_business', label: '主营业务', sortable: false },
         { key: `finance_${latestYear}_revenue`, label: `${latestYear}营收`, sortable: false },
         { key: `finance_${latestYear}_profit`, label: `${latestYear}净利润`, sortable: false },
       ];
@@ -1117,7 +1788,6 @@
             <td>${escapeHtml(item.list_date || '-')}</td>
             <td><span class="tag ${tagClass}">${escapeHtml(item.board || '-')}</span></td>
             <td>${escapeHtml(item.industry || '-')}</td>
-            <td class="col-business" title="${escapeHtml(item.main_business || '')}">${escapeHtml(item.main_business || '-')}</td>
             <td>${formatMoney(latestFin.revenue)}</td>
             <td>${formatMoney(latestFin.profit)}</td>
           </tr>
@@ -1126,7 +1796,7 @@
         if (isExpanded) {
           html += `
             <tr class="detail-row">
-              <td colspan="8">
+              <td colspan="7">
                 <div class="detail-panel">
                   ${renderDetailPanel(item)}
                 </div>
@@ -1213,11 +1883,81 @@
             }
           </div>
         </div>
+        ${renderListingStandardSection(item)}
         <div class="detail-actions">
           <a class="btn btn-primary btn-sm" href="${escapeHtml(searchUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
             📄 查找招股说明书
           </a>
           <span class="hint">搜索关键词：${escapeHtml(searchKeyword)}</span>
+        </div>
+      `;
+    }
+
+    function inferPossibleStandards(item, board) {
+      const latest = state.years[state.years.length - 1];
+      const prev = state.years[state.years.length - 2];
+      const prev2 = state.years[state.years.length - 3];
+
+      const p1 = safeNum(getLatestFin(item, latest).profit);
+      const p2 = safeNum(getLatestFin(item, prev).profit);
+      const p3 = safeNum(getLatestFin(item, prev2).profit);
+      const r1 = safeNum(getLatestFin(item, latest).revenue);
+      const r2 = safeNum(getLatestFin(item, prev).revenue);
+      const r3 = safeNum(getLatestFin(item, prev2).revenue);
+
+      const profits2 = [p1, p2].filter(v => v !== null);
+      const profits3 = [p1, p2, p3].filter(v => v !== null);
+      const rev3 = [r1, r2, r3].filter(v => v !== null);
+
+      const possible = new Set();
+
+      if (board === '科创板') {
+        if (profits2.length === 2 && profits2.every(v => v > 0) && profits2.reduce((a, b) => a + b, 0) >= 5e7) possible.add('一');
+        if (p1 !== null && p1 > 0 && r1 !== null && r1 >= 1e8) possible.add('一');
+        if (r1 !== null && r1 >= 3e8) possible.add('四');
+      } else if (board === '创业板') {
+        if (profits2.length === 2 && profits2.every(v => v > 0) && profits2.reduce((a, b) => a + b, 0) >= 1e8 && p1 !== null && p1 >= 6e7) possible.add('一');
+        if (p1 !== null && p1 > 0 && r1 !== null && r1 >= 4e8) possible.add('二');
+        if (r1 !== null && r1 >= 3e8) possible.add('三');
+      } else if (board === '北交所') {
+        if (profits2.length === 2 && profits2.every(v => v >= 1.5e7)) possible.add('一');
+        if (p1 !== null && p1 >= 2.5e7) possible.add('一');
+        if (r1 !== null && r1 >= 2e8) possible.add('三');
+      } else if (board === '沪市主板' || board === '深市主板') {
+        if (profits3.length === 3 && profits3.every(v => v > 0) && profits3.reduce((a, b) => a + b, 0) >= 2e8 && p1 !== null && p1 >= 1e8) possible.add('一');
+        if (rev3.length === 3 && rev3.reduce((a, b) => a + b, 0) >= 1.5e9) possible.add('一');
+      }
+
+      return Array.from(possible).sort();
+    }
+
+    function renderListingStandardSection(item) {
+      const board = item.board || '未知';
+      const possible = inferPossibleStandards(item, board);
+
+      let hint = '';
+      if (possible.length > 0) {
+        hint = `<div class="standard-hint">
+          <strong>预测适用标准：</strong>根据现有营收/净利润数据，该企业<strong>可能符合 ${escapeHtml(board)} 标准${possible.join('、')}</strong>。
+        </div>`;
+      } else {
+        hint = `<div class="standard-hint">
+          <strong>预测适用标准：</strong>仅凭现有营收/净利润数据无法判断具体适用哪套标准（市值、研发投入、现金流等未纳入）。
+        </div>`;
+      }
+
+      return `
+        <div class="detail-section">
+          <div class="detail-section-title">📋 上市标准预测</div>
+          <div class="standard-section">
+            ${hint}
+            <div style="margin-top:0.5rem; font-size:0.85rem; color:var(--text);">
+              <strong>保荐机构：</strong>${escapeHtml(item.sponsor || '-')}
+            </div>
+            <div class="standard-disclaimer">
+              具体企业实际使用哪一套标准，请以招股说明书及交易所审核披露为准。此处仅为根据公开财务数据的粗略匹配，不构成投资建议。
+            </div>
+          </div>
         </div>
       `;
     }
@@ -1309,6 +2049,10 @@
     window.setSort = setSort;
     window.goPage = goPage;
     window.toggleRow = toggleRow;
+    window.setIPOSort = setIPOSort;
+    window.goIPOPage = goIPOPage;
+    window.toggleIPORow = toggleIPORow;
+    window.toggleIndustryBlock = toggleIndustryBlock;
 
     // ================== AI 助手 ==================
     (function initAI() {
