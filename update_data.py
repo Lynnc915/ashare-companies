@@ -23,6 +23,7 @@ from pathlib import Path
 
 import akshare as ak
 import pandas as pd
+import requests
 
 # 项目根目录
 ROOT = Path(__file__).resolve().parent
@@ -384,10 +385,12 @@ def build_records(
     finance_data: dict,
     main_business: dict | None = None,
     sponsor_index: tuple[dict[str, str], list[tuple[str, str]]] | None = None,
+    org_id_map: dict[str, str] | None = None,
 ) -> list[dict]:
     """清洗数据、过滤上市日期、返回前端可用的字典列表。"""
     main_business = main_business or {}
     sponsor_exact_map, sponsor_entries = sponsor_index or ({}, [])
+    org_id_map = org_id_map or {}
     # 确保必要字段存在
     for col in ["code", "name"]:
         if col not in df.columns:
@@ -431,6 +434,7 @@ def build_records(
             "industry": str(row["industry"]).strip() or "-",
             "main_business": main_business.get(code, "-"),
             "sponsor": find_sponsor(name, sponsor_exact_map, sponsor_entries) or "-",
+            "org_id": org_id_map.get(code, ""),
             "finance": fin,
         })
 
@@ -465,6 +469,44 @@ def build_sponsor_index(df: pd.DataFrame | None) -> tuple[dict[str, str], list[t
         normalized_entries.append((normalize_company_name(name), name))
     print(f"[OK] 保荐机构索引共 {len(normalized_entries)} 条，精确映射 {len(exact_map)} 条")
     return exact_map, normalized_entries
+
+
+def fetch_org_ids(codes: list[str]) -> dict[str, str]:
+    """通过 CNInfo topSearch 接口查询每个股票代码对应的 orgId。"""
+    url = "http://www.cninfo.com.cn/new/information/topSearch/query"
+    result = {}
+
+    def query_one(code: str) -> tuple[str, str | None]:
+        code = code.zfill(6)
+        try:
+            res = requests.post(
+                url,
+                data={"keyWord": code},
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+                timeout=10,
+            )
+            res.raise_for_status()
+            data = res.json()
+            if isinstance(data, list) and data:
+                for item in data:
+                    if str(item.get("code", "")).zfill(6) == code:
+                        return code, item.get("orgId")
+                return code, data[0].get("orgId")
+        except Exception:
+            pass
+        return code, None
+
+    print(f"[*] 正在查询 {len(codes)} 家企业的 orgId...")
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+        future_to_code = {executor.submit(query_one, c): c for c in codes}
+        for i, future in enumerate(concurrent.futures.as_completed(future_to_code), 1):
+            code, org_id = future.result()
+            if org_id:
+                result[code] = org_id
+            if i % 100 == 0 or i == len(codes):
+                print(f"  进度 {i}/{len(codes)}，已获取 {len(result)} 条 orgId")
+    print(f"[OK] orgId 查询完成，共 {len(result)} 条")
+    return result
 
 
 def fetch_ipo_accepted(df: pd.DataFrame | None, since: str = None) -> list[dict]:
@@ -584,8 +626,9 @@ def main():
     # 抓取 IPO 审核数据，复用于保荐机构匹配和 IPO 受理企业
     register_df = fetch_register_all_em()
     sponsor_index = build_sponsor_index(register_df)
+    org_id_map = fetch_org_ids(codes)
 
-    records = build_records(df, since, finance_data, main_business, sponsor_index)
+    records = build_records(df, since, finance_data, main_business, sponsor_index, org_id_map)
     save_data(records)
 
     # 抓取 IPO 获得受理企业数据（使用相同 since 过滤受理日期）
