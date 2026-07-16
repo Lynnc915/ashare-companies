@@ -509,6 +509,82 @@ def fetch_org_ids(codes: list[str]) -> dict[str, str]:
     return result
 
 
+def fetch_prospectus_urls(records: list[dict]) -> dict[str, str]:
+    """通过 CNInfo hisAnnouncement/query 查询每家上市企业的招股说明书 PDF 直链。"""
+    url = "http://www.cninfo.com.cn/new/hisAnnouncement/query"
+    pdf_base = "https://static.cninfo.com.cn"
+
+    def get_params(board: str) -> tuple[str, str, str]:
+        if "科创板" in board or "沪市" in board:
+            return "sse", "sh", "category_szsh_all"
+        if "创业板" in board or "深市" in board:
+            return "szse", "sz", "category_szsh_all"
+        if "北交所" in board:
+            return "bjse", "bj", ""
+        return "szse", "sz", "category_szsh_all"
+
+    def pick(announcements: list[dict]) -> dict | None:
+        if not announcements:
+            return None
+        excludes = ("提示性公告", "摘要", "更正", "修订")
+        for a in announcements:
+            title = str(a.get("announcementTitle", ""))
+            if "招股说明书" in title and not any(e in title for e in excludes):
+                return a
+        for a in announcements:
+            if "招股说明书" in str(a.get("announcementTitle", "")):
+                return a
+        return announcements[0]
+
+    def query_one(record: dict) -> tuple[str, str | None]:
+        code = str(record.get("code", "")).zfill(6)
+        org_id = record.get("org_id", "")
+        board = record.get("board", "")
+        if not org_id:
+            return code, None
+        column, plate, category = get_params(board)
+        try:
+            res = requests.post(
+                url,
+                data={
+                    "pageNum": "1",
+                    "pageSize": "30",
+                    "column": column,
+                    "tabName": "fulltext",
+                    "plate": plate,
+                    "stock": f"{code},{org_id}",
+                    "searchkey": "招股说明书",
+                    "seDate": "",
+                    "category": category,
+                },
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+                timeout=15,
+            )
+            res.raise_for_status()
+            data = res.json()
+            announcements = data.get("announcements") or []
+            picked = pick(announcements)
+            adjunct = picked.get("adjunctUrl") if picked else None
+            if adjunct:
+                return code, f"{pdf_base}/{adjunct}"
+        except Exception:
+            pass
+        return code, None
+
+    result = {}
+    print(f"[*] 正在查询 {len(records)} 家企业的招股说明书 PDF...")
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+        future_to_code = {executor.submit(query_one, r): r["code"] for r in records}
+        for i, future in enumerate(concurrent.futures.as_completed(future_to_code), 1):
+            code, pdf_url = future.result()
+            if pdf_url:
+                result[code] = pdf_url
+            if i % 100 == 0 or i == len(records):
+                print(f"  进度 {i}/{len(records)}，已匹配 {len(result)} 条")
+    print(f"[OK] 招股说明书 PDF 查询完成，共 {len(result)} 条")
+    return result
+
+
 def fetch_ipo_accepted(df: pd.DataFrame | None, since: str = None) -> list[dict]:
     """
     抓取 IPO 获得受理的企业数据。
@@ -629,6 +705,12 @@ def main():
     org_id_map = fetch_org_ids(codes)
 
     records = build_records(df, since, finance_data, main_business, sponsor_index, org_id_map)
+
+    # 补充招股说明书 PDF 直链
+    prospectus_map = fetch_prospectus_urls(records)
+    for record in records:
+        record["prospectus_url"] = prospectus_map.get(record["code"], "")
+
     save_data(records)
 
     # 抓取 IPO 获得受理企业数据（使用相同 since 过滤受理日期）

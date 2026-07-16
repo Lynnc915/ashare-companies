@@ -1925,7 +1925,11 @@
         (item.finance[latestYear].revenue != null || item.finance[latestYear].profit != null);
 
       const searchKeyword = `${item.code} ${item.name} 招股说明书`;
-      const prospectusSearchUrl = `https://www.baidu.com/s?wd=${encodeURIComponent(searchKeyword + ' site:cninfo.com.cn')}`;
+      const hasDirectProspectus = item.prospectus_url && item.prospectus_url.startsWith('http');
+      const prospectusUrl = hasDirectProspectus
+        ? item.prospectus_url
+        : `https://www.baidu.com/s?wd=${encodeURIComponent(searchKeyword + ' site:cninfo.com.cn')}`;
+      const prospectusLabel = hasDirectProspectus ? '📄 查看招股说明书' : '📄 查找招股说明书';
       const businessInfo = item.main_business && item.main_business !== '-' ? `
         <div style="margin-bottom: 1rem; padding: 0.85rem; background: white; border: 1px solid var(--border); border-radius: 0.5rem;">
           <strong>主营业务：</strong>${escapeHtml(item.main_business)}
@@ -1954,8 +1958,8 @@
         </div>
         ${renderListingStandardSection(item)}
         <div class="detail-actions">
-          <a class="btn btn-primary btn-sm" href="${escapeHtml(prospectusSearchUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
-            📄 查找招股说明书
+          <a class="btn btn-primary btn-sm" href="${escapeHtml(prospectusUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+            ${prospectusLabel}
           </a>
           <span class="hint">搜索关键词：${escapeHtml(searchKeyword)}</span>
         </div>
