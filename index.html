@@ -575,6 +575,55 @@
       flex-wrap: wrap;
     }
 
+    .collapsible-header {
+      cursor: pointer;
+      user-select: none;
+      align-items: center;
+    }
+
+    .collapsible-header .section-title {
+      margin: 0;
+    }
+
+    .toggle-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.5rem;
+      height: 1.5rem;
+      color: var(--muted);
+      transition: transform 0.2s;
+      font-size: 0.85rem;
+    }
+
+    .collapsible-header.collapsed .toggle-icon {
+      transform: rotate(-90deg);
+    }
+
+    .collapsible-content.collapsed {
+      display: none;
+    }
+
+    .card-header-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .card-header-toggle h4 {
+      margin: 0;
+    }
+
+    .card-header-toggle .toggle-icon {
+      transform: rotate(0deg);
+    }
+
+    .card-header-toggle.collapsed .toggle-icon {
+      transform: rotate(-90deg);
+    }
+
     .section-title {
       margin: 0 0 0.35rem;
       font-size: 1rem;
@@ -1012,8 +1061,11 @@
           <div class="overview-content" id="overviewThresholds">-</div>
         </div>
         <div class="overview-card full-width">
-          <h4>行业概览</h4>
-          <div class="overview-content" id="overviewIndustries">-</div>
+          <div class="card-header-toggle collapsed" id="industryHeader" onclick="toggleSection('industryOverview')">
+            <h4>行业概览</h4>
+            <span class="toggle-icon">▲</span>
+          </div>
+          <div class="overview-content collapsible-content collapsed" id="overviewIndustries">-</div>
         </div>
         <div class="overview-card">
           <h4>增长与质量</h4>
@@ -1025,33 +1077,39 @@
         </div>
       </div>
     </div>
-    <div class="stats">
-      <span id="updateTime">正在加载数据…</span>
-      <span id="resultCount"></span>
-      <div class="page-size">
-        <label for="pageSize">每页</label>
-        <select id="pageSize">
-          <option value="50">50</option>
-          <option value="100" selected>100</option>
-          <option value="200">200</option>
-          <option value="500">500</option>
-        </select>
-        <span>条</span>
-      </div>
+    <div class="section-header collapsible-header" id="listedHeader" onclick="toggleSection('listedCompanies')">
+      <h3 class="section-title">📈 上市企业</h3>
+      <span class="toggle-icon">▲</span>
     </div>
-
-    <div class="table-wrap">
-      <div id="content">
-        <div class="loading">正在加载数据，请稍候…</div>
+    <div class="collapsible-content" id="listedCompaniesContent">
+      <div class="stats">
+        <span id="updateTime">正在加载数据…</span>
+        <span id="resultCount"></span>
+        <div class="page-size">
+          <label for="pageSize">每页</label>
+          <select id="pageSize">
+            <option value="50">50</option>
+            <option value="100" selected>100</option>
+            <option value="200">200</option>
+            <option value="500">500</option>
+          </select>
+          <span>条</span>
+        </div>
       </div>
-    </div>
 
-    <div class="pagination" id="pagination"></div>
+      <div class="table-wrap">
+        <div id="content">
+          <div class="loading">正在加载数据，请稍候…</div>
+        </div>
+      </div>
+
+      <div class="pagination" id="pagination"></div>
+    </div>
 
     <div class="section-divider"></div>
 
     <div class="ipo-section" id="ipoSection" style="display: none;">
-      <div class="section-header">
+      <div class="section-header collapsible-header" id="ipoHeader" onclick="toggleSection('ipoCompanies')">
         <div>
           <h3 class="section-title">📋 获得受理的 IPO 企业</h3>
           <p class="section-source">
@@ -1059,14 +1117,19 @@
             · 仅统计状态为“已受理”的企业
           </p>
         </div>
-        <div class="section-count" id="ipoAcceptedCount">0 家</div>
-      </div>
-      <div class="table-wrap">
-        <div id="ipoContent">
-          <div class="empty">暂无数据</div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div class="section-count" id="ipoAcceptedCount">0 家</div>
+          <span class="toggle-icon">▲</span>
         </div>
       </div>
-      <div class="pagination" id="ipoPagination"></div>
+      <div class="collapsible-content" id="ipoCompaniesContent">
+        <div class="table-wrap">
+          <div id="ipoContent">
+            <div class="empty">暂无数据</div>
+          </div>
+        </div>
+        <div class="pagination" id="ipoPagination"></div>
+      </div>
     </div>
   </div>
 
@@ -1136,6 +1199,11 @@
       expanded: new Set(),
       ipoExpanded: new Set(),
       years: ['2022', '2023', '2024'],
+      sectionsCollapsed: {
+        industryOverview: true,
+        listedCompanies: false,
+        ipoCompanies: false,
+      },
     };
 
     const contentEl = document.getElementById('content');
@@ -1207,6 +1275,7 @@
         state.expanded.clear();
         populateBoardFilter();
         applyFilters();
+        initSectionCollapses();
         updateTimeEl.textContent = '数据更新时间：' + formatDateTime(state.updateTime);
       } catch (err) {
         console.error('加载数据失败:', err);
@@ -2008,6 +2077,30 @@
       render();
     }
 
+    function toggleSection(section) {
+      state.sectionsCollapsed[section] = !state.sectionsCollapsed[section];
+      applySectionCollapse(section);
+    }
+
+    function applySectionCollapse(section) {
+      const collapsed = state.sectionsCollapsed[section];
+      const mapping = {
+        industryOverview: { header: 'industryHeader', content: 'overviewIndustries' },
+        listedCompanies: { header: 'listedHeader', content: 'listedCompaniesContent' },
+        ipoCompanies: { header: 'ipoHeader', content: 'ipoCompaniesContent' },
+      };
+      const cfg = mapping[section];
+      if (!cfg) return;
+      const header = document.getElementById(cfg.header);
+      const content = document.getElementById(cfg.content);
+      if (header) header.classList.toggle('collapsed', collapsed);
+      if (content) content.classList.toggle('collapsed', collapsed);
+    }
+
+    function initSectionCollapses() {
+      Object.keys(state.sectionsCollapsed).forEach(applySectionCollapse);
+    }
+
     function formatMoney(value) {
       if (value === null || value === undefined || value === '') {
         return '—';
@@ -2053,6 +2146,7 @@
     window.goIPOPage = goIPOPage;
     window.toggleIPORow = toggleIPORow;
     window.toggleIndustryBlock = toggleIndustryBlock;
+    window.toggleSection = toggleSection;
 
     // ================== AI 助手 ==================
     (function initAI() {
