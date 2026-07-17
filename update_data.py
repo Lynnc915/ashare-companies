@@ -129,7 +129,7 @@ def parse_date(value):
     value = str(value).strip()
     if not value or value in {"-", "NaT", "None", "nan"}:
         return None
-    for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%Y%m%d", "%%Y-%m-%d %H:%M:%S"):
+    for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%Y%m%d", "%Y-%m-%d %H:%M:%S"):
         try:
             return datetime.strptime(value[:10], fmt).strftime("%Y-%m-%d")
         except ValueError:
