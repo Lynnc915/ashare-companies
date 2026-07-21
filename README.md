@@ -94,9 +94,19 @@ http://localhost:8080
 
 ## 自动更新数据
 
-### macOS / Linux（crontab）
+项目已配置 GitHub Actions 工作流 `.github/workflows/update-data.yml`，每月 1 日自动抓取最新数据并部署到 GitHub Pages，无需本地开站。
 
-每天上午 9 点自动更新：
+你也可以随时进入仓库的 **Actions** 页面，手动运行 `Update Data and Deploy to Pages` 工作流。
+
+如需在本地手动更新，仍可执行：
+
+```bash
+python3 update_data.py
+```
+
+### 本地定时更新（可选）
+
+#### macOS / Linux（crontab）
 
 ```bash
 crontab -e
@@ -108,7 +118,7 @@ crontab -e
 0 9 * * * cd /Users/lynn/ashare-companies && python3 update_data.py
 ```
 
-### Windows
+#### Windows
 
 使用“任务计划程序”创建一个每天执行一次 `python update_data.py` 的任务。
 
