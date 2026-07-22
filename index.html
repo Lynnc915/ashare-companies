@@ -1173,13 +1173,28 @@
       <button class="btn btn-primary btn-sm" id="aiSend">发送</button>
     </div>
     <div class="ai-settings">
-      <label>AI 代理服务地址（可选）</label>
-      <input type="url" id="aiProxy" placeholder="https://你的-worker.workers.dev" />
-      <div style="margin-top: 0.35rem; font-size: 0.8rem;">填写后访客无需输入 API Key。没有代理？也可直接在下方输入 Claude API Key。</div>
+      <label>AI 服务商</label>
+      <select id="aiProvider">
+        <option value="claude">Claude</option>
+        <option value="kimi">Kimi（Moonshot）</option>
+      </select>
+      <div style="margin-top: 0.35rem; font-size: 0.8rem;">选择后使用对应服务商的 API Key，Key 仅保存在浏览器本地。</div>
 
-      <label style="margin-top: 0.75rem; display: block;">Claude API Key（未填代理时必填，仅存在浏览器本地）</label>
-      <input type="password" id="aiKey" placeholder="sk-ant-api03-..." />
-      <div style="margin-top: 0.35rem;">没有 Key？可前往 <a href="https://console.anthropic.com/" target="_blank" rel="noopener">Anthropic 控制台</a> 申请，或用 <a href="https://workers.cloudflare.com/" target="_blank" rel="noopener">Cloudflare Worker</a> 自建代理。</div>
+      <div id="claudeSettings">
+        <label style="margin-top: 0.75rem; display: block;">AI 代理服务地址（可选）</label>
+        <input type="url" id="aiProxy" placeholder="https://你的-worker.workers.dev" />
+        <div style="margin-top: 0.35rem; font-size: 0.8rem;">填写后无需输入 Claude API Key。没有代理？也可直接在下方输入 Claude API Key。</div>
+
+        <label style="margin-top: 0.75rem; display: block;">Claude API Key（未填代理时必填）</label>
+        <input type="password" id="aiKey" placeholder="sk-ant-api03-..." />
+        <div style="margin-top: 0.35rem;">没有 Key？可前往 <a href="https://console.anthropic.com/" target="_blank" rel="noopener">Anthropic 控制台</a> 申请，或用 <a href="https://workers.cloudflare.com/" target="_blank" rel="noopener">Cloudflare Worker</a> 自建代理。</div>
+      </div>
+
+      <div id="kimiSettings" style="display: none;">
+        <label style="margin-top: 0.75rem; display: block;">Kimi API Key</label>
+        <input type="password" id="kimiKey" placeholder="sk-..." />
+        <div style="margin-top: 0.35rem;">没有 Key？可前往 <a href="https://platform.moonshot.cn/" target="_blank" rel="noopener">Moonshot 控制台</a> 申请。</div>
+      </div>
     </div>
   </div>
 
@@ -2177,13 +2192,35 @@
       const aiMessages = document.getElementById('aiMessages');
       const aiKey = document.getElementById('aiKey');
       const aiProxy = document.getElementById('aiProxy');
+      const aiProvider = document.getElementById('aiProvider');
+      const claudeSettings = document.getElementById('claudeSettings');
+      const kimiSettings = document.getElementById('kimiSettings');
+      const kimiKey = document.getElementById('kimiKey');
       const aiSuggestions = document.getElementById('aiSuggestions');
 
+      const SYSTEM_PROMPT = '你是 A 股投资分析助手。请基于用户提供的筛选企业数据回答问题，回答要简洁、专业、有数据支撑。不要给出投资建议，仅作信息整理。';
+
       // 从 localStorage 读取配置
+      const savedProvider = localStorage.getItem('ashare_ai_provider');
+      if (savedProvider) aiProvider.value = savedProvider;
       const savedKey = localStorage.getItem('ashare_ai_key');
       if (savedKey) aiKey.value = savedKey;
       const savedProxy = localStorage.getItem('ashare_ai_proxy');
       if (savedProxy) aiProxy.value = savedProxy;
+      const savedKimiKey = localStorage.getItem('ashare_kimi_key');
+      if (savedKimiKey) kimiKey.value = savedKimiKey;
+
+      function updateSettingsVisibility() {
+        if (aiProvider.value === 'kimi') {
+          claudeSettings.style.display = 'none';
+          kimiSettings.style.display = 'block';
+        } else {
+          claudeSettings.style.display = 'block';
+          kimiSettings.style.display = 'none';
+        }
+      }
+      updateSettingsVisibility();
+      aiProvider.addEventListener('change', updateSettingsVisibility);
 
       function toggleChat() {
         aiChat.classList.toggle('open');
@@ -2243,30 +2280,15 @@
           return `- ${d.code} ${d.name}（${d.board}，${d.industry}）${fin ? `${latestYear}营收 ${formatMoney(fin.revenue)}` : '营收未披露'}，主营：${d.main_business || '未披露'}`;
         }).join('\n');
 
-        return `当前共筛选出 ${total} 家 A 股上市企业。
-板块分布：${boardText}。
-${revenueText}
-主营业务样例（前15条）：
-${businessList.join('\n')}
-前10家企业详情：
-${top10}`;
+        return `当前共筛选出 ${total} 家 A 股上市企业。\n板块分布：${boardText}。\n${revenueText}\n主营业务样例（前15条）：\n${businessList.join('\n')}\n前10家企业详情：\n${top10}`;
       }
 
       async function sendMessage() {
         const text = aiInput.value.trim();
         if (!text) return;
 
-        const apiKey = aiKey.value.trim();
-        const proxyUrl = aiProxy.value.trim();
-
-        // 保存配置
-        if (apiKey) localStorage.setItem('ashare_ai_key', apiKey);
-        if (proxyUrl) localStorage.setItem('ashare_ai_proxy', proxyUrl);
-
-        if (!proxyUrl && !apiKey) {
-          addMessage('请填写 AI 代理服务地址，或输入 Claude API Key。', 'error');
-          return;
-        }
+        const provider = aiProvider.value;
+        localStorage.setItem('ashare_ai_provider', provider);
 
         addMessage(text, 'user');
         aiInput.value = '';
@@ -2275,45 +2297,99 @@ ${top10}`;
         addMessage('正在思考…', 'bot');
         const thinkingMsg = aiMessages.lastElementChild;
 
-        const payload = {
-          model: 'claude-sonnet-5',
-          max_tokens: 1024,
-          system: '你是 A 股投资分析助手。请基于用户提供的筛选企业数据回答问题，回答要简洁、专业、有数据支撑。不要给出投资建议，仅作信息整理。',
-          messages: [
-            { role: 'user', content: `以下是我当前筛选出的企业数据：\n${context}\n\n用户问题：${text}` }
-          ],
-        };
-
         try {
           let res;
-          if (proxyUrl) {
-            res = await fetch(proxyUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload),
-            });
-          } else {
-            res = await fetch('https://api.anthropic.com/v1/messages', {
+          let reply = '';
+
+          if (provider === 'kimi') {
+            const kimiApiKey = kimiKey.value.trim();
+            if (!kimiApiKey) {
+              addMessage('请输入 Kimi API Key。', 'error');
+              thinkingMsg.remove();
+              return;
+            }
+            localStorage.setItem('ashare_kimi_key', kimiApiKey);
+
+            const payload = {
+              model: 'moonshot-v1-32k',
+              temperature: 0.7,
+              messages: [
+                { role: 'system', content: SYSTEM_PROMPT },
+                { role: 'user', content: `以下是我当前筛选出的企业数据：\n${context}\n\n用户问题：${text}` }
+              ],
+            };
+
+            res = await fetch('https://api.moonshot.cn/v1/chat/completions', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'x-api-key': apiKey,
-                'anthropic-version': '2023-06-01',
+                'Authorization': `Bearer ${kimiApiKey}`,
               },
               body: JSON.stringify(payload),
             });
+
+            thinkingMsg.remove();
+
+            if (!res.ok) {
+              const err = await res.json().catch(() => ({}));
+              addMessage(`请求失败：${err.error?.message || res.statusText}`, 'error');
+              return;
+            }
+
+            const json = await res.json();
+            reply = json.choices?.[0]?.message?.content || '没有收到回复。';
+          } else {
+            const apiKey = aiKey.value.trim();
+            const proxyUrl = aiProxy.value.trim();
+
+            if (apiKey) localStorage.setItem('ashare_ai_key', apiKey);
+            if (proxyUrl) localStorage.setItem('ashare_ai_proxy', proxyUrl);
+
+            if (!proxyUrl && !apiKey) {
+              addMessage('请填写 AI 代理服务地址，或输入 Claude API Key。', 'error');
+              thinkingMsg.remove();
+              return;
+            }
+
+            const payload = {
+              model: 'claude-sonnet-5',
+              max_tokens: 1024,
+              system: SYSTEM_PROMPT,
+              messages: [
+                { role: 'user', content: `以下是我当前筛选出的企业数据：\n${context}\n\n用户问题：${text}` }
+              ],
+            };
+
+            if (proxyUrl) {
+              res = await fetch(proxyUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+              });
+            } else {
+              res = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-api-key': apiKey,
+                  'anthropic-version': '2023-06-01',
+                },
+                body: JSON.stringify(payload),
+              });
+            }
+
+            thinkingMsg.remove();
+
+            if (!res.ok) {
+              const err = await res.json().catch(() => ({}));
+              addMessage(`请求失败：${err.error?.message || res.statusText}`, 'error');
+              return;
+            }
+
+            const json = await res.json();
+            reply = json.content?.[0]?.text || '没有收到回复。';
           }
 
-          thinkingMsg.remove();
-
-          if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            addMessage(`请求失败：${err.error?.message || res.statusText}`, 'error');
-            return;
-          }
-
-          const json = await res.json();
-          const reply = json.content?.[0]?.text || '没有收到回复。';
           addMessage(reply, 'bot');
         } catch (err) {
           thinkingMsg.remove();
