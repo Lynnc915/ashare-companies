@@ -2332,7 +2332,10 @@
 
             if (!res.ok) {
               const err = await res.json().catch(() => ({}));
-              addMessage(`请求失败：${err.error?.message || res.statusText}`, 'error');
+              const errMsg = err.error?.message || res.statusText;
+              const errType = err.error?.type ? `（类型：${err.error.type}）` : '';
+              const errCode = err.error?.code ? `（代码：${err.error.code}）` : '';
+              addMessage(`请求失败：${errMsg}${errType}${errCode}`, 'error');
               return;
             }
 
@@ -2382,7 +2385,10 @@
 
             if (!res.ok) {
               const err = await res.json().catch(() => ({}));
-              addMessage(`请求失败：${err.error?.message || res.statusText}`, 'error');
+              const errMsg = err.error?.message || res.statusText;
+              const errType = err.error?.type ? `（类型：${err.error.type}）` : '';
+              const errCode = err.error?.code ? `（代码：${err.error.code}）` : '';
+              addMessage(`请求失败：${errMsg}${errType}${errCode}`, 'error');
               return;
             }
 
