@@ -1126,7 +1126,6 @@
       <input type="text" id="searchCode" placeholder="股票代码" />
       <input type="text" id="searchName" placeholder="企业名称" />
       <input type="text" id="searchIndustry" placeholder="所属行业" />
-      <input type="text" id="searchSponsor" placeholder="保荐机构" />
       <select id="filterBoard">
         <option value="">全部板块</option>
       </select>
@@ -1340,7 +1339,7 @@
     });
 
     function bindEvents() {
-      ['searchCode', 'searchName', 'searchIndustry', 'searchSponsor', 'filterBoard', 'dateFrom', 'dateTo'].forEach(id => {
+      ['searchCode', 'searchName', 'searchIndustry', 'filterBoard', 'dateFrom', 'dateTo'].forEach(id => {
         document.getElementById(id).addEventListener('input', applyFilters);
       });
 
@@ -1420,7 +1419,6 @@
       const code = document.getElementById('searchCode').value.trim().toLowerCase();
       const name = document.getElementById('searchName').value.trim().toLowerCase();
       const industry = document.getElementById('searchIndustry').value.trim().toLowerCase();
-      const sponsor = document.getElementById('searchSponsor').value.trim().toLowerCase();
       const board = document.getElementById('filterBoard').value;
       const dateFrom = document.getElementById('dateFrom').value;
       const dateTo = document.getElementById('dateTo').value;
@@ -1429,7 +1427,6 @@
         if (code && !String(item.code).toLowerCase().includes(code)) return false;
         if (name && !String(item.name).toLowerCase().includes(name)) return false;
         if (industry && !String(item.industry || '').toLowerCase().includes(industry)) return false;
-        if (sponsor && !String(item.sponsor || '').toLowerCase().includes(sponsor)) return false;
         if (board && item.board !== board) return false;
         if (dateFrom && item.list_date && item.list_date < dateFrom) return false;
         if (dateTo && item.list_date && item.list_date > dateTo) return false;
@@ -1460,7 +1457,6 @@
         { key: 'code', id: 'searchCode' },
         { key: 'name', id: 'searchName' },
         { key: 'industry', id: 'searchIndustry' },
-        { key: 'sponsor', id: 'searchSponsor' },
         { key: 'board', id: 'filterBoard' },
         { key: 'from', id: 'dateFrom' },
         { key: 'to', id: 'dateTo' },
@@ -1480,7 +1476,6 @@
         code: 'searchCode',
         name: 'searchName',
         industry: 'searchIndustry',
-        sponsor: 'searchSponsor',
         board: 'filterBoard',
         from: 'dateFrom',
         to: 'dateTo',
