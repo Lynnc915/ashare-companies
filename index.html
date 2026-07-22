@@ -830,6 +830,37 @@
     .error { color: #dc2626; }
     .success { color: var(--success); }
 
+    /* 骨架屏加载 */
+    .skeleton-wrap {
+      padding: 1rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      animation: skeleton-fade 1.6s infinite;
+    }
+    .skeleton-row {
+      display: grid;
+      grid-template-columns: 1.2fr 2fr 1fr 1fr 1.5fr 1fr 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+    .skeleton-cell {
+      height: 1.25rem;
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      border-radius: 0.3rem;
+      animation: skeleton-shimmer 1.6s infinite linear;
+    }
+    .skeleton-cell.short { width: 60%; }
+    @keyframes skeleton-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    @keyframes skeleton-fade {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+
     /* AI 助手浮窗 */
     .ai-float {
       position: fixed;
@@ -1095,12 +1126,14 @@
       <input type="text" id="searchCode" placeholder="股票代码" />
       <input type="text" id="searchName" placeholder="企业名称" />
       <input type="text" id="searchIndustry" placeholder="所属行业" />
+      <input type="text" id="searchSponsor" placeholder="保荐机构" />
       <select id="filterBoard">
         <option value="">全部板块</option>
       </select>
       <input type="date" id="dateFrom" placeholder="上市日期起" />
       <input type="date" id="dateTo" placeholder="上市日期止" />
       <div class="spacer"></div>
+      <button class="btn" id="exportBtn" title="导出当前筛选结果">📥 导出</button>
       <button class="btn btn-primary" id="refreshBtn">🔄 刷新数据</button>
     </div>
 
@@ -1294,6 +1327,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       try {
         bindEvents();
+        restoreFiltersFromURL();
         loadData();
       } catch (err) {
         console.error('初始化失败:', err);
@@ -1306,7 +1340,7 @@
     });
 
     function bindEvents() {
-      ['searchCode', 'searchName', 'searchIndustry', 'filterBoard', 'dateFrom', 'dateTo'].forEach(id => {
+      ['searchCode', 'searchName', 'searchIndustry', 'searchSponsor', 'filterBoard', 'dateFrom', 'dateTo'].forEach(id => {
         document.getElementById(id).addEventListener('input', applyFilters);
       });
 
@@ -1319,10 +1353,12 @@
       document.getElementById('refreshBtn').addEventListener('click', () => {
         loadData(true);
       });
+
+      document.getElementById('exportBtn').addEventListener('click', exportCSV);
     }
 
     async function loadData(force = false) {
-      contentEl.innerHTML = '<div class="loading">正在加载数据，请稍候…</div>';
+      contentEl.innerHTML = renderSkeleton();
       try {
         const suffix = force ? '?_=' + Date.now() : '';
         const [listedRes, ipoRes] = await Promise.all([
@@ -1384,6 +1420,7 @@
       const code = document.getElementById('searchCode').value.trim().toLowerCase();
       const name = document.getElementById('searchName').value.trim().toLowerCase();
       const industry = document.getElementById('searchIndustry').value.trim().toLowerCase();
+      const sponsor = document.getElementById('searchSponsor').value.trim().toLowerCase();
       const board = document.getElementById('filterBoard').value;
       const dateFrom = document.getElementById('dateFrom').value;
       const dateTo = document.getElementById('dateTo').value;
@@ -1392,6 +1429,7 @@
         if (code && !String(item.code).toLowerCase().includes(code)) return false;
         if (name && !String(item.name).toLowerCase().includes(name)) return false;
         if (industry && !String(item.industry || '').toLowerCase().includes(industry)) return false;
+        if (sponsor && !String(item.sponsor || '').toLowerCase().includes(sponsor)) return false;
         if (board && item.board !== board) return false;
         if (dateFrom && item.list_date && item.list_date < dateFrom) return false;
         if (dateTo && item.list_date && item.list_date > dateTo) return false;
@@ -1413,6 +1451,45 @@
       renderBoardOverview();
       render();
       renderIPOAcceptedTable();
+      updateFilterURL();
+    }
+
+    function updateFilterURL() {
+      const params = new URLSearchParams();
+      const fields = [
+        { key: 'code', id: 'searchCode' },
+        { key: 'name', id: 'searchName' },
+        { key: 'industry', id: 'searchIndustry' },
+        { key: 'sponsor', id: 'searchSponsor' },
+        { key: 'board', id: 'filterBoard' },
+        { key: 'from', id: 'dateFrom' },
+        { key: 'to', id: 'dateTo' },
+      ];
+      fields.forEach(({ key, id }) => {
+        const value = document.getElementById(id).value.trim();
+        if (value) params.set(key, value);
+      });
+
+      const newUrl = params.toString() ? '?' + params.toString() : window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+    }
+
+    function restoreFiltersFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const mapping = {
+        code: 'searchCode',
+        name: 'searchName',
+        industry: 'searchIndustry',
+        sponsor: 'searchSponsor',
+        board: 'filterBoard',
+        from: 'dateFrom',
+        to: 'dateTo',
+      };
+      Object.entries(mapping).forEach(([param, id]) => {
+        if (params.has(param)) {
+          document.getElementById(id).value = params.get(param);
+        }
+      });
     }
 
     function median(arr) {
@@ -2217,6 +2294,72 @@
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+    }
+
+    function renderSkeleton() {
+      return `
+        <div class="skeleton-wrap" role="status" aria-label="正在加载数据">
+          ${Array.from({ length: 8 }).map(() => `
+            <div class="skeleton-row">
+              <div class="skeleton-cell short"></div>
+              <div class="skeleton-cell"></div>
+              <div class="skeleton-cell"></div>
+              <div class="skeleton-cell short"></div>
+              <div class="skeleton-cell"></div>
+              <div class="skeleton-cell short"></div>
+              <div class="skeleton-cell short"></div>
+            </div>
+          `).join('')}
+          <div style="text-align:center;color:var(--muted);font-size:0.9rem;margin-top:0.75rem;">正在加载数据，请稍候…</div>
+        </div>
+      `;
+    }
+
+    function exportCSV() {
+      const data = state.filteredData;
+      if (!data || data.length === 0) {
+        alert('当前没有可导出的数据，请先调整筛选条件。');
+        return;
+      }
+
+      const latestYear = state.years[state.years.length - 1];
+      const headers = ['股票代码', '企业名称', '上市日期', '板块', '所属行业', '保荐机构', `${latestYear}营收`, `${latestYear}净利润`];
+      const rows = data.map(item => {
+        const fin = (item.finance && item.finance[latestYear]) || {};
+        return [
+          item.code || '',
+          item.name || '',
+          item.list_date || '',
+          item.board || '',
+          item.industry || '',
+          item.sponsor || '',
+          fin.revenue != null ? fin.revenue : '',
+          fin.profit != null ? fin.profit : '',
+        ];
+      });
+
+      const csvContent = [headers, ...rows]
+        .map(cells =>
+          cells
+            .map(cell => {
+              const str = String(cell ?? '').replace(/"/g, '""');
+              if (/[",\n\r]/.test(str)) return `"${str}"`;
+              return str;
+            })
+            .join(',')
+        )
+        .join('\n');
+
+      const blob = new Blob(['﻿' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const timestamp = new Date().toISOString().slice(0, 10);
+      link.href = url;
+      link.download = `A股上市公司筛选结果_${timestamp}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     }
 
     function formatDateTime(iso) {
