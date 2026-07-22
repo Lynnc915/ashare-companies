@@ -1191,6 +1191,10 @@
       </div>
 
       <div id="kimiSettings" style="display: none;">
+        <label style="margin-top: 0.75rem; display: block;">Kimi Code 代理服务地址</label>
+        <input type="url" id="kimiProxy" placeholder="https://你的-kimi-proxy.workers.dev" />
+        <div style="margin-top: 0.35rem; font-size: 0.8rem;">GitHub Pages 直接调用 Kimi Code 会被浏览器拦截，需通过代理。代理只转发请求，不保存你的 Key。</div>
+
         <label style="margin-top: 0.75rem; display: block;">Kimi Code API Key</label>
         <input type="password" id="kimiKey" placeholder="sk-..." />
         <div style="margin-top: 0.35rem;">没有 Key？可前往 <a href="https://www.kimi.com/code" target="_blank" rel="noopener">Kimi Code</a> 页面获取。</div>
@@ -2195,6 +2199,7 @@
       const aiProvider = document.getElementById('aiProvider');
       const claudeSettings = document.getElementById('claudeSettings');
       const kimiSettings = document.getElementById('kimiSettings');
+      const kimiProxy = document.getElementById('kimiProxy');
       const kimiKey = document.getElementById('kimiKey');
       const aiSuggestions = document.getElementById('aiSuggestions');
 
@@ -2209,6 +2214,8 @@
       if (savedProxy) aiProxy.value = savedProxy;
       const savedKimiKey = localStorage.getItem('ashare_kimi_key');
       if (savedKimiKey) kimiKey.value = savedKimiKey;
+      const savedKimiProxy = localStorage.getItem('ashare_kimi_proxy');
+      if (savedKimiProxy) kimiProxy.value = savedKimiProxy;
 
       function updateSettingsVisibility() {
         if (aiProvider.value === 'kimi') {
@@ -2303,12 +2310,16 @@
 
           if (provider === 'kimi') {
             const kimiApiKey = kimiKey.value.trim();
+            const kimiProxyUrl = kimiProxy.value.trim();
+
+            if (kimiApiKey) localStorage.setItem('ashare_kimi_key', kimiApiKey);
+            if (kimiProxyUrl) localStorage.setItem('ashare_kimi_proxy', kimiProxyUrl);
+
             if (!kimiApiKey) {
-              addMessage('请输入 Kimi API Key。', 'error');
+              addMessage('请输入 Kimi Code API Key。', 'error');
               thinkingMsg.remove();
               return;
             }
-            localStorage.setItem('ashare_kimi_key', kimiApiKey);
 
             const payload = {
               model: 'moonshot-v1-32k',
@@ -2319,12 +2330,15 @@
               ],
             };
 
-            res = await fetch('https://api.kimi.com/coding/v1/chat/completions', {
+            const targetUrl = kimiProxyUrl || 'https://api.kimi.com/coding/v1/chat/completions';
+            const headers = {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${kimiApiKey}`,
+            };
+
+            res = await fetch(targetUrl, {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${kimiApiKey}`,
-              },
+              headers,
               body: JSON.stringify(payload),
             });
 
