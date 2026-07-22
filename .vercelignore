@@ -1,0 +1,7 @@
+*.py
+requirements.txt
+*.log
+.DS_Store
+.git
+.github
+node_modules
