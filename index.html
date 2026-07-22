@@ -2233,6 +2233,29 @@
         aiChat.classList.toggle('open');
       }
 
+      async function formatError(res) {
+        const statusInfo = `HTTP ${res.status} ${res.statusText}`;
+        const rawText = await res.text().catch(() => '');
+        let details = rawText;
+        try {
+          const errJson = JSON.parse(rawText);
+          const msg = errJson.error?.message || errJson.message || rawText;
+          const type = errJson.error?.type;
+          const code = errJson.error?.code;
+          details = msg;
+          if (type) details += `（类型：${type}）`;
+          if (code) details += `（代码：${code}）`;
+        } catch (e) {
+          // 不是 JSON，用原始文本
+        }
+        if (!details || details.trim() === '') {
+          details = statusInfo;
+        } else {
+          details = `${statusInfo}\n${details}`;
+        }
+        return details.length > 300 ? details.slice(0, 300) + '...' : details;
+      }
+
       aiToggle.addEventListener('click', toggleChat);
       aiClose.addEventListener('click', toggleChat);
 
@@ -2345,11 +2368,8 @@
             thinkingMsg.remove();
 
             if (!res.ok) {
-              const err = await res.json().catch(() => ({}));
-              const errMsg = err.error?.message || res.statusText;
-              const errType = err.error?.type ? `（类型：${err.error.type}）` : '';
-              const errCode = err.error?.code ? `（代码：${err.error.code}）` : '';
-              addMessage(`请求失败：${errMsg}${errType}${errCode}`, 'error');
+              const details = await formatError(res);
+              addMessage(`请求失败：\n${details}`, 'error');
               return;
             }
 
@@ -2398,11 +2418,8 @@
             thinkingMsg.remove();
 
             if (!res.ok) {
-              const err = await res.json().catch(() => ({}));
-              const errMsg = err.error?.message || res.statusText;
-              const errType = err.error?.type ? `（类型：${err.error.type}）` : '';
-              const errCode = err.error?.code ? `（代码：${err.error.code}）` : '';
-              addMessage(`请求失败：${errMsg}${errType}${errCode}`, 'error');
+              const details = await formatError(res);
+              addMessage(`请求失败：\n${details}`, 'error');
               return;
             }
 
