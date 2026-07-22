@@ -1193,7 +1193,7 @@
       <div id="kimiSettings" style="display: none;">
         <label style="margin-top: 0.75rem; display: block;">Kimi Code API Key</label>
         <input type="password" id="kimiKey" placeholder="sk-..." />
-        <div style="margin-top: 0.35rem;">没有 Key？可前往 <a href="https://platform.moonshot.cn/" target="_blank" rel="noopener">Moonshot 控制台</a> 申请。</div>
+        <div style="margin-top: 0.35rem;">没有 Key？可前往 <a href="https://www.kimi.com/code" target="_blank" rel="noopener">Kimi Code</a> 页面获取。</div>
       </div>
     </div>
   </div>
@@ -2319,7 +2319,7 @@
               ],
             };
 
-            res = await fetch('https://api.moonshot.cn/v1/chat/completions', {
+            res = await fetch('https://api.kimi.com/coding/v1/chat/completions', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
