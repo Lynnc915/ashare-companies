@@ -1921,6 +1921,19 @@
           return state.sortDesc ? db.localeCompare(da) : da.localeCompare(db);
         }
 
+        // 按财务数据数值比较（key 形如 finance_2025_revenue）
+        if (key.startsWith('finance_')) {
+          const parts = key.split('_');
+          const year = parts[1];
+          const field = parts[2];
+          const na = safeNum(getLatestFin(a, year)[field]);
+          const nb = safeNum(getLatestFin(b, year)[field]);
+          if (na === null && nb === null) return 0;
+          if (na === null) return state.sortDesc ? 1 : -1;
+          if (nb === null) return state.sortDesc ? -1 : 1;
+          return state.sortDesc ? nb - na : na - nb;
+        }
+
         // 按字符串比较
         const sa = String(va).toLowerCase();
         const sb = String(vb).toLowerCase();
@@ -1973,8 +1986,8 @@
         { key: 'list_date', label: '上市日期' },
         { key: 'board', label: '板块' },
         { key: 'industry', label: '所属行业' },
-        { key: `finance_${latestYear}_revenue`, label: `${latestYear}营收`, sortable: false },
-        { key: `finance_${latestYear}_profit`, label: `${latestYear}净利润`, sortable: false },
+        { key: `finance_${latestYear}_revenue`, label: `${latestYear}营收` },
+        { key: `finance_${latestYear}_profit`, label: `${latestYear}净利润` },
       ];
 
       let html = '<table><thead><tr>';
