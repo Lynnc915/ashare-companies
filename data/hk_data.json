@@ -1,0 +1,53 @@
+{
+  "update_time": "2026-07-24T10:00:00+08:00",
+  "count": 4,
+  "source_name": "东方财富 / akshare / HKEX",
+  "source_url": "https://www.hkex.com.hk",
+  "years": [],
+  "data": [
+    {
+      "code": "00700",
+      "name": "腾讯控股",
+      "name_en": "TENCENT HOLDINGS LIMITED",
+      "list_date": "2004-06-16",
+      "board": "主板",
+      "industry": "软件服务",
+      "main_business": "腾讯控股是一家主要提供增值服务（VAS）及网络广告服务的投资控股公司。",
+      "market_cap": 3654200000000,
+      "market_cap_currency": "HKD"
+    },
+    {
+      "code": "09999",
+      "name": "网易-S",
+      "name_en": "NETEASE, INC.",
+      "list_date": "2020-06-11",
+      "board": "主板",
+      "industry": "软件服务",
+      "main_business": "网易是一家互联网技术公司，提供在线游戏、电子邮件、电子商务等服务。",
+      "market_cap": 450000000000,
+      "market_cap_currency": "HKD"
+    },
+    {
+      "code": "01810",
+      "name": "小米集团-W",
+      "name_en": "Xiaomi Corporation",
+      "list_date": "2018-07-09",
+      "board": "主板",
+      "industry": "资讯科技器材",
+      "main_business": "小米集团是一家以手机、智能硬件和IoT平台为核心的互联网公司。",
+      "market_cap": 680000000000,
+      "market_cap_currency": "HKD"
+    },
+    {
+      "code": "08296",
+      "name": "国电科环",
+      "name_en": "GUODIAN TECHNOLOGY & ENVIRONMENT GROUP CORPORATION LIMITED",
+      "list_date": "2011-12-30",
+      "board": "创业板",
+      "industry": "工业工程",
+      "main_business": "国电科技环保集团股份有限公司主要从事环保及节能业务。",
+      "market_cap": 2500000000,
+      "market_cap_currency": "HKD"
+    }
+  ]
+}

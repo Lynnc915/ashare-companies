@@ -1,6 +1,8 @@
-# A股上市企业信息查询网页
+# A股 / 港股通上市企业信息查询网页
 
-一个纯前端静态网页，用于查看 **2022 年至今 A 股上市企业详细信息**，支持：
+一个纯前端静态网页，用于查看 **2022 年至今 A 股上市企业** 及 **港股通成分股** 详细信息。
+
+## A股功能
 
 - 按股票代码、企业名称、所属行业搜索
 - 按**细分板块**筛选（沪市主板、科创板、深市主板、创业板、北交所等）
@@ -10,15 +12,25 @@
 - 选择板块/时间范围后，页面顶部显示**同期获得受理的 IPO 企业**（来源：东方财富 IPO 数据中心）
 - 点击表头排序、分页浏览
 
+## 港股通功能
+
+- 独立的 `hk.html` 页面，不混入 A 股数据
+- 展示港股通成分股：股票代码、企业名称、上市日期、板块（主板/创业板）、行业、市值
+- 点击展开详情查看主营业务、HKEX 行情链接、HKEXnews 公告链接
+- 支持搜索、筛选、排序、分页
+
 ## 项目结构
 
 ```
 ashare-companies/
-├── index.html          # 前端网页
-├── update_data.py      # 数据抓取脚本
+├── index.html          # A 股前端网页
+├── hk.html             # 港股通前端网页
+├── update_data.py      # A 股数据抓取脚本
+├── update_hk_data.py   # 港股通数据抓取脚本
 ├── data/
-│   ├── data.json       # 生成的上市企业数据
-│   └── ipo_accepted.json  # 生成的 IPO 获得受理企业数据
+│   ├── data.json       # A 股上市企业数据
+│   ├── ipo_accepted.json  # IPO 获得受理企业数据
+│   └── hk_data.json    # 港股通企业数据
 ├── requirements.txt    # Python 依赖
 └── README.md           # 本文件
 ```
@@ -62,6 +74,20 @@ python3 update_data.py --since 2023-01-01
 python3 update_data.py --no-finance
 ```
 
+### 2.1 生成港股通数据
+
+```bash
+python3 update_hk_data.py
+```
+
+> 抓取约 500 只港股通成分股，每只股票需调用两次 akshare 接口补充上市日期、行业、主营业务等信息，首次运行可能需要 **5–10 分钟**。
+
+测试时仅抓取前 10 条：
+
+```bash
+python3 update_hk_data.py --limit 10
+```
+
 ### 3. 打开网页
 
 由于浏览器安全策略，建议通过本地 HTTP 服务器打开：
@@ -73,10 +99,11 @@ python3 -m http.server 8080
 然后浏览器访问：
 
 ```text
-http://localhost:8080
+http://localhost:8080          # A 股
+http://localhost:8080/hk.html  # 港股通
 ```
 
-**不要**直接双击 `index.html` 文件打开，否则浏览器会因安全限制无法读取 `data.json`。
+**不要**直接双击 `index.html` 或 `hk.html` 文件打开，否则浏览器会因安全限制无法读取 JSON 数据。
 
 ## 网页功能说明
 

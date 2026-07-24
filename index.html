@@ -40,6 +40,34 @@
     header h1 { margin: 0 0 0.5rem; font-size: 1.75rem; }
     header p { margin: 0; opacity: 0.9; }
 
+    .market-nav {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    .market-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      margin: 0 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.4rem;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .market-nav a:hover {
+      color: var(--primary);
+      background: var(--hover);
+    }
+
+    .market-nav a.active {
+      color: var(--primary);
+      font-weight: 600;
+      background: #eff6ff;
+    }
+
     .container {
       max-width: 1400px;
       margin: 0 auto;
@@ -1156,6 +1184,11 @@
     <h1>A股上市企业信息查询</h1>
     <p>2022年至今 · 报告期+最新年度财务数据 · 板块细分 · 巨潮官网+招股说明书链接</p>
   </header>
+
+  <div class="market-nav">
+    <a href="index.html" class="active">A股</a>
+    <a href="hk.html">港股通</a>
+  </div>
 
   <noscript>
     <div style="background: #fee2e2; color: #991b1b; padding: 1rem; text-align: center; border-bottom: 1px solid #fecaca;">
