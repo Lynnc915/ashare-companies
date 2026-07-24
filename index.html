@@ -478,6 +478,13 @@
       border-radius: 999px;
       font-size: 0.78rem;
       color: var(--text);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .industry-company-tag:hover {
+      background: #dbeafe;
+      border-color: #bfdbfe;
     }
 
     .industry-detail-grid {
@@ -1680,7 +1687,7 @@
         const recent = sortedByDate[0] || null;
 
         const companyTags = items.slice(0, 8).map(item =>
-          `<span class="industry-company-tag" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</span>`
+          `<span class="industry-company-tag" title="${escapeHtml(item.name)}" onclick="filterByCompanyName(decodeURIComponent('${encodeURIComponent(item.name)}')); event.stopPropagation();">${escapeHtml(item.name)}</span>`
         ).join('');
         const more = items.length > 8 ? `<span class="industry-company-tag" style="background:#f1f5f9;border-color:#e2e8f0;color:var(--muted);">等 ${items.length - 8} 家</span>` : '';
 
@@ -2330,6 +2337,16 @@
       }
     }
 
+    function filterByCompanyName(name) {
+      const input = document.getElementById('searchName');
+      if (!input || !name) return;
+      input.value = name;
+      applyFilters();
+      // 滾動到企業列表區域
+      const header = document.getElementById('listedHeader');
+      if (header) header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
     // 暴露给 HTML 内联事件使用
     window.setSort = setSort;
     window.goPage = goPage;
@@ -2339,6 +2356,7 @@
     window.toggleIPORow = toggleIPORow;
     window.toggleIndustryBlock = toggleIndustryBlock;
     window.toggleSection = toggleSection;
+    window.filterByCompanyName = filterByCompanyName;
 
     // ================== AI 助手 ==================
     (function initAI() {
