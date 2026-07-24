@@ -318,18 +318,18 @@
     }
 
     .industry-chart-label {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       fill: var(--text);
     }
 
     .industry-chart-value {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       fill: var(--muted);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
     .industry-chart-header {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 600;
       fill: var(--text);
     }
@@ -1791,14 +1791,14 @@
 
       const maxCount = top10[0][1];
       const total = data.length;
-      const rowHeight = 26;
-      const labelWidth = 140;
-      const barAreaWidth = 280;
-      const valueWidth = 56;
+      const rowHeight = 22;
+      const labelWidth = 130;
+      const barAreaWidth = 240;
+      const valueWidth = 50;
       const chartWidth = labelWidth + barAreaWidth + valueWidth;
-      const chartHeight = top10.length * rowHeight + 24;
-      const barHeight = 14;
-      const barMaxWidth = barAreaWidth - 20;
+      const chartHeight = top10.length * rowHeight + 22;
+      const barHeight = 12;
+      const barMaxWidth = barAreaWidth - 16;
 
       let svg = `
         <svg class="industry-chart" viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">
