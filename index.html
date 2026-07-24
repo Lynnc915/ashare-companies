@@ -318,14 +318,20 @@
     }
 
     .industry-chart-label {
-      font-size: 12px;
+      font-size: 0.85rem;
       fill: var(--text);
     }
 
     .industry-chart-value {
-      font-size: 12px;
+      font-size: 0.85rem;
       fill: var(--muted);
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .industry-chart-header {
+      font-size: 0.85rem;
+      font-weight: 600;
+      fill: var(--text);
     }
 
     .industry-chart-axis {
@@ -1785,33 +1791,33 @@
 
       const maxCount = top10[0][1];
       const total = data.length;
-      const rowHeight = 32;
-      const labelWidth = 160;
-      const barAreaWidth = 360;
-      const valueWidth = 70;
+      const rowHeight = 26;
+      const labelWidth = 140;
+      const barAreaWidth = 280;
+      const valueWidth = 56;
       const chartWidth = labelWidth + barAreaWidth + valueWidth;
       const chartHeight = top10.length * rowHeight + 24;
-      const barHeight = 18;
-      const barMaxWidth = barAreaWidth - 24;
+      const barHeight = 14;
+      const barMaxWidth = barAreaWidth - 20;
 
       let svg = `
         <svg class="industry-chart" viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">
-          <text x="0" y="16" class="industry-chart-label" style="font-weight: 600;">行業</text>
-          <text x="${labelWidth + barMaxWidth + 8}" y="16" class="industry-chart-value" style="font-weight: 600;">家數</text>
+          <text x="0" y="14" class="industry-chart-header">行業</text>
+          <text x="${labelWidth + barMaxWidth + 6}" y="14" class="industry-chart-header">家數</text>
       `;
 
       top10.forEach(([industry, count], idx) => {
-        const y = 28 + idx * rowHeight;
+        const y = 24 + idx * rowHeight;
         const barWidth = maxCount > 0 ? (count / maxCount) * barMaxWidth : 0;
         const pct = total > 0 ? ((count / total) * 100).toFixed(1) + '%' : '0%';
 
         svg += `
           <g class="industry-chart-row" data-industry="${escapeHtml(industry)}" data-count="${count}" data-pct="${pct}">
-            <rect class="industry-chart-row-bg" x="0" y="${y - 6}" width="${chartWidth}" height="${rowHeight - 4}" />
-            <text x="${labelWidth - 8}" y="${y + barHeight / 2 + 4}" class="industry-chart-label" text-anchor="end">${escapeHtml(industry)}</text>
-            <rect class="industry-chart-bar" x="${labelWidth}" y="${y}" width="${barWidth}" height="${barHeight}" rx="4" fill="var(--primary)" />
-            <text x="${labelWidth + barWidth + 8}" y="${y + barHeight / 2 + 4}" class="industry-chart-value">${count}</text>
-            <text x="${labelWidth + barMaxWidth + 48}" y="${y + barHeight / 2 + 4}" class="industry-chart-value">${pct}</text>
+            <rect class="industry-chart-row-bg" x="0" y="${y - 4}" width="${chartWidth}" height="${rowHeight - 4}" />
+            <text x="${labelWidth - 6}" y="${y + barHeight / 2 + 4}" class="industry-chart-label" text-anchor="end">${escapeHtml(industry)}</text>
+            <rect class="industry-chart-bar" x="${labelWidth}" y="${y}" width="${barWidth}" height="${barHeight}" rx="3" fill="var(--primary)" />
+            <text x="${labelWidth + barWidth + 6}" y="${y + barHeight / 2 + 4}" class="industry-chart-value">${count}</text>
+            <text x="${labelWidth + barMaxWidth + 40}" y="${y + barHeight / 2 + 4}" class="industry-chart-value">${pct}</text>
           </g>
         `;
       });
