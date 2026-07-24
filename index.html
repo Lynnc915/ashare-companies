@@ -1132,7 +1132,6 @@
       <input type="date" id="dateFrom" placeholder="上市日期起" />
       <input type="date" id="dateTo" placeholder="上市日期止" />
       <div class="spacer"></div>
-      <button class="btn" id="exportBtn" title="导出当前筛选结果">📥 导出</button>
       <button class="btn btn-primary" id="refreshBtn">🔄 刷新数据</button>
     </div>
 
@@ -1352,8 +1351,6 @@
       document.getElementById('refreshBtn').addEventListener('click', () => {
         loadData(true);
       });
-
-      document.getElementById('exportBtn').addEventListener('click', exportCSV);
     }
 
     async function loadData(force = false) {
@@ -2321,69 +2318,6 @@
           <div style="text-align:center;color:var(--muted);font-size:0.9rem;margin-top:0.75rem;">正在加载数据，请稍候…</div>
         </div>
       `;
-    }
-
-    function exportCSV() {
-      try {
-        const data = state.filteredData;
-        if (!data || data.length === 0) {
-          alert('当前没有可导出的数据，请先调整筛选条件。');
-          return;
-        }
-
-        const latestYear = state.years[state.years.length - 1];
-        const headers = ['股票代码', '企业名称', '上市日期', '板块', '所属行业', '保荐机构', `${latestYear}营收`, `${latestYear}净利润`];
-        const rows = data.map(item => {
-          const fin = (item.finance && item.finance[latestYear]) || {};
-          return [
-            item.code || '',
-            item.name || '',
-            item.list_date || '',
-            item.board || '',
-            item.industry || '',
-            item.sponsor || '',
-            fin.revenue != null ? fin.revenue : '',
-            fin.profit != null ? fin.profit : '',
-          ];
-        });
-
-        const csvContent = [headers, ...rows]
-          .map(cells =>
-            cells
-              .map(cell => {
-                const str = String(cell ?? '').replace(/"/g, '""');
-                if (/[",\n\r]/.test(str)) return `"${str}"`;
-                return str;
-              })
-              .join(',')
-          )
-          .join('\n');
-
-        const blob = new Blob(['﻿' + csvContent], { type: 'text/csv;charset=utf-8;' });
-        const timestamp = new Date().toISOString().slice(0, 10);
-
-        if (navigator.msSaveOrOpenBlob) {
-          navigator.msSaveOrOpenBlob(blob, `ashare_filtered_results_${timestamp}.csv`);
-          return;
-        }
-
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `ashare_filtered_results_${timestamp}.csv`;
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-
-        // 部分浏览器需要延迟清理
-        setTimeout(() => {
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        }, 100);
-      } catch (err) {
-        console.error('导出 CSV 失败:', err);
-        alert('导出失败：' + err.message);
-      }
     }
 
     function formatDateTime(iso) {
