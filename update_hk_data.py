@@ -176,7 +176,7 @@ def main():
             "name": row["name"],
             "name_en": None,
             "list_date": row["list_date"],
-            "board": "主板",
+            "board": "创业板" if str(row["code"]).startswith("08") else "主板",
             "industry": row["industry"] if row["industry"] and row["industry"] != "-" else "-",
             "main_business": "-",
             "market_cap": float(row["market_cap"]) if pd.notna(row["market_cap"]) else None,
