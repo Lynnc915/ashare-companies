@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import functools
 import json
 import re
@@ -138,6 +139,58 @@ def fetch_base_list() -> pd.DataFrame:
     return df[["code", "name", "market_cap", "list_date", "industry"]]
 
 
+@retry(max_attempts=3, base_delay=2.0)
+def fetch_financial_data(code: str) -> dict[str, dict[str, float | None]]:
+    """通過東方財富數據中心獲取港股年度營收/淨利潤。"""
+    url = "https://datacenter.eastmoney.com/api/data/v1/get"
+    params = {
+        "reportName": "RPT_HKF10_FN_GMAININDICATOR",
+        "columns": "ALL",
+        "filter": f'(SECUCODE="{code}.HK")',
+        "pageNumber": 1,
+        "pageSize": 12,
+        "sortColumns": "REPORT_DATE",
+        "sortTypes": "-1",
+    }
+    res = requests.get(url, params=params, timeout=20)
+    res.raise_for_status()
+    payload = res.json()
+    items = payload.get("result", {}).get("data", [])
+
+    finance: dict[str, dict[str, float | None]] = {}
+    for item in items:
+        report_date = str(item.get("REPORT_DATE", ""))[:10]
+        date_type = str(item.get("DATE_TYPE", ""))
+        if not report_date:
+            continue
+        # 只取年報數據（DATE_TYPE 為年報，或報告期為 12-31）
+        if date_type != "年报" and not report_date.endswith("12-31"):
+            continue
+        year = report_date[:4]
+        revenue = item.get("OPERATE_INCOME")
+        profit = item.get("HOLDER_PROFIT")
+        if revenue is None and profit is None:
+            continue
+        finance[year] = {
+            "revenue": float(revenue) if revenue is not None else None,
+            "profit": float(profit) if profit is not None else None,
+        }
+    return finance
+
+
+def enrich_finance(record: dict[str, Any]) -> dict[str, Any]:
+    """為單條記錄補充財務數據。"""
+    code = record["code"]
+    try:
+        finance = fetch_financial_data(code)
+        record["finance"] = finance
+    except Exception as e:
+        print(f"[WARN] {code} 財務數據獲取失敗: {e}", file=sys.stderr)
+        record["finance"] = {}
+    sleep(0.15)
+    return record
+
+
 def main():
     parser = argparse.ArgumentParser(description="抓取香港新上市企業數據")
     parser.add_argument(
@@ -190,14 +243,34 @@ def main():
     if args.limit:
         records = records[:args.limit]
 
+    # 補充年度財務數據
+    print("[*] 正在補充財務數據...")
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+        future_to_code = {executor.submit(enrich_finance, r): r["code"] for r in records}
+        for i, future in enumerate(concurrent.futures.as_completed(future_to_code), 1):
+            code = future_to_code[future]
+            try:
+                future.result()
+            except Exception as e:
+                print(f"[WARN] {code} 財務數據處理失敗: {e}", file=sys.stderr)
+            if i % 20 == 0 or i == len(records):
+                print(f"  財務進度 {i}/{len(records)}")
+
     records.sort(key=lambda r: r["code"])
+
+    # 收集所有財務年份
+    years = sorted({
+        year
+        for r in records
+        for year in (r.get("finance") or {}).keys()
+    })
 
     payload = {
         "update_time": datetime.now(timezone.utc).astimezone().isoformat(),
         "count": len(records),
         "source_name": "东方财富 / akshare / HKEX",
         "source_url": "https://www.hkex.com.hk",
-        "years": [],
+        "years": years,
         "data": records,
     }
 
