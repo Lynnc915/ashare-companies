@@ -507,6 +507,28 @@
     .info-row span:first-child { color: var(--muted); }
     .info-row span:last-child { font-weight: 500; }
 
+    .finance-table {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      font-size: 0.9rem;
+    }
+    .finance-row {
+      display: grid;
+      grid-template-columns: 0.8fr 1.1fr 1.1fr;
+      gap: 0.75rem;
+      padding: 0.35rem 0;
+      border-bottom: 1px dashed var(--border);
+    }
+    .finance-row:last-child { border-bottom: none; }
+    .finance-header {
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .finance-row span { white-space: nowrap; }
+
     .detail-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
     .detail-actions .hint { color: var(--muted); font-size: 0.85rem; }
 
@@ -1045,6 +1067,7 @@
         const payload = await res.json();
         state.allData = payload.data || [];
         state.updateTime = payload.update_time || '未知';
+        state.years = payload.years || [];
         state.expanded.clear();
         populateBoardFilter();
         applyFilters();
@@ -1466,6 +1489,29 @@
       const hkexUrl = `https://www.hkex.com.hk/Market-Data/Securities-Prices/Equities/Equities-Quote?sym=${encodeURIComponent(parseInt(item.code, 10))}&sc_lang=zh-hk`;
       const hkexnewsUrl = `https://www1.hkexnews.hk/search/titlesearch.xhtml?stkcode=${encodeURIComponent(item.code)}`;
 
+      const finance = item.finance || {};
+      const financeYears = Object.keys(finance).sort((a, b) => b.localeCompare(a));
+      let financeHtml = '<p style="margin:0;color:var(--muted);">暂无年度财务数据</p>';
+      if (financeYears.length > 0) {
+        financeHtml = `
+          <div class="finance-table">
+            <div class="finance-row finance-header">
+              <span>年度</span>
+              <span>营业收入</span>
+              <span>净利润</span>
+            </div>
+            ${financeYears.map(year => `
+              <div class="finance-row">
+                <span>${escapeHtml(year)}</span>
+                <span>${formatFinanceValue(finance[year].revenue)}</span>
+                <span>${formatFinanceValue(finance[year].profit)}</span>
+              </div>
+            `).join('')}
+          </div>
+          <p style="margin:0.5rem 0 0;font-size:0.8rem;color:var(--muted);">数据来源：东方财富（人民币）</p>
+        `;
+      }
+
       return `
         <div class="detail-grid">
           <div class="info-card">
@@ -1479,6 +1525,10 @@
           <div class="info-card">
             <h4>主营业务</h4>
             <p style="margin:0; font-size:0.9rem; line-height:1.7;">${escapeHtml(item.main_business || '未披露')}</p>
+          </div>
+          <div class="info-card">
+            <h4>年度财务数据</h4>
+            ${financeHtml}
           </div>
         </div>
         <div class="detail-actions" style="margin-top:1rem;">
@@ -1535,6 +1585,14 @@
       state.currentPage = page;
       render();
       document.querySelector('.stats').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function formatFinanceValue(value) {
+      if (value === null || value === undefined || value === '') return '—';
+      const num = parseFloat(value);
+      if (isNaN(num)) return '—';
+      // 东方财富财务数据单位为人民币元，转换为亿元
+      return (num / 1e8).toFixed(2) + ' 亿元';
     }
 
     function formatMarketCap(value) {
