@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import functools
 import json
 import re
 import sys
@@ -38,8 +39,14 @@ def parse_date(value: Any) -> str | None:
         return None
     for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%Y%m%d", "%Y-%m-%d %H:%M:%S"):
         try:
-            return datetime.strptime(s[:10], "%Y-%m-%d").strftime("%Y-%m-%d")
+            return datetime.strptime(s, fmt).strftime("%Y-%m-%d")
         except ValueError:
+            # 對於純日期格式，嘗試只取前 10 個字元（去掉時間部分）
+            if "%H" not in fmt:
+                try:
+                    return datetime.strptime(s[:10], fmt).strftime("%Y-%m-%d")
+                except ValueError:
+                    continue
             continue
     # 嘗試只取日期部分
     m = re.search(r"(\d{4})[-/](\d{1,2})[-/](\d{1,2})", s)
@@ -51,6 +58,31 @@ def parse_date(value: Any) -> str | None:
     return None
 
 
+def retry(max_attempts: int = 3, base_delay: float = 1.0):
+    """簡單的指數退避重試裝飾器。"""
+
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    if attempt == max_attempts:
+                        raise
+                    sleep_time = base_delay * (2 ** (attempt - 1))
+                    print(
+                        f"[WARN] {func.__name__} 第 {attempt} 次失敗: {e}；{sleep_time:.1f}s 后重試",
+                        file=sys.stderr,
+                    )
+                    sleep(sleep_time)
+
+        return wrapper
+
+    return decorator
+
+
+@retry(max_attempts=3, base_delay=2.0)
 def fetch_base_list() -> pd.DataFrame:
     """獲取港股通成分股基礎列表。"""
     import akshare as ak
@@ -61,6 +93,7 @@ def fetch_base_list() -> pd.DataFrame:
     return df[["code", "name"]]
 
 
+@retry(max_attempts=3, base_delay=2.0)
 def fetch_security_profile(code: str) -> dict[str, Any]:
     """獲取港股上市信息（上市日期、板塊等）。"""
     import akshare as ak
@@ -100,6 +133,7 @@ def fetch_security_profile(code: str) -> dict[str, Any]:
     return result
 
 
+@retry(max_attempts=3, base_delay=2.0)
 def fetch_company_profile(code: str) -> dict[str, Any]:
     """獲取港股公司資料（行業、主營業務等）。"""
     import akshare as ak
@@ -193,10 +227,13 @@ def main():
                 records.append({
                     "code": code,
                     "name": str(base_df.loc[base_df["code"] == code, "name"].values[0]),
+                    "name_en": None,
                     "list_date": None,
                     "board": "主板",
                     "industry": "-",
                     "main_business": "-",
+                    "market_cap": None,
+                    "market_cap_currency": "HKD",
                 })
             if i % 50 == 0 or i == len(base_df):
                 print(f"  進度 {i}/{len(base_df)}")

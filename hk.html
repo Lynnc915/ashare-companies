@@ -14,6 +14,8 @@
       --muted: #64748b;
       --border: #e2e8f0;
       --hover: #f1f5f9;
+      --success: #16a34a;
+      --danger: #dc2626;
       --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     }
 
@@ -105,7 +107,7 @@
       border-radius: 0.5rem;
       font-size: 0.95rem;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.1s;
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
@@ -114,6 +116,10 @@
 
     .btn-primary { background: var(--primary); color: white; }
     .btn-primary:hover { background: var(--primary-dark); }
+    .btn-sm { padding: 0.35rem 0.65rem; font-size: 0.85rem; }
+    .btn-outline { background: white; border: 1px solid var(--border); color: var(--text); }
+    .btn-outline:hover { background: var(--hover); }
+    .btn:active { transform: translateY(1px); }
 
     .stats-tiles {
       display: grid;
@@ -141,6 +147,7 @@
     }
 
     .stat-tile-label { font-size: 0.85rem; color: var(--muted); }
+    .stat-tile-sublabel { font-size: 0.75rem; color: var(--muted); opacity: 0.85; }
 
     .stats {
       display: flex;
@@ -155,6 +162,253 @@
 
     .page-size { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--muted); }
 
+    .board-overview {
+      background: var(--card);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .overview-title {
+      margin: 0 0 1rem;
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .overview-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.85rem 1rem;
+    }
+
+    .overview-card h4 {
+      margin: 0 0 0.5rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .overview-card.full-width { grid-column: 1 / -1; }
+
+    .overview-content {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .overview-metric {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.25rem 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .overview-metric:last-child { border-bottom: none; }
+    .overview-metric span:first-child { color: var(--muted); }
+    .overview-metric span:last-child { font-weight: 500; font-family: ui-monospace, monospace; }
+
+    .overview-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .overview-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.6rem;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.8rem;
+    }
+
+    .overview-tag .count {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .industry-overview {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .industry-block {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .industry-header {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr 1fr 1.2fr;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 0.7rem 0.9rem;
+      cursor: pointer;
+      background: #f8fafc;
+      transition: background 0.15s;
+    }
+
+    .industry-header:hover { background: #f1f5f9; }
+
+    .industry-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .industry-title .expand-icon {
+      margin-right: 0;
+      font-size: 0.75rem;
+    }
+
+    .industry-count {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .industry-metric {
+      font-size: 0.82rem;
+      color: var(--text);
+    }
+
+    .industry-metric span { color: var(--muted); }
+
+    .industry-standout {
+      font-size: 0.8rem;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .industry-body {
+      display: none;
+      padding: 0.75rem 0.9rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .industry-block.open .industry-body { display: block; }
+    .industry-block.open .industry-header .expand-icon { transform: rotate(90deg); }
+
+    .industry-company-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .industry-company-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0.5rem;
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .industry-company-tag:hover {
+      background: #dbeafe;
+      border-color: #bfdbfe;
+    }
+
+    .industry-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .industry-detail-item {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 0.4rem;
+      padding: 0.6rem 0.75rem;
+    }
+
+    .industry-detail-item h5 {
+      margin: 0 0 0.35rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .industry-detail-item p {
+      margin: 0.15rem 0;
+      font-size: 0.82rem;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.5rem 0;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .collapsible-header {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .toggle-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.5rem;
+      height: 1.5rem;
+      color: var(--muted);
+      transition: transform 0.2s;
+      font-size: 0.85rem;
+    }
+
+    .collapsible-header.collapsed .toggle-icon { transform: rotate(-90deg); }
+    .collapsible-content.collapsed { display: none; }
+
+    .card-header-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .card-header-toggle h4 { margin: 0; }
+    .card-header-toggle .toggle-icon { transform: rotate(0deg); }
+    .card-header-toggle.collapsed .toggle-icon { transform: rotate(-90deg); }
+
     .table-wrap {
       background: var(--card);
       border-radius: 0.75rem;
@@ -166,7 +420,7 @@
 
     table {
       width: 100%;
-      min-width: 800px;
+      min-width: 900px;
       border-collapse: collapse;
       font-size: 0.92rem;
     }
@@ -295,12 +549,278 @@
     }
     .error { color: #dc2626; }
 
+    /* 骨架屏 */
+    .skeleton-wrap {
+      padding: 1rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      animation: skeleton-fade 1.6s infinite;
+    }
+    .skeleton-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr 1fr 1.5fr 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+    .skeleton-cell {
+      height: 1.25rem;
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      border-radius: 0.3rem;
+      animation: skeleton-shimmer 1.6s infinite linear;
+    }
+    .skeleton-cell.short { width: 60%; }
+    @keyframes skeleton-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    @keyframes skeleton-fade {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+
+    /* AI 助手浮窗 */
+    .ai-float {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 1000;
+    }
+
+    .ai-toggle {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .ai-toggle:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+    .ai-chat {
+      position: fixed;
+      bottom: 5.5rem;
+      right: 1.5rem;
+      width: 520px;
+      max-width: calc(100vw - 2rem);
+      height: 70vh;
+      min-height: 480px;
+      max-height: 760px;
+      background: var(--card);
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    .ai-chat.open { display: flex; }
+
+    .ai-header {
+      background: var(--primary);
+      color: white;
+      padding: 0.85rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .ai-header h3 { margin: 0; font-size: 1rem; }
+    .ai-header button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 1.25rem;
+      cursor: pointer;
+    }
+
+    .ai-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      min-height: 0;
+    }
+
+    .ai-message {
+      max-width: 92%;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .ai-message.user, .ai-message.error { white-space: pre-wrap; }
+
+    .ai-message.user {
+      align-self: flex-end;
+      background: var(--primary);
+      color: white;
+      border-bottom-right-radius: 0.25rem;
+    }
+
+    .ai-message.bot {
+      align-self: flex-start;
+      background: #f1f5f9;
+      color: var(--text);
+      border-bottom-left-radius: 0.25rem;
+    }
+
+    .ai-message.error { background: #fee2e2; color: #991b1b; }
+
+    .ai-message p { margin: 0 0 0.5rem 0; }
+    .ai-message p:last-child { margin-bottom: 0; }
+    .ai-message ul, .ai-message ol {
+      margin: 0.5rem 0;
+      padding-left: 1.25rem;
+    }
+    .ai-message li { margin-bottom: 0.25rem; }
+    .ai-message strong, .ai-message b { font-weight: 600; }
+    .ai-message code {
+      background: rgba(0, 0, 0, 0.06);
+      padding: 0.15rem 0.35rem;
+      border-radius: 0.25rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85em;
+    }
+    .ai-message pre {
+      background: rgba(0, 0, 0, 0.06);
+      padding: 0.6rem 0.75rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85em;
+      margin: 0.5rem 0;
+    }
+
+    .ai-input-area {
+      padding: 0.75rem 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .ai-input-area input {
+      flex: 1;
+      padding: 0.6rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .ai-input-area input:focus { border-color: var(--primary); }
+
+    .ai-settings {
+      padding: 0.85rem 1rem;
+      border-top: 1px solid var(--border);
+      background: #f8fafc;
+      font-size: 0.85rem;
+      color: var(--muted);
+      max-height: 220px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .ai-settings input, .ai-settings select {
+      width: 100%;
+      padding: 0.45rem 0.65rem;
+      border: 1px solid var(--border);
+      border-radius: 0.4rem;
+      margin-top: 0.35rem;
+      font-size: 0.85rem;
+      background: white;
+    }
+
+    .ai-settings a { color: var(--primary); }
+
+    .ai-suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      padding: 0 1rem 0.75rem;
+    }
+
+    .ai-suggestions button {
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      color: var(--primary-dark);
+      border-radius: 999px;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .ai-suggestions button:hover { background: #dbeafe; }
+
     @media (max-width: 768px) {
       header h1 { font-size: 1.4rem; }
       th, td { padding: 0.65rem 0.5rem; font-size: 0.85rem; }
       .toolbar input[type="text"], .toolbar input[type="date"], .toolbar select { width: 100%; }
+      .industry-header {
+        grid-template-columns: 1fr;
+        gap: 0.35rem;
+      }
+      .industry-metric, .industry-standout { white-space: normal; }
+      .overview-grid { grid-template-columns: 1fr; }
+      .detail-grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 0.75rem;
+        padding-bottom: 0.5rem;
+      }
+      .info-card {
+        flex: 0 0 85%;
+        max-width: 280px;
+        scroll-snap-align: start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .ai-chat {
+        width: 100vw;
+        max-width: 100vw;
+        height: 100vh;
+        min-height: 100vh;
+        max-height: 100vh;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+      }
+      .ai-float {
+        bottom: 1rem;
+        right: 1rem;
+      }
     }
   </style>
+  <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+      const el = document.getElementById('pageError');
+      if (el) {
+        el.style.display = 'block';
+        el.innerHTML = '<p><strong>页面运行出错：</strong>' + message + '</p>' +
+          '<p>位置：' + source + ' 第 ' + lineno + ' 行</p>' +
+          '<p>请尝试按 Ctrl+F5 / Cmd+Shift+R 强制刷新，或换用 Chrome/Safari/Edge 浏览器。</p>';
+      }
+      console.error(message, error);
+    };
+  </script>
 </head>
 <body>
   <header>
@@ -320,6 +840,8 @@
   </noscript>
 
   <div class="container">
+    <div id="pageError" class="error" style="display: none;"></div>
+
     <div class="toolbar">
       <input type="text" id="searchCode" placeholder="股票代码" />
       <input type="text" id="searchName" placeholder="企业名称" />
@@ -335,33 +857,130 @@
 
     <div class="stats-tiles" id="statsTiles" style="display: none;"></div>
 
-    <div class="stats">
-      <span id="updateTime">正在加载数据…</span>
-      <span id="resultCount"></span>
-      <div class="page-size">
-        <label for="pageSize">每页</label>
-        <select id="pageSize">
-          <option value="50">50</option>
-          <option value="100" selected>100</option>
-          <option value="200">200</option>
-          <option value="500">500</option>
-        </select>
-        <span>条</span>
+    <div class="board-overview" id="boardOverview" style="display: none;">
+      <div class="section-header collapsible-header" id="boardOverviewHeader" onclick="toggleSection('boardOverview')">
+        <h3 class="section-title">📊 板块概览</h3>
+        <span class="toggle-icon">▲</span>
+      </div>
+      <div class="collapsible-content" id="boardOverviewContent">
+        <div class="overview-grid">
+          <div class="overview-card">
+            <h4>市值统计（亿港元）</h4>
+            <div id="overviewMarketCapStats">-</div>
+          </div>
+          <div class="overview-card">
+            <h4>上市节奏</h4>
+            <div id="overviewTimeline">-</div>
+          </div>
+          <div class="overview-card full-width">
+            <div class="card-header-toggle collapsed" id="industryHeader" onclick="toggleSection('industryOverview')">
+              <h4>行业概览</h4>
+              <span class="toggle-icon">▲</span>
+            </div>
+            <div class="overview-content collapsible-content collapsed" id="overviewIndustries">-</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="table-wrap">
-      <div id="content">
-        <div class="loading">正在加载数据，请稍候…</div>
-      </div>
-    </div>
+    <div class="section-divider"></div>
 
-    <div class="pagination" id="pagination"></div>
+    <div class="section-header collapsible-header" id="listedHeader" onclick="toggleSection('listedCompanies')">
+      <h3 class="section-title">📈 上市企业</h3>
+      <span class="toggle-icon">▲</span>
+    </div>
+    <div class="collapsible-content" id="listedCompaniesContent">
+      <div class="stats">
+        <span id="updateTime">正在加载数据…</span>
+        <span id="resultCount"></span>
+        <div class="page-size">
+          <label for="pageSize">每页</label>
+          <select id="pageSize">
+            <option value="50">50</option>
+            <option value="100" selected>100</option>
+            <option value="200">200</option>
+            <option value="500">500</option>
+          </select>
+          <span>条</span>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div id="content">
+          <div class="loading">正在加载数据，请稍候…</div>
+        </div>
+      </div>
+
+      <div class="pagination" id="pagination"></div>
+    </div>
   </div>
 
   <footer>
     数据来源：akshare / 东方财富 / HKEX · 市值单位：港元 · 本页面仅供学习参考，不构成投资建议
   </footer>
+
+  <!-- AI 助手浮窗 -->
+  <div class="ai-float">
+    <button class="ai-toggle" id="aiToggle" title="AI 助手">
+      <svg viewBox="0 0 64 64" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="34" r="24" fill="#FFD1DC" stroke="#FF9AAE" stroke-width="3"/>
+        <polygon points="14,18 22,8 30,18" fill="#FFD1DC" stroke="#FF9AAE" stroke-width="3" stroke-linejoin="round"/>
+        <polygon points="34,18 42,8 50,18" fill="#FFD1DC" stroke="#FF9AAE" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="24" cy="32" r="3" fill="#4A4A4A"/>
+        <circle cx="40" cy="32" r="3" fill="#4A4A4A"/>
+        <ellipse cx="32" cy="40" rx="4" ry="3" fill="#FF9AAE"/>
+        <path d="M26 44 Q32 50 38 44" stroke="#4A4A4A" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <circle cx="48" cy="28" r="5" fill="#B5EAD7" stroke="#7FD8C0" stroke-width="2"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="ai-chat" id="aiChat">
+    <div class="ai-header">
+      <h3>AI 港股通助手</h3>
+      <button id="aiClose">×</button>
+    </div>
+    <div class="ai-messages" id="aiMessages">
+      <div class="ai-message bot">你好！我可以基于当前筛选出的港股通成分股数据回答你的问题。如果站长已配置 AI 代理服务，你可以直接提问；否则需要在下方输入自己的 Claude API Key。</div>
+    </div>
+    <div class="ai-suggestions" id="aiSuggestions">
+      <button data-q="市值最高和最低的是哪几家公司？">市值最高/最低？</button>
+      <button data-q="这些公司主要从事什么业务？">主要从事什么业务？</button>
+      <button data-q="帮我总结一下这些公司的特点">总结特点</button>
+    </div>
+    <div class="ai-input-area">
+      <input type="text" id="aiInput" placeholder="输入你的问题…" />
+      <button class="btn btn-primary btn-sm" id="aiSend">发送</button>
+    </div>
+    <div class="ai-settings">
+      <label>AI 服务商</label>
+      <select id="aiProvider">
+        <option value="claude">Claude</option>
+        <option value="kimi">Kimi（Moonshot）</option>
+      </select>
+      <div style="margin-top: 0.35rem; font-size: 0.8rem;">选择后使用对应服务商的 API Key，Key 仅保存在浏览器本地。</div>
+
+      <div id="claudeSettings">
+        <label style="margin-top: 0.75rem; display: block;">AI 代理服务地址（可选）</label>
+        <input type="url" id="aiProxy" placeholder="https://你的-worker.workers.dev" />
+        <div style="margin-top: 0.35rem; font-size: 0.8rem;">填写后无需输入 Claude API Key。没有代理？也可直接在下方输入 Claude API Key。</div>
+
+        <label style="margin-top: 0.75rem; display: block;">Claude API Key（未填代理时必填）</label>
+        <input type="password" id="aiKey" placeholder="sk-ant-api03-..." />
+        <div style="margin-top: 0.35rem;">没有 Key？可前往 <a href="https://console.anthropic.com/" target="_blank" rel="noopener">Anthropic 控制台</a> 申请，或用 <a href="https://workers.cloudflare.com/" target="_blank" rel="noopener">Cloudflare Worker</a> 自建代理。</div>
+      </div>
+
+      <div id="kimiSettings" style="display: none;">
+        <label style="margin-top: 0.75rem; display: block;">Kimi Code 代理服务地址</label>
+        <input type="url" id="kimiProxy" placeholder="https://你的域名.vercel.app/api/kimi" />
+        <div style="margin-top: 0.35rem; font-size: 0.8rem;">GitHub Pages 直接调用 Kimi Code 会被浏览器拦截，需通过 Vercel 代理。代理只转发请求，不保存你的 Key。</div>
+
+        <label style="margin-top: 0.75rem; display: block;">Kimi Code API Key</label>
+        <input type="password" id="kimiKey" placeholder="sk-..." />
+        <div style="margin-top: 0.35rem;">没有 Key？可前往 <a href="https://www.kimi.com/code" target="_blank" rel="noopener">Kimi Code</a> 页面获取。</div>
+      </div>
+    </div>
+  </div>
 
   <script>
     const state = {
@@ -373,6 +992,11 @@
       sortDesc: true,
       expanded: new Set(),
       updateTime: '未知',
+      sectionsCollapsed: {
+        boardOverview: false,
+        industryOverview: true,
+        listedCompanies: false,
+      },
     };
 
     const contentEl = document.getElementById('content');
@@ -380,10 +1004,21 @@
     const updateTimeEl = document.getElementById('updateTime');
     const resultCountEl = document.getElementById('resultCount');
     const statsTilesEl = document.getElementById('statsTiles');
+    const boardOverviewEl = document.getElementById('boardOverview');
 
     document.addEventListener('DOMContentLoaded', () => {
-      bindEvents();
-      loadData();
+      try {
+        bindEvents();
+        restoreFiltersFromURL();
+        loadData();
+      } catch (err) {
+        console.error('初始化失败:', err);
+        const el = document.getElementById('pageError');
+        if (el) {
+          el.style.display = 'block';
+          el.innerHTML = '<p><strong>页面初始化失败：</strong>' + err.message + '</p><p>请尝试强制刷新或换用其他浏览器。</p>';
+        }
+      }
     });
 
     function bindEvents() {
@@ -401,7 +1036,7 @@
     }
 
     async function loadData(force = false) {
-      contentEl.innerHTML = '<div class="loading">正在加载数据，请稍候…</div>';
+      contentEl.innerHTML = renderSkeleton();
       try {
         const suffix = force ? '?_=' + Date.now() : '';
         const res = await fetch('./data/hk_data.json' + suffix);
@@ -412,6 +1047,7 @@
         state.expanded.clear();
         populateBoardFilter();
         applyFilters();
+        initSectionCollapses();
         updateTimeEl.textContent = '数据更新时间：' + formatDateTime(state.updateTime);
       } catch (err) {
         console.error(err);
@@ -458,7 +1094,58 @@
       sortData();
       state.currentPage = 1;
       renderStatsTiles();
+      renderBoardOverview();
       render();
+      updateFilterURL();
+    }
+
+    function updateFilterURL() {
+      const params = new URLSearchParams();
+      const fields = [
+        { key: 'code', id: 'searchCode' },
+        { key: 'name', id: 'searchName' },
+        { key: 'industry', id: 'searchIndustry' },
+        { key: 'board', id: 'filterBoard' },
+        { key: 'from', id: 'dateFrom' },
+        { key: 'to', id: 'dateTo' },
+      ];
+      fields.forEach(({ key, id }) => {
+        const value = document.getElementById(id).value.trim();
+        if (value) params.set(key, value);
+      });
+
+      const newUrl = params.toString() ? '?' + params.toString() : window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+    }
+
+    function restoreFiltersFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const mapping = {
+        code: 'searchCode',
+        name: 'searchName',
+        industry: 'searchIndustry',
+        board: 'filterBoard',
+        from: 'dateFrom',
+        to: 'dateTo',
+      };
+      Object.entries(mapping).forEach(([param, id]) => {
+        if (params.has(param)) {
+          document.getElementById(id).value = params.get(param);
+        }
+      });
+    }
+
+    function parseMarketCap(value) {
+      if (value === null || value === undefined || value === '') return null;
+      const num = parseFloat(value);
+      return isNaN(num) ? null : num;
+    }
+
+    function median(arr) {
+      if (!arr || arr.length === 0) return null;
+      const sorted = [...arr].sort((a, b) => a - b);
+      const mid = Math.floor(sorted.length / 2);
+      return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
     }
 
     function renderStatsTiles() {
@@ -469,11 +1156,196 @@
       statsTilesEl.style.display = 'grid';
       const mainBoard = state.filteredData.filter(r => r.board === '主板').length;
       const gem = state.filteredData.filter(r => r.board === '创业板').length;
-      statsTilesEl.innerHTML = `
-        <div class="stat-tile"><div class="stat-tile-value">${state.filteredData.length.toLocaleString()}</div><div class="stat-tile-label">企业数量</div></div>
-        <div class="stat-tile"><div class="stat-tile-value">${mainBoard.toLocaleString()}</div><div class="stat-tile-label">主板</div></div>
-        <div class="stat-tile"><div class="stat-tile-value">${gem.toLocaleString()}</div><div class="stat-tile-label">创业板</div></div>
+      const caps = state.filteredData.map(r => parseMarketCap(r.market_cap)).filter(v => v !== null);
+      const totalCap = caps.length ? caps.reduce((a, b) => a + b, 0) : null;
+      const avgCap = caps.length ? totalCap / caps.length : null;
+      const top = caps.length
+        ? state.filteredData.reduce((best, cur) => {
+            const curCap = parseMarketCap(cur.market_cap);
+            const bestCap = parseMarketCap(best.market_cap);
+            return curCap !== null && (bestCap === null || curCap > bestCap) ? cur : best;
+          }, state.filteredData[0])
+        : null;
+
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentQuarter = Math.floor(now.getMonth() / 3) + 1;
+      const currentQLabel = `${currentYear}-Q${currentQuarter}`;
+      const thisQuarterCount = state.filteredData.filter(item => {
+        if (!item.list_date) return false;
+        const d = new Date(item.list_date);
+        const q = `${d.getFullYear()}-Q${Math.floor(d.getMonth() / 3) + 1}`;
+        return q === currentQLabel;
+      }).length;
+
+      const tiles = [
+        { value: state.filteredData.length.toLocaleString(), label: '企业数量', sublabel: '当前筛选结果' },
+        { value: mainBoard.toLocaleString(), label: '主板', sublabel: '数量' },
+        { value: gem.toLocaleString(), label: '创业板', sublabel: '数量' },
+        { value: formatMarketCap(totalCap), label: '总市值', sublabel: '亿港元' },
+        { value: formatMarketCap(avgCap), label: '平均市值', sublabel: '亿港元' },
+        { value: thisQuarterCount.toLocaleString(), label: '本季度上市', sublabel: currentQLabel },
+        { value: top ? formatMarketCap(top.market_cap) : '—', label: '市值最高', sublabel: top ? escapeHtml(top.name) : '—' },
+      ];
+
+      statsTilesEl.innerHTML = tiles.map(t => `
+        <div class="stat-tile">
+          <div class="stat-tile-value">${escapeHtml(t.value)}</div>
+          <div class="stat-tile-label">${escapeHtml(t.label)}</div>
+          <div class="stat-tile-sublabel">${escapeHtml(t.sublabel)}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderBoardOverview() {
+      if (state.filteredData.length === 0) {
+        boardOverviewEl.style.display = 'none';
+        return;
+      }
+      boardOverviewEl.style.display = 'block';
+
+      const caps = state.filteredData.map(r => parseMarketCap(r.market_cap)).filter(v => v !== null);
+      const totalCap = caps.length ? caps.reduce((a, b) => a + b, 0) : null;
+      const avgCap = caps.length ? totalCap / caps.length : null;
+      const maxCap = caps.length ? Math.max(...caps) : null;
+      const top = caps.length
+        ? state.filteredData.find(r => parseMarketCap(r.market_cap) === maxCap)
+        : null;
+
+      const marketCapHtml = `
+        <div class="overview-metric"><span>企业数量</span><span>${state.filteredData.length.toLocaleString()} 家</span></div>
+        <div class="overview-metric"><span>有市值数据</span><span>${caps.length.toLocaleString()} 家</span></div>
+        <div class="overview-metric"><span>总市值</span><span>${formatMarketCap(totalCap)}</span></div>
+        <div class="overview-metric"><span>平均市值</span><span>${formatMarketCap(avgCap)}</span></div>
+        <div class="overview-metric"><span>市值最高</span><span>${top ? escapeHtml(top.name) + ' (' + formatMarketCap(top.market_cap) + ')' : '—'}</span></div>
       `;
+
+      const quarterCount = {};
+      state.filteredData.forEach(item => {
+        if (!item.list_date) return;
+        const d = new Date(item.list_date);
+        const q = `${d.getFullYear()}-Q${Math.floor(d.getMonth()/3)+1}`;
+        quarterCount[q] = (quarterCount[q] || 0) + 1;
+      });
+      const sortedQuarters = Object.entries(quarterCount).sort((a, b) => a[0].localeCompare(b[0]));
+      const timelineHtml = sortedQuarters.length > 0
+        ? `<div class="overview-tags">` + sortedQuarters.map(([q, count]) =>
+            `<span class="overview-tag">${q} <span class="count">${count}家</span></span>`
+          ).join('') + `</div>`
+        : '<p style="color:var(--muted);margin:0;">—</p>';
+
+      document.getElementById('overviewMarketCapStats').innerHTML = marketCapHtml;
+      document.getElementById('overviewTimeline').innerHTML = timelineHtml;
+      document.getElementById('overviewIndustries').innerHTML = renderIndustryOverview();
+    }
+
+    function renderIndustryOverview() {
+      if (!state.filteredData.length) return '<p style="color:var(--muted);margin:0;">—</p>';
+
+      const groups = {};
+      state.filteredData.forEach(item => {
+        const industry = item.industry && item.industry !== '-' ? item.industry : '未分类';
+        if (!groups[industry]) groups[industry] = [];
+        groups[industry].push(item);
+      });
+
+      const industries = Object.keys(groups).sort((a, b) => groups[b].length - groups[a].length);
+
+      const formatRange = (values) => {
+        if (!values.length) return '—';
+        const min = Math.min(...values);
+        const max = Math.max(...values);
+        const med = median(values);
+        return `${formatMarketCap(min)} ~ ${formatMarketCap(max)} · 中位数 ${formatMarketCap(med)}`;
+      };
+
+      const blocks = industries.map((industry, idx) => {
+        const items = groups[industry];
+        const caps = items.map(i => parseMarketCap(i.market_cap)).filter(v => v !== null);
+        const sortedByCap = [...items].sort((a, b) => parseMarketCap(b.market_cap) - parseMarketCap(a.market_cap));
+        const sortedByDate = [...items].filter(i => i.list_date).sort((a, b) => b.list_date.localeCompare(a.list_date));
+
+        const topCap = sortedByCap[0];
+        const recent = sortedByDate[0] || null;
+
+        const companyTags = items.slice(0, 8).map(item =>
+          `<span class="industry-company-tag" title="${escapeHtml(item.name)}" onclick="filterByCompanyName(decodeURIComponent('${encodeURIComponent(item.name)}')); event.stopPropagation();">${escapeHtml(item.name)}</span>`
+        ).join('');
+        const more = items.length > 8 ? `<span class="industry-company-tag" style="background:#f1f5f9;border-color:#e2e8f0;color:var(--muted);">等 ${items.length - 8} 家</span>` : '';
+
+        const standoutParts = [];
+        if (topCap) standoutParts.push(`市值最高：<strong>${escapeHtml(topCap.name)}</strong> ${formatMarketCap(topCap.market_cap)}`);
+        if (recent) standoutParts.push(`最近上市：<strong>${escapeHtml(recent.name)}</strong> ${recent.list_date}`);
+
+        return `
+          <div class="industry-block" id="industryBlock_${idx}" onclick="toggleIndustryBlock(${idx})">
+            <div class="industry-header">
+              <div class="industry-title"><span class="expand-icon">▶</span>${escapeHtml(industry)}</div>
+              <div class="industry-count">${items.length} 家</div>
+              <div class="industry-metric"><span>市值区间</span> ${formatRange(caps)}</div>
+              <div class="industry-standout">${standoutParts.join(' · ') || '—'}</div>
+            </div>
+            <div class="industry-body" onclick="event.stopPropagation();">
+              <div class="industry-company-list">${companyTags}${more}</div>
+              <div class="industry-detail-grid">
+                <div class="industry-detail-item">
+                  <h5>市值区间（亿港元）</h5>
+                  <p>${formatRange(caps)}</p>
+                </div>
+                <div class="industry-detail-item">
+                  <h5>企业数量</h5>
+                  <p>${items.length} 家</p>
+                </div>
+                <div class="industry-detail-item">
+                  <h5>市值龙头 / 最近上市</h5>
+                  <p>${topCap ? escapeHtml(topCap.name) + ' ' + formatMarketCap(topCap.market_cap) : '—'}</p>
+                  <p>${recent ? escapeHtml(recent.name) + ' ' + recent.list_date : '—'}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      return `<div class="industry-overview">${blocks}</div>`;
+    }
+
+    function toggleIndustryBlock(idx) {
+      const el = document.getElementById(`industryBlock_${idx}`);
+      if (el) el.classList.toggle('open');
+    }
+
+    function filterByCompanyName(name) {
+      const input = document.getElementById('searchName');
+      if (!input || !name) return;
+      input.value = name;
+      applyFilters();
+      const header = document.getElementById('listedHeader');
+      if (header) header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function toggleSection(section) {
+      state.sectionsCollapsed[section] = !state.sectionsCollapsed[section];
+      applySectionCollapse(section);
+    }
+
+    function applySectionCollapse(section) {
+      const collapsed = state.sectionsCollapsed[section];
+      const mapping = {
+        boardOverview: { header: 'boardOverviewHeader', content: 'boardOverviewContent' },
+        industryOverview: { header: 'industryHeader', content: 'overviewIndustries' },
+        listedCompanies: { header: 'listedHeader', content: 'listedCompaniesContent' },
+      };
+      const cfg = mapping[section];
+      if (!cfg) return;
+      const header = document.getElementById(cfg.header);
+      const content = document.getElementById(cfg.content);
+      if (header) header.classList.toggle('collapsed', collapsed);
+      if (content) content.classList.toggle('collapsed', collapsed);
+    }
+
+    function initSectionCollapses() {
+      Object.keys(state.sectionsCollapsed).forEach(applySectionCollapse);
     }
 
     function sortData() {
@@ -491,8 +1363,11 @@
         }
 
         if (key === 'market_cap') {
-          const na = parseFloat(va) || 0;
-          const nb = parseFloat(vb) || 0;
+          const na = parseMarketCap(va);
+          const nb = parseMarketCap(vb);
+          if (na === null && nb === null) return 0;
+          if (na === null) return state.sortDesc ? 1 : -1;
+          if (nb === null) return state.sortDesc ? -1 : 1;
           return state.sortDesc ? nb - na : na - nb;
         }
 
@@ -608,9 +1483,25 @@
         <div class="detail-actions" style="margin-top:1rem;">
           <a class="btn btn-primary" href="${escapeHtml(hkexUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">🏛️ HKEX 行情</a>
           <a class="btn btn-primary" href="${escapeHtml(hkexnewsUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">📄 HKEXnews 公告</a>
+          <button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); copyToClipboard('${item.code}');">📋 复制代码</button>
           <span class="hint">数据来源：akshare / 东方财富 / HKEX</span>
         </div>
       `;
+    }
+
+    async function copyToClipboard(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        alert('已复制：' + text);
+      } catch (err) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        alert('已复制：' + text);
+      }
     }
 
     function renderPagination(totalPages) {
@@ -649,7 +1540,7 @@
       if (value === null || value === undefined || value === '') return '—';
       const num = parseFloat(value);
       if (isNaN(num)) return '—';
-      return (num / 1e8).toFixed(2) + ' 亿';
+      return (num / 1e8).toFixed(2);
     }
 
     function formatDateTime(iso) {
@@ -672,9 +1563,361 @@
         .replace(/'/g, '&#039;');
     }
 
+    function renderSkeleton() {
+      return `
+        <div class="skeleton-wrap" role="status" aria-label="正在加载数据">
+          ${Array.from({ length: 8 }).map(() => `
+            <div class="skeleton-row">
+              <div class="skeleton-cell short"></div>
+              <div class="skeleton-cell"></div>
+              <div class="skeleton-cell"></div>
+              <div class="skeleton-cell short"></div>
+              <div class="skeleton-cell"></div>
+              <div class="skeleton-cell short"></div>
+            </div>
+          `).join('')}
+          <div style="text-align:center;color:var(--muted);font-size:0.9rem;margin-top:0.75rem;">正在加载数据，请稍候…</div>
+        </div>
+      `;
+    }
+
     window.setSort = setSort;
     window.toggleRow = toggleRow;
     window.goPage = goPage;
+    window.toggleSection = toggleSection;
+    window.toggleIndustryBlock = toggleIndustryBlock;
+    window.filterByCompanyName = filterByCompanyName;
+
+    // ================== AI 助手 ==================
+    (function initAI() {
+      const aiToggle = document.getElementById('aiToggle');
+      const aiClose = document.getElementById('aiClose');
+      const aiChat = document.getElementById('aiChat');
+      const aiInput = document.getElementById('aiInput');
+      const aiSend = document.getElementById('aiSend');
+      const aiMessages = document.getElementById('aiMessages');
+      const aiKey = document.getElementById('aiKey');
+      const aiProxy = document.getElementById('aiProxy');
+      const aiProvider = document.getElementById('aiProvider');
+      const claudeSettings = document.getElementById('claudeSettings');
+      const kimiSettings = document.getElementById('kimiSettings');
+      const kimiProxy = document.getElementById('kimiProxy');
+      const kimiKey = document.getElementById('kimiKey');
+      const aiSuggestions = document.getElementById('aiSuggestions');
+
+      const SYSTEM_PROMPT = '你是港股通投资分析助手。请基于用户提供的港股通成分股数据回答问题，回答要简洁、专业、有数据支撑。不要给出投资建议，仅作信息整理。';
+
+      const savedProvider = localStorage.getItem('hk_ai_provider');
+      if (savedProvider) aiProvider.value = savedProvider;
+      const savedKey = localStorage.getItem('hk_ai_key');
+      if (savedKey) aiKey.value = savedKey;
+      const savedProxy = localStorage.getItem('hk_ai_proxy');
+      if (savedProxy) aiProxy.value = savedProxy;
+      const savedKimiKey = localStorage.getItem('hk_kimi_key');
+      if (savedKimiKey) kimiKey.value = savedKimiKey;
+      const savedKimiProxy = localStorage.getItem('hk_kimi_proxy');
+      if (savedKimiProxy) kimiProxy.value = savedKimiProxy;
+
+      function updateSettingsVisibility() {
+        if (aiProvider.value === 'kimi') {
+          claudeSettings.style.display = 'none';
+          kimiSettings.style.display = 'block';
+        } else {
+          claudeSettings.style.display = 'block';
+          kimiSettings.style.display = 'none';
+        }
+      }
+      updateSettingsVisibility();
+      aiProvider.addEventListener('change', updateSettingsVisibility);
+
+      function toggleChat() {
+        aiChat.classList.toggle('open');
+      }
+
+      async function formatError(res) {
+        const statusInfo = `HTTP ${res.status} ${res.statusText}`;
+        const rawText = await res.text().catch(() => '');
+        let details = rawText;
+        try {
+          const errJson = JSON.parse(rawText);
+          const msg = errJson.error?.message || errJson.message || rawText;
+          const type = errJson.error?.type;
+          const code = errJson.error?.code;
+          details = msg;
+          if (type) details += `（类型：${type}）`;
+          if (code) details += `（代码：${code}）`;
+        } catch (e) {
+          // 不是 JSON，用原始文本
+        }
+        if (!details || details.trim() === '') {
+          details = statusInfo;
+        } else {
+          details = `${statusInfo}\n${details}`;
+        }
+        return details.length > 300 ? details.slice(0, 300) + '...' : details;
+      }
+
+      aiToggle.addEventListener('click', toggleChat);
+      aiClose.addEventListener('click', toggleChat);
+
+      function escapeHtmlAI(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function formatBotMessage(text) {
+        let html = escapeHtmlAI(text);
+        html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+        html = html.replace(/^####\s+(.+)$/gm, '<h4>$1</h4>');
+        html = html.replace(/^###\s+(.+)$/gm, '<h4>$1</h4>');
+        html = html.replace(/^##\s+(.+)$/gm, '<h3>$1</h3>');
+        html = html.replace(/^#\s+(.+)$/gm, '<h3>$1</h3>');
+
+        const lines = html.split('\n');
+        let inUl = false;
+        let inOl = false;
+        const out = [];
+
+        for (const line of lines) {
+          const ul = line.match(/^(\s*)[-*]\s+(.+)$/);
+          const ol = line.match(/^(\s*)\d+\.\s+(.+)$/);
+          const isHeading = /^<h[1-6]>/.test(line);
+          const isPre = /^<pre>/.test(line);
+
+          if (isHeading || isPre) {
+            if (inUl) { out.push('</ul>'); inUl = false; }
+            if (inOl) { out.push('</ol>'); inOl = false; }
+            out.push(line);
+            continue;
+          }
+
+          if (ul) {
+            if (!inUl) {
+              if (inOl) { out.push('</ol>'); inOl = false; }
+              out.push('<ul>');
+              inUl = true;
+            }
+            out.push(`<li>${ul[2]}</li>`);
+          } else if (ol) {
+            if (!inOl) {
+              if (inUl) { out.push('</ul>'); inUl = false; }
+              out.push('<ol>');
+              inOl = true;
+            }
+            out.push(`<li>${ol[2]}</li>`);
+          } else {
+            if (inUl) { out.push('</ul>'); inUl = false; }
+            if (inOl) { out.push('</ol>'); inOl = false; }
+            if (line.trim() === '') {
+              out.push('');
+            } else {
+              out.push(`<p>${line}</p>`);
+            }
+          }
+        }
+
+        if (inUl) out.push('</ul>');
+        if (inOl) out.push('</ol>');
+
+        return out.join('\n');
+      }
+
+      function addMessage(text, role) {
+        const div = document.createElement('div');
+        div.className = `ai-message ${role}`;
+        if (role === 'bot') {
+          div.innerHTML = formatBotMessage(text);
+        } else {
+          div.textContent = text;
+        }
+        aiMessages.appendChild(div);
+        aiMessages.scrollTop = aiMessages.scrollHeight;
+      }
+
+      function buildContext() {
+        const data = state.filteredData;
+        const total = data.length;
+        if (total === 0) return '当前没有筛选出任何港股通企业。';
+
+        const boardCount = {};
+        data.forEach(d => { boardCount[d.board || '未知'] = (boardCount[d.board || '未知'] || 0) + 1; });
+        const boardText = Object.entries(boardCount)
+          .map(([b, c]) => `${b}: ${c}家`)
+          .join('，');
+
+        const caps = data.map(d => parseMarketCap(d.market_cap)).filter(v => v !== null);
+        let capText = '市值数据缺失较多。';
+        if (caps.length > 0) {
+          const min = Math.min(...caps);
+          const max = Math.max(...caps);
+          const avg = caps.reduce((a, b) => a + b, 0) / caps.length;
+          capText = `市值（已披露${caps.length}家）：最低 ${formatMarketCap(min)} 亿港元，最高 ${formatMarketCap(max)} 亿港元，平均 ${formatMarketCap(avg)} 亿港元。`;
+        }
+
+        const industryCount = {};
+        data.forEach(d => {
+          const ind = d.industry && d.industry !== '-' ? d.industry : '未分类';
+          industryCount[ind] = (industryCount[ind] || 0) + 1;
+        });
+        const industryText = Object.entries(industryCount)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 10)
+          .map(([ind, c]) => `${ind}: ${c}家`)
+          .join('，');
+
+        const businessSet = new Set();
+        data.forEach(d => {
+          if (d.main_business && d.main_business !== '-') {
+            businessSet.add(d.main_business);
+          }
+        });
+        const businessList = Array.from(businessSet).slice(0, 15);
+
+        const top10 = [...data]
+          .sort((a, b) => parseMarketCap(b.market_cap) - parseMarketCap(a.market_cap))
+          .slice(0, 10)
+          .map(d => `- ${d.code} ${d.name}（${d.board}，${d.industry || '未分类'}）市值 ${formatMarketCap(d.market_cap)} 亿港元，主营：${d.main_business || '未披露'}`)
+          .join('\n');
+
+        return `当前共筛选出 ${total} 家港股通成分股。\n板块分布：${boardText}。\n${capText}\n行业分布（前10）：${industryText}\n主营业务样例（前15条）：\n${businessList.join('\n')}\n市值前10企业详情：\n${top10}`;
+      }
+
+      async function sendMessage() {
+        const text = aiInput.value.trim();
+        if (!text) return;
+
+        const provider = aiProvider.value;
+        localStorage.setItem('hk_ai_provider', provider);
+
+        addMessage(text, 'user');
+        aiInput.value = '';
+
+        const context = buildContext();
+        addMessage('正在思考…', 'bot');
+        const thinkingMsg = aiMessages.lastElementChild;
+
+        try {
+          let res;
+          let reply = '';
+
+          if (provider === 'kimi') {
+            const kimiApiKey = kimiKey.value.trim();
+            const kimiProxyUrl = kimiProxy.value.trim();
+
+            if (kimiApiKey) localStorage.setItem('hk_kimi_key', kimiApiKey);
+            if (kimiProxyUrl) localStorage.setItem('hk_kimi_proxy', kimiProxyUrl);
+
+            if (!kimiApiKey) {
+              addMessage('请输入 Kimi Code API Key。', 'error');
+              thinkingMsg.remove();
+              return;
+            }
+
+            const payload = {
+              model: 'moonshot-v1-32k',
+              temperature: 1,
+              messages: [
+                { role: 'system', content: SYSTEM_PROMPT },
+                { role: 'user', content: `以下是我当前筛选出的港股通成分股数据：\n${context}\n\n用户问题：${text}` }
+              ],
+            };
+
+            const targetUrl = kimiProxyUrl || 'https://api.kimi.com/coding/v1/chat/completions';
+            const headers = {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${kimiApiKey}`,
+            };
+
+            res = await fetch(targetUrl, {
+              method: 'POST',
+              headers,
+              body: JSON.stringify(payload),
+            });
+
+            thinkingMsg.remove();
+
+            if (!res.ok) {
+              const details = await formatError(res);
+              addMessage(`请求失败：\n${details}`, 'error');
+              return;
+            }
+
+            const json = await res.json();
+            reply = json.choices?.[0]?.message?.content || '没有收到回复。';
+          } else {
+            const apiKey = aiKey.value.trim();
+            const proxyUrl = aiProxy.value.trim();
+
+            if (apiKey) localStorage.setItem('hk_ai_key', apiKey);
+            if (proxyUrl) localStorage.setItem('hk_ai_proxy', proxyUrl);
+
+            if (!proxyUrl && !apiKey) {
+              addMessage('请填写 AI 代理服务地址，或输入 Claude API Key。', 'error');
+              thinkingMsg.remove();
+              return;
+            }
+
+            const payload = {
+              model: 'claude-sonnet-5',
+              max_tokens: 1024,
+              system: SYSTEM_PROMPT,
+              messages: [
+                { role: 'user', content: `以下是我当前筛选出的港股通成分股数据：\n${context}\n\n用户问题：${text}` }
+              ],
+            };
+
+            if (proxyUrl) {
+              res = await fetch(proxyUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+              });
+            } else {
+              res = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-api-key': apiKey,
+                  'anthropic-version': '2023-06-01',
+                },
+                body: JSON.stringify(payload),
+              });
+            }
+
+            thinkingMsg.remove();
+
+            if (!res.ok) {
+              const details = await formatError(res);
+              addMessage(`请求失败：\n${details}`, 'error');
+              return;
+            }
+
+            const json = await res.json();
+            reply = json.content?.[0]?.text || '没有收到回复。';
+          }
+
+          addMessage(reply, 'bot');
+        } catch (err) {
+          thinkingMsg.remove();
+          addMessage(`网络错误：${err.message}`, 'error');
+        }
+      }
+
+      aiSend.addEventListener('click', sendMessage);
+      aiInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendMessage();
+      });
+
+      aiSuggestions.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON') {
+          aiInput.value = e.target.dataset.q;
+          sendMessage();
+        }
+      });
+    })();
   </script>
 </body>
 </html>
