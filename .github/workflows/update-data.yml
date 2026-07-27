@@ -2,8 +2,8 @@ name: Update Data and Deploy to Pages
 
 on:
   schedule:
-    # 每月 1 日 02:00 UTC（北京时间 10:00）自动更新
-    - cron: '0 2 1 * *'
+    # 每月 1 日和 15 日 02:00 UTC（北京时间 10:00）自动更新
+    - cron: '0 2 1,15 * *'
   workflow_dispatch:
 
 permissions:
