@@ -2035,6 +2035,7 @@
     function renderIPOStandardSection(item) {
       const board = mapExchangeToBoard(item.exchange);
       const statusClass = getIPOStatusClass(item.status);
+      const sciTechHtml = board === '科创板' ? renderSTARSciTechSection() : '';
 
       return `
         <div class="standard-section">
@@ -2050,6 +2051,7 @@
               <div class="info-row"><span>保荐机构</span><span>${escapeHtml(item.sponsor || '-')}</span></div>
             </div>
           </div>
+          ${sciTechHtml}
           <div class="standard-hint">
             <strong>上市标准预测：</strong>IPO 申报企业暂无公开财务数据，无法预测具体适用哪套标准，请以交易所审核披露为准。
           </div>
@@ -2057,6 +2059,43 @@
             <a class="btn btn-outline btn-sm" href="https://data.eastmoney.com/xg/ipo/" target="_blank" rel="noopener" onclick="event.stopPropagation();">
               🔍 东方财富 IPO 数据中心
             </a>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSTARSciTechSection() {
+      return `
+        <div class="standard-section" style="margin-bottom:0.75rem;">
+          <div class="standard-section-title">🔬 科创板科创属性评价标准（一般规定）</div>
+          <div class="standard-hint" style="margin-bottom:0.5rem;">
+            申报科创板上市的企业，需同时满足下列 4 项指标；未同时满足的，可按照《科创属性评价指引（试行）》规定的例外情形论证。
+          </div>
+          <div class="detail-grid">
+            <div class="info-card">
+              <h4>1. 研发投入</h4>
+              <p style="margin:0;font-size:0.9rem;line-height:1.7;">
+                最近三年研发投入占营业收入比例 <strong>5% 以上</strong>，或最近三年研发投入金额累计 <strong>8,000 万元以上</strong>。
+              </p>
+            </div>
+            <div class="info-card">
+              <h4>2. 研发人员</h4>
+              <p style="margin:0;font-size:0.9rem;line-height:1.7;">
+                研发人员占当年员工总数的比例 <strong>不低于 10%</strong>。
+              </p>
+            </div>
+            <div class="info-card">
+              <h4>3. 发明专利</h4>
+              <p style="margin:0;font-size:0.9rem;line-height:1.7;">
+                应用于公司主营业务并能够产业化的发明专利 <strong>7 项以上</strong>。
+              </p>
+            </div>
+            <div class="info-card">
+              <h4>4. 营业收入增长</h4>
+              <p style="margin:0;font-size:0.9rem;line-height:1.7;">
+                最近三年营业收入复合增长率达到 <strong>25%</strong>，或最近一年营业收入金额达到 <strong>3 亿元</strong>。
+              </p>
+            </div>
           </div>
         </div>
       `;
