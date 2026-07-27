@@ -87,12 +87,24 @@ python3 update_data.py --no-finance
 python3 update_hk_data.py
 ```
 
-> 抓取约 500 只港股通成分股，每只股票需调用两次 akshare 接口补充上市日期、行业、主营业务等信息，首次运行可能需要 **5–10 分钟**。
+> 默认抓取 **2024 年至今**的港股通成分股，每只股票需调用两次 akshare 接口补充上市日期、行业、主营业务等信息，首次运行可能需要 **5–10 分钟**。
 
 测试时仅抓取前 10 条：
 
 ```bash
 python3 update_hk_data.py --limit 10
+```
+
+抓取全部港股通成分股（不限上市日期）：
+
+```bash
+python3 update_hk_data.py --since 1900-01-01
+```
+
+指定起始日期：
+
+```bash
+python3 update_hk_data.py --since 2023-01-01
 ```
 
 ### 3. 打开网页

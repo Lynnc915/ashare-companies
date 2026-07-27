@@ -206,7 +206,18 @@ def main():
         default=4,
         help="並發線程數（默認 4）",
     )
+    parser.add_argument(
+        "--since",
+        type=str,
+        default="2024-01-01",
+        help="僅保留上市日期在此日期之後的成分股，默認 2024-01-01",
+    )
     args = parser.parse_args()
+
+    since = parse_date(args.since)
+    if since is None:
+        print(f"[ERROR] --since 日期格式無法識別: {args.since}", file=sys.stderr)
+        sys.exit(1)
 
     print("[*] 正在獲取港股通成分股列表...")
     base_df = fetch_base_list()
@@ -240,6 +251,12 @@ def main():
 
     # 按代碼排序
     records.sort(key=lambda r: r["code"])
+
+    # 按上市日期過濾
+    filtered = [r for r in records if r.get("list_date") is None or r["list_date"] >= since]
+    if len(filtered) != len(records):
+        print(f"[*] 按上市日期 {since} 過濾后保留 {len(filtered)} 條記錄")
+    records = filtered
 
     payload = {
         "update_time": datetime.now(timezone.utc).astimezone().isoformat(),
