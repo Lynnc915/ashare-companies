@@ -29,11 +29,15 @@ warnings.filterwarnings("ignore")
 import pandas as pd
 import requests
 
+# 統一 session：不讀取環境/系統代理，避免本地代理工具未運行時連接失敗
+SESSION = requests.Session()
+SESSION.trust_env = False
+
 ROOT = Path(__file__).resolve().parent
 DATA_FILE = ROOT / "data" / "hk_data.json"
 
 BASE_URL = "https://33.push2.eastmoney.com/api/qt/clist/get"
-FS = "m:128+t:3,m:128+t:4,m:128+t:1,m:128+t:2"
+FS = "m:128"
 FIELDS = "f12,f14,f20,f26,f100"
 PAGE_SIZE = 100
 
@@ -92,7 +96,7 @@ def retry(max_attempts: int = 3, base_delay: float = 1.0):
 
 @retry(max_attempts=3, base_delay=2.0)
 def fetch_base_list() -> pd.DataFrame:
-    """通過東方財富批量接口獲取港股通成分股基本信息。"""
+    """通過東方財富批量接口獲取全部香港上市公司基本信息（主板 + 創業板）。"""
     records: list[dict[str, Any]] = []
     page = 1
     while True:
@@ -108,7 +112,7 @@ def fetch_base_list() -> pd.DataFrame:
             "fields": FIELDS,
             "_": int(datetime.now().timestamp() * 1000),
         }
-        res = requests.get(BASE_URL, params=params, timeout=30)
+        res = SESSION.get(BASE_URL, params=params, timeout=30)
         res.raise_for_status()
         payload = res.json()
         diff = payload.get("data", {}).get("diff", [])
@@ -152,7 +156,7 @@ def fetch_financial_data(code: str) -> dict[str, dict[str, float | None]]:
         "sortColumns": "REPORT_DATE",
         "sortTypes": "-1",
     }
-    res = requests.get(url, params=params, timeout=20)
+    res = SESSION.get(url, params=params, timeout=20)
     res.raise_for_status()
     payload = res.json()
     items = payload.get("result", {}).get("data", [])
