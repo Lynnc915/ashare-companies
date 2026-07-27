@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-抓取港股通成分股數據，生成 data/hk_data.json。
+抓取 2024 年以來香港新上市企業數據，生成 data/hk_data.json。
 
-數據源：東方財富港股通成分股批量接口
+數據源：東方財富香港全部股票批量接口（主板 + 創業板）
 - f12: 代碼
 - f14: 名稱
 - f20: 總市值（港元）
@@ -32,7 +32,7 @@ ROOT = Path(__file__).resolve().parent
 DATA_FILE = ROOT / "data" / "hk_data.json"
 
 BASE_URL = "https://33.push2.eastmoney.com/api/qt/clist/get"
-FS = "b:DLMK0146,b:DLMK0144"
+FS = "m:128+t:3,m:128+t:4,m:128+t:1,m:128+t:2"
 FIELDS = "f12,f14,f20,f26,f100"
 PAGE_SIZE = 100
 
@@ -139,18 +139,18 @@ def fetch_base_list() -> pd.DataFrame:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="抓取港股通數據")
+    parser = argparse.ArgumentParser(description="抓取香港新上市企業數據")
     parser.add_argument(
         "--limit",
         type=int,
         default=None,
-        help="僅抓取前 N 條記錄（用於測試）",
+        help="僅保留前 N 條新上市記錄（用於測試）",
     )
     parser.add_argument(
         "--since",
         type=str,
         default="2024-01-01",
-        help="僅保留上市日期在此日期之後的成分股，默認 2024-01-01",
+        help="僅保留上市日期在此日期之后的新上市公司，默認 2024-01-01",
     )
     args = parser.parse_args()
 
@@ -159,14 +159,12 @@ def main():
         print(f"[ERROR] --since 日期格式無法識別: {args.since}", file=sys.stderr)
         sys.exit(1)
 
-    print("[*] 正在獲取港股通成分股列表...")
+    print("[*] 正在獲取香港上市公司列表...")
     base_df = fetch_base_list()
     if base_df.empty:
         print("[ERROR] 未獲取到任何數據", file=sys.stderr)
         sys.exit(1)
 
-    if args.limit:
-        base_df = base_df.head(args.limit)
     print(f"[*] 共 {len(base_df)} 只股票待處理")
 
     records: list[dict[str, Any]] = []
@@ -183,11 +181,14 @@ def main():
             "market_cap_currency": "HKD",
         })
 
-    # 按上市日期過濾（缺失上市日期的記錄保留，避免誤刪）
-    filtered = [r for r in records if r.get("list_date") is None or r["list_date"] >= since]
+    # 按上市日期過濾，僅保留 2024 年以來的新上市公司
+    filtered = [r for r in records if r.get("list_date") and r["list_date"] >= since]
     if len(filtered) != len(records):
         print(f"[*] 按上市日期 {since} 過濾后保留 {len(filtered)} 條記錄")
     records = filtered
+
+    if args.limit:
+        records = records[:args.limit]
 
     records.sort(key=lambda r: r["code"])
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>港股通上市企业信息查询</title>
+  <title>港股新上市企业信息查询（2024年至今）</title>
   <style>
     :root {
       --primary: #2563eb;
@@ -824,13 +824,13 @@
 </head>
 <body>
   <header>
-    <h1>港股通上市企业信息查询</h1>
-    <p>2024年至今 · 港股通成分股 · 上市日期 · 行业 · 市值 · HKEX 公告链接</p>
+    <h1>港股新上市企业信息查询</h1>
+    <p>2024年至今 · 香港主板 + 创业板 · 上市日期 · 行业 · 市值 · HKEX 公告链接</p>
   </header>
 
   <div class="market-nav">
     <a href="index.html">A股</a>
-    <a href="hk.html" class="active">港股通</a>
+    <a href="hk.html" class="active">港股</a>
   </div>
 
   <noscript>
@@ -937,11 +937,11 @@
 
   <div class="ai-chat" id="aiChat">
     <div class="ai-header">
-      <h3>AI 港股通助手</h3>
+      <h3>AI 港股助手</h3>
       <button id="aiClose">×</button>
     </div>
     <div class="ai-messages" id="aiMessages">
-      <div class="ai-message bot">你好！我可以基于当前筛选出的港股通成分股数据回答你的问题。如果站长已配置 AI 代理服务，你可以直接提问；否则需要在下方输入自己的 Claude API Key。</div>
+      <div class="ai-message bot">你好！我可以基于当前筛选出的港股新上市企业数据回答你的问题。如果站长已配置 AI 代理服务，你可以直接提问；否则需要在下方输入自己的 Claude API Key。</div>
     </div>
     <div class="ai-suggestions" id="aiSuggestions">
       <button data-q="市值最高和最低的是哪几家公司？">市值最高/最低？</button>
@@ -1605,7 +1605,7 @@
       const kimiKey = document.getElementById('kimiKey');
       const aiSuggestions = document.getElementById('aiSuggestions');
 
-      const SYSTEM_PROMPT = '你是港股通投资分析助手。请基于用户提供的港股通成分股数据回答问题，回答要简洁、专业、有数据支撑。不要给出投资建议，仅作信息整理。';
+      const SYSTEM_PROMPT = '你是港股投资分析助手。请基于用户提供的港股新上市企业数据回答问题，回答要简洁、专业、有数据支撑。不要给出投资建议，仅作信息整理。';
 
       const savedProvider = localStorage.getItem('hk_ai_provider');
       if (savedProvider) aiProvider.value = savedProvider;
@@ -1740,7 +1740,7 @@
       function buildContext() {
         const data = state.filteredData;
         const total = data.length;
-        if (total === 0) return '当前没有筛选出任何港股通企业。';
+        if (total === 0) return '当前没有筛选出任何港股企业。';
 
         const boardCount = {};
         data.forEach(d => { boardCount[d.board || '未知'] = (boardCount[d.board || '未知'] || 0) + 1; });
@@ -1782,7 +1782,7 @@
           .map(d => `- ${d.code} ${d.name}（${d.board}，${d.industry || '未分类'}）市值 ${formatMarketCap(d.market_cap)} 亿港元，主营：${d.main_business || '未披露'}`)
           .join('\n');
 
-        return `当前共筛选出 ${total} 家港股通成分股。\n板块分布：${boardText}。\n${capText}\n行业分布（前10）：${industryText}\n主营业务样例（前15条）：\n${businessList.join('\n')}\n市值前10企业详情：\n${top10}`;
+        return `当前共筛选出 ${total} 家港股成分股。\n板块分布：${boardText}。\n${capText}\n行业分布（前10）：${industryText}\n主营业务样例（前15条）：\n${businessList.join('\n')}\n市值前10企业详情：\n${top10}`;
       }
 
       async function sendMessage() {
@@ -1821,7 +1821,7 @@
               temperature: 1,
               messages: [
                 { role: 'system', content: SYSTEM_PROMPT },
-                { role: 'user', content: `以下是我当前筛选出的港股通成分股数据：\n${context}\n\n用户问题：${text}` }
+                { role: 'user', content: `以下是我当前筛选出的港股成分股数据：\n${context}\n\n用户问题：${text}` }
               ],
             };
 
@@ -1865,7 +1865,7 @@
               max_tokens: 1024,
               system: SYSTEM_PROMPT,
               messages: [
-                { role: 'user', content: `以下是我当前筛选出的港股通成分股数据：\n${context}\n\n用户问题：${text}` }
+                { role: 'user', content: `以下是我当前筛选出的港股成分股数据：\n${context}\n\n用户问题：${text}` }
               ],
             };
 
