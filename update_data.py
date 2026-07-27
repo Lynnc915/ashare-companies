@@ -585,26 +585,30 @@ def fetch_prospectus_urls(records: list[dict]) -> dict[str, str]:
     return result
 
 
-def fetch_ipo_accepted(df: pd.DataFrame | None, since: str = None) -> list[dict]:
+def fetch_ipo_accepted(df: pd.DataFrame | None, since: str = None, until: str = None) -> list[dict]:
     """
-    抓取 IPO 获得受理的企业数据。
+    抓取 IPO 受理企业数据（含历史受理记录及当前最新状态）。
     使用 akshare 的 stock_register_all_em（来源：东方财富）。
     返回字段：name, status, accept_date, exchange, industry, reg_address, sponsor, prospectus_url
     """
-    print("[*] 正在抓取 IPO 获得受理企业数据...")
+    print("[*] 正在抓取 IPO 受理企业数据...")
     if df is None or df.empty:
         return []
 
-    # 只保留已受理状态
-    df = df[df["最新状态"] == "已受理"].copy()
+    # 按受理日期过滤（保留所有当前状态：已受理/已问询/通过/终止等）
+    try:
+        df["受理日期_dt"] = pd.to_datetime(df["受理日期"], errors="coerce").dt.date
+        df = df[df["受理日期_dt"].apply(lambda d: d is not None)]
 
-    if since:
-        try:
+        if since:
             since_dt = datetime.strptime(since, "%Y-%m-%d").date()
-            df["受理日期_dt"] = pd.to_datetime(df["受理日期"], errors="coerce").dt.date
-            df = df[df["受理日期_dt"].apply(lambda d: d is not None and d >= since_dt)]
-        except Exception as e:
-            print(f"[WARN] 受理日期过滤失败: {e}")
+            df = df[df["受理日期_dt"].apply(lambda d: d >= since_dt)]
+
+        if until:
+            until_dt = datetime.strptime(until, "%Y-%m-%d").date()
+            df = df[df["受理日期_dt"].apply(lambda d: d <= until_dt)]
+    except Exception as e:
+        print(f"[WARN] 受理日期过滤失败: {e}")
 
     # 字段映射
     records = []
@@ -622,7 +626,7 @@ def fetch_ipo_accepted(df: pd.DataFrame | None, since: str = None) -> list[dict]
 
     # 按受理日期降序
     records.sort(key=lambda x: x["accept_date"] or "0000-00-00", reverse=True)
-    print(f"[OK] IPO 获得受理企业共 {len(records)} 条")
+    print(f"[OK] IPO 受理企业共 {len(records)} 条")
     return records
 
 

@@ -789,6 +789,21 @@
     .tag-sz { background: #fef3c7; color: #b45309; }
     .tag-sh { background: #dbeafe; color: #1e40af; }
 
+    .status-tag {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      background: #f1f5f9;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .status-accepted { background: #dbeafe; color: #1e40af; }
+    .status-passed { background: #d1fae5; color: #047857; }
+    .status-terminated { background: #fee2e2; color: #991b1b; }
+    .status-suspended { background: #fef3c7; color: #b45309; }
+    .status-asked { background: #ede9fe; color: #7c3aed; }
+
     .expand-icon {
       display: inline-block;
       width: 1rem;
@@ -846,6 +861,29 @@
 
     .finance-value { font-weight: 600; font-family: ui-monospace, monospace; }
     .finance-value.empty { color: var(--muted); font-weight: normal; }
+
+    .info-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.85rem;
+      font-size: 0.9rem;
+    }
+    .info-card h4 {
+      margin: 0 0 0.5rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.25rem 0;
+      border-bottom: 1px dashed var(--border);
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-row span:first-child { color: var(--muted); }
+    .info-row span:last-child { font-weight: 500; }
 
     .detail-actions {
       display: flex;
@@ -1276,10 +1314,10 @@
     <div class="ipo-section" id="ipoSection" style="display: none;">
       <div class="section-header collapsible-header" id="ipoHeader" onclick="toggleSection('ipoCompanies')">
         <div>
-          <h3 class="section-title">📋 获得受理的 IPO 企业</h3>
+          <h3 class="section-title">📋 IPO 受理企业</h3>
           <p class="section-source">
             数据来源：<a href="https://data.eastmoney.com/xg/ipo/" target="_blank" rel="noopener">东方财富 IPO 数据中心</a>
-            · 仅统计状态为“已受理”的企业
+            · 按受理日期统计，展示当前最新审核状态
           </p>
         </div>
         <div style="display:flex;align-items:center;gap:0.75rem;">
@@ -1928,7 +1966,7 @@
       const pageData = data.slice(start, start + state.ipoPageSize);
 
       if (total === 0) {
-        ipoContentEl.innerHTML = '<div class="empty">当前筛选条件下暂无获得受理的企业</div>';
+        ipoContentEl.innerHTML = '<div class="empty">当前筛选条件下暂无 IPO 受理企业</div>';
         ipoPaginationEl.innerHTML = '';
         return;
       }
@@ -1937,6 +1975,7 @@
         { key: 'name', label: '企业名称' },
         { key: 'accept_date', label: '受理日期' },
         { key: 'exchange', label: '拟上市板块' },
+        { key: 'status', label: '当前状态' },
         { key: 'industry', label: '所属行业' },
         { key: 'reg_address', label: '注册地' },
         { key: 'sponsor', label: '保荐机构' },
@@ -1952,11 +1991,13 @@
 
       pageData.forEach(item => {
         const isExpanded = state.ipoExpanded.has(item.name);
+        const statusClass = getIPOStatusClass(item.status);
         html += `
           <tr class="main-row ${isExpanded ? 'expanded' : ''}" onclick="toggleIPORow(decodeURIComponent('${encodeURIComponent(item.name)}'))">
             <td><span class="expand-icon">▶</span>${escapeHtml(item.name)}</td>
             <td>${escapeHtml(item.accept_date || '-')}</td>
             <td>${escapeHtml(mapExchangeToBoard(item.exchange) || '-')}</td>
+            <td><span class="${statusClass}">${escapeHtml(item.status || '-')}</span></td>
             <td>${escapeHtml(item.industry || '-')}</td>
             <td>${escapeHtml(item.reg_address || '-')}</td>
             <td>${escapeHtml(item.sponsor || '-')}</td>
@@ -1966,7 +2007,7 @@
         if (isExpanded) {
           html += `
             <tr class="detail-row">
-              <td colspan="6">
+              <td colspan="7">
                 <div class="detail-panel">
                   ${renderIPOStandardSection(item)}
                 </div>
@@ -1981,14 +2022,36 @@
       renderIPOPagination(totalPages);
     }
 
+    function getIPOStatusClass(status) {
+      const s = String(status || '');
+      if (s.includes('已受理')) return 'status-tag status-accepted';
+      if (s.includes('通过') || s.includes('注册生效')) return 'status-tag status-passed';
+      if (s.includes('终止') || s.includes('撤回') || s.includes('否决')) return 'status-tag status-terminated';
+      if (s.includes('中止')) return 'status-tag status-suspended';
+      if (s.includes('问询') || s.includes('反馈')) return 'status-tag status-asked';
+      return 'status-tag';
+    }
+
     function renderIPOStandardSection(item) {
       const board = mapExchangeToBoard(item.exchange);
+      const statusClass = getIPOStatusClass(item.status);
 
       return `
         <div class="standard-section">
-          <div class="standard-section-title">📋 上市标准预测（${escapeHtml(board)}）</div>
+          <div class="standard-section-title">📋 ${escapeHtml(item.name)} · 受理与审核情况</div>
+          <div class="detail-grid" style="margin-bottom:0.75rem;">
+            <div class="info-card">
+              <h4>基本资料</h4>
+              <div class="info-row"><span>受理日期</span><span>${escapeHtml(item.accept_date || '-')}</span></div>
+              <div class="info-row"><span>拟上市板块</span><span>${escapeHtml(board)}</span></div>
+              <div class="info-row"><span>当前状态</span><span class="${statusClass}">${escapeHtml(item.status || '-')}</span></div>
+              <div class="info-row"><span>所属行业</span><span>${escapeHtml(item.industry || '-')}</span></div>
+              <div class="info-row"><span>注册地</span><span>${escapeHtml(item.reg_address || '-')}</span></div>
+              <div class="info-row"><span>保荐机构</span><span>${escapeHtml(item.sponsor || '-')}</span></div>
+            </div>
+          </div>
           <div class="standard-hint">
-            <strong>预测适用标准：</strong>IPO 申报企业暂无公开财务数据，无法预测具体适用哪套标准，请以交易所审核披露为准。
+            <strong>上市标准预测：</strong>IPO 申报企业暂无公开财务数据，无法预测具体适用哪套标准，请以交易所审核披露为准。
           </div>
           <div class="detail-actions" style="margin-top:0.75rem;">
             <a class="btn btn-outline btn-sm" href="https://data.eastmoney.com/xg/ipo/" target="_blank" rel="noopener" onclick="event.stopPropagation();">
