@@ -24,6 +24,8 @@ from pathlib import Path
 import akshare as ak
 import pandas as pd
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from PyPDF2 import PdfReader
 from io import BytesIO
 
@@ -32,6 +34,26 @@ ROOT = Path(__file__).resolve().parent
 DATA_DIR = ROOT / "data"
 DATA_FILE = DATA_DIR / "data.json"
 IPO_ACCEPTED_FILE = DATA_DIR / "ipo_accepted.json"
+
+# 帶重試的 PDF 下載會話（用於招股書下載）
+def _create_pdf_session() -> requests.Session:
+    session = requests.Session()
+    retry = Retry(
+        total=3,
+        backoff_factor=1,
+        status_forcelist=[500, 502, 503, 504],
+        allowed_methods=["GET"],
+    )
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    session.headers.update({
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+    })
+    return session
+
+
+PDF_SESSION = _create_pdf_session()
 
 # 默认只保留 2022 年及以后上市的企业
 DEFAULT_SINCE = "2022-01-01"
@@ -689,15 +711,15 @@ def _check_met_by_context(section_one_line: str, keyword_pos: int, window_size: 
     return None
 
 
-def extract_kcb_sci_tech(pdf_url: str) -> dict | None:
+def _extract_kcb_sci_tech_impl(pdf_url: str) -> dict | None:
     """
-    從科創板招股說明書 PDF 中提取科創屬性指標。
+    從科創板招股說明書 PDF 中提取科創屬性指標（內部實現）。
     返回結構化數據；失敗返回 None。
     """
     if not pdf_url:
         return None
     try:
-        res = requests.get(pdf_url, timeout=60)
+        res = PDF_SESSION.get(pdf_url, timeout=60)
         res.raise_for_status()
     except Exception as e:
         print(f"[WARN] 招股書下載失敗 {pdf_url}: {e}", file=sys.stderr)
@@ -865,6 +887,15 @@ def extract_kcb_sci_tech(pdf_url: str) -> dict | None:
     return result
 
 
+def extract_kcb_sci_tech(pdf_url: str) -> dict | None:
+    """帶異常保護的招股書科創屬性提取入口。"""
+    try:
+        return _extract_kcb_sci_tech_impl(pdf_url)
+    except Exception as e:
+        print(f"[WARN] 提取科创属性失败 {pdf_url}: {e}", file=sys.stderr)
+        return None
+
+
 def enrich_kcb_sci_tech(records: list[dict]) -> list[dict]:
     """為科創板 IPO 受理企業補充科創屬性指標。"""
     kcb_records = [r for r in records if r.get("exchange") == "科创板" and r.get("prospectus_url")]
@@ -872,11 +903,20 @@ def enrich_kcb_sci_tech(records: list[dict]) -> list[dict]:
         return records
 
     print(f"[*] 正在提取 {len(kcb_records)} 家科創板企業的科創屬性指標...")
+    success = 0
+    failed = 0
     for i, record in enumerate(kcb_records, 1):
         sci_tech = extract_kcb_sci_tech(record.get("prospectus_url"))
         record["sci_tech"] = sci_tech
+        if sci_tech and sci_tech.get("metrics"):
+            success += 1
+        else:
+            failed += 1
         if i % 10 == 0 or i == len(kcb_records):
-            print(f"  科創屬性提取進度 {i}/{len(kcb_records)}")
+            print(f"  科創屬性提取進度 {i}/{len(kcb_records)}，成功 {success}，失敗 {failed}")
+        if i < len(kcb_records):
+            time.sleep(0.5)
+    print(f"[OK] 科創屬性提取完成，成功 {success}，失敗 {failed}")
     return records
 
 

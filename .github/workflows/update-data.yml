@@ -21,6 +21,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,10 +37,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Update data
-        run: |
-          python update_data.py
-          python update_hk_data.py
+      - name: Update A-share data
+        run: python update_data.py
+
+      - name: Update HK data
+        run: python update_hk_data.py
 
       - name: Check for data changes
         id: diff
