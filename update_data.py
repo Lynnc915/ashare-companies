@@ -24,6 +24,8 @@ from pathlib import Path
 import akshare as ak
 import pandas as pd
 import requests
+from PyPDF2 import PdfReader
+from io import BytesIO
 
 # 项目根目录
 ROOT = Path(__file__).resolve().parent
@@ -585,11 +587,304 @@ def fetch_prospectus_urls(records: list[dict]) -> dict[str, str]:
     return result
 
 
+def extract_pdf_text(pdf_bytes: bytes, max_pages: int = 120) -> str:
+    """從 PDF 字節中提取文本，失敗時返回空字符串。"""
+    try:
+        reader = PdfReader(BytesIO(pdf_bytes))
+        texts = []
+        for i, page in enumerate(reader.pages):
+            if i >= max_pages:
+                break
+            try:
+                txt = page.extract_text()
+                if txt:
+                    texts.append(txt)
+            except Exception:
+                pass
+        return "\n".join(texts)
+    except Exception as e:
+        print(f"[WARN] PDF 解析失敗: {e}", file=sys.stderr)
+        return ""
+
+
+def _extract_metric_after_checkbox(section_one_line: str, label_pattern: str, next_labels: list[str]) -> tuple[str | None, bool | None]:
+    """在合併後的單行文本中，根據指標標籤正則定位，跳過閾值和勾選，提取"指標情況"。"""
+    match = re.search(label_pattern, section_one_line)
+    if not match:
+        return None, None
+
+    search_start = match.end()
+    window = section_one_line[search_start:search_start + 60]
+
+    met = None
+    value_start = search_start
+
+    # 常見勾選格式："是 □否"、"√是 □否"、"是 □否"、"■是 □否"
+    for marker in ["", "√", "■", "☑"]:
+        yes_match = re.search(re.escape(marker) + r"\s*是", window)
+        no_match = re.search(re.escape(marker) + r"\s*否", window)
+        if yes_match:
+            met = True
+            value_start = search_start + yes_match.end()
+            break
+        if no_match:
+            met = False
+            value_start = search_start + no_match.end()
+            break
+    if met is None:
+        yes_pos = window.find("是")
+        no_pos = window.find("否")
+        if yes_pos >= 0 and (no_pos < 0 or yes_pos < no_pos):
+            met = True
+            value_start = search_start + yes_pos + 1
+        elif no_pos >= 0:
+            met = False
+            value_start = search_start + no_pos + 1
+
+    end = len(section_one_line)
+    for next_label in next_labels:
+        nidx = section_one_line.find(next_label, value_start + 3)
+        if nidx >= 0:
+            end = min(end, nidx)
+
+    value = section_one_line[value_start:end].strip()
+    value = re.sub(r"^[□√■☑\s≥\d\.,亿元万元%\-]*", "", value)
+    value = re.sub(r"^否\s*", "", value)
+    value = value.strip()
+    if not value:
+        value = None
+    return value, met
+
+
+def _safe_float(text: str) -> float | None:
+    """從文本中提取第一個數字（支持萬/億單位）。"""
+    if not text:
+        return None
+    # 去掉千分位逗號
+    text = text.replace(",", "")
+    # 嘗試匹配 142,797.55、3億、8000萬等
+    m = re.search(r"([\d\.]+)\s*(?:萬|万|億|亿)?", text)
+    if not m:
+        return None
+    try:
+        return float(m.group(1))
+    except ValueError:
+        return None
+
+
+def _check_met_by_context(section_one_line: str, keyword_pos: int, window_size: int = 120) -> bool | None:
+    """根據關鍵詞後面的文本判斷是否符合。"""
+    window = section_one_line[keyword_pos:keyword_pos + window_size]
+    # 直接關鍵詞
+    if re.search(r"[√■☑]\s*是", window):
+        return True
+    if re.search(r"[√■☑]\s*否", window):
+        return False
+    if "满足" in window or "符合" in window:
+        return True
+    if "不满足" in window or "不符合" in window:
+        return False
+    if "不适用" in window:
+        return None  # 特殊標記
+    return None
+
+
+def extract_kcb_sci_tech(pdf_url: str) -> dict | None:
+    """
+    從科創板招股說明書 PDF 中提取科創屬性指標。
+    返回結構化數據；失敗返回 None。
+    """
+    if not pdf_url:
+        return None
+    try:
+        res = requests.get(pdf_url, timeout=60)
+        res.raise_for_status()
+    except Exception as e:
+        print(f"[WARN] 招股書下載失敗 {pdf_url}: {e}", file=sys.stderr)
+        return None
+
+    text = extract_pdf_text(res.content, max_pages=120)
+    if not text:
+        return None
+
+    # 定位科创属性章节：优先匹配正文中的具体指标区域，避免只匹配到目录
+    keywords = [
+        "科创属性相关指标要求",
+        "科创属性评价标准",
+        "科创属性相关指标或情形",
+        "科创属性评价指引",
+        "科创属性评价",
+        "发行人符合科创板定位",
+        "科创属性符合科创板定位要求",
+    ]
+    candidates = []
+    for kw in keywords:
+        idx = text.find(kw)
+        while idx >= 0:
+            candidates.append(idx)
+            idx = text.find(kw, idx + len(kw))
+    if not candidates:
+        return None
+    # 優先選擇同時包含"研发投入"的位置（避開目錄頁）
+    start_idx = None
+    for idx in sorted(candidates):
+        snippet = text[idx:idx + 300]
+        if "研发投入" in snippet or "研发人员" in snippet:
+            start_idx = idx
+            break
+    if start_idx is None:
+        start_idx = min(candidates)
+
+    section = text[start_idx:start_idx + 5000]
+    section_one_line = re.sub(r"\s+", " ", section.replace("\n", " "))
+
+    result: dict[str, Any] = {
+        "metrics": {},
+        "exceptional": False,
+        "all_met": None,
+    }
+
+    # 1. 研发投入：累计研发投入金额 或 研发投入占比
+    rd_value = None
+    rd_met = None
+    # 优先找"累计研发投入"
+    m = re.search(r"累计研发投入(?:金额)?(?:为|分别)?\s*[≥≈]?\s*([\d,\.]+\s*(?:万元|亿元))[^。，]{0,80}?[，。]", section_one_line)
+    if not m:
+        m = re.search(r"研发投入(?:分别)?为\s*[≥≈]?\s*([\d,\.]+\s*(?:万元|亿元))[^。，]{0,120}?[，。]", section_one_line)
+    if not m:
+        # 找比例
+        m = re.search(r"研发投入占(?:最近三年累计)?营业收入比例\s*(?:为|≥|≈|不低于|达到)?\s*([\d\.]+%)", section_one_line)
+    if m:
+        rd_value = m.group(0).strip()
+        rd_num = _safe_float(m.group(1))
+        # 判断标准：金额 >= 8000万 或 比例 >= 5%
+        if "万元" in m.group(1) or "亿元" in m.group(1):
+            # 转成万元
+            unit = 1
+            if "亿" in m.group(1):
+                unit = 10000
+            rd_met = (rd_num is not None and rd_num * unit >= 8000) or _check_met_by_context(section_one_line, m.start()) is True
+        elif "%" in m.group(1):
+            rd_met = (rd_num is not None and rd_num >= 5) or _check_met_by_context(section_one_line, m.start()) is True
+        else:
+            rd_met = _check_met_by_context(section_one_line, m.start())
+    result["metrics"]["rd_investment"] = {"value": rd_value, "met": rd_met}
+
+    # 2. 研发人员占比
+    rd_person_value = None
+    rd_person_met = None
+    m = re.search(r"研发人员占(?:当年)?员工总数\s*(?:的)?\s*比例\s*(?:为|是|不低于|达到|≥|≈)?\s*([\d\.]+%)", section_one_line)
+    if m:
+        rd_person_value = m.group(0).strip()
+        ratio = _safe_float(m.group(1))
+        context_met = _check_met_by_context(section_one_line, m.start())
+        if context_met is not None:
+            rd_person_met = context_met
+        elif ratio is not None:
+            rd_person_met = ratio >= 10
+    result["metrics"]["rd_personnel"] = {"value": rd_person_value, "met": rd_person_met}
+
+    # 3. 发明专利
+    patent_value = None
+    patent_met = None
+    # 找"形成主营业务收入的发明专利"或"应用于公司主营业务的发明专利"
+    m = re.search(r"(?:形成主营业务收入|应用于公司主营业务).*?发明专[\s]*利(?:合计)?\s*(\d+)\s*项", section_one_line)
+    if not m:
+        m = re.search(r"发明专[\s]*利(?:合计)?\s*(\d+)\s*项[^。，]{0,60}(?:主营业务|产业化)", section_one_line)
+    if not m:
+        # 更宽松：找"授权发明专利 \d+ 项"、"发明专利 \d+ 项"等
+        m = re.search(r"(?:授权|发明)专[\s]*利(?:合计)?\s*(\d+)\s*项", section_one_line)
+    if not m:
+        # 有的写法是"\d+ 项授权发明专利"
+        m = re.search(r"(\d+)\s*项\s*(?:授权|发明)专[\s]*利", section_one_line)
+    if m:
+        patent_value = m.group(0).strip()
+        count = int(m.group(1))
+        context_met = _check_met_by_context(section_one_line, m.start())
+        if context_met is not None:
+            patent_met = context_met
+        else:
+            patent_met = count >= 7
+    result["metrics"]["patents"] = {"value": patent_value, "met": patent_met}
+
+    # 4. 营业收入增长
+    revenue_value = None
+    revenue_met = None
+    revenue_not_applicable = False
+    m = re.search(r"营业收入复合增\s*长率\s*(?:为|≥|≈|不低于|达到)?\s*([\d\.]+%)", section_one_line)
+    if not m:
+        m = re.search(r"复合增\s*长率\s*(?:为|≥|≈|不低于|达到)?\s*([\d\.]+%)", section_one_line)
+    if m:
+        revenue_value = m.group(0).strip()
+        growth = _safe_float(m.group(1))
+        context_met = _check_met_by_context(section_one_line, m.start())
+        if context_met is True:
+            revenue_met = True
+        elif context_met is False:
+            revenue_met = False
+        elif growth is not None:
+            revenue_met = growth >= 25
+    # 找"营业收入分别为"，計算複合增長率或取最近一年營收
+    if not revenue_value:
+        m = re.search(r"营业收入分别(?:为|是)\s*([\d,\.]+\s*(?:万元|亿元))、\s*([\d,\.]+\s*(?:万元|亿元))、\s*([\d,\.]+\s*(?:万元|亿元))", section_one_line)
+        if m:
+            amounts = [_safe_float(v) for v in m.groups()]
+            units = [10000 if "亿" in v else 1 for v in m.groups()]
+            amounts_wan = [a * u for a, u in zip(amounts, units) if a is not None]
+            if len(amounts_wan) == 3 and amounts_wan[0] > 0:
+                # 複合增長率 = (末期/初期)^(1/2) - 1
+                growth = (amounts_wan[2] / amounts_wan[0]) ** 0.5 - 1
+                revenue_value = f"最近三年营业收入分别为 {m.group(1)}、{m.group(2)}、{m.group(3)}，复合增长率约 {(growth*100):.2f}%"
+                revenue_met = growth >= 0.25 or amounts_wan[2] >= 30000
+    # 找最近一年营收（作为替代标准）
+    if not revenue_value:
+        m = re.search(r"最近一年营业收入(?:金额)?(?:为|达到)?\s*[≥≈]?\s*([\d,\.]+\s*(?:万元|亿元))", section_one_line)
+        if m:
+            revenue_value = m.group(0).strip()
+            amount = _safe_float(m.group(1))
+            unit = 10000 if "亿" in m.group(1) else 1
+            if amount is not None:
+                revenue_met = amount * unit >= 30000
+    # 识别"不适用"（第五套标准等）
+    if re.search(r"不适用.*?关于营业收入的要求", section_one_line):
+        revenue_not_applicable = True
+        revenue_met = True
+        if not revenue_value or "不适用" not in revenue_value:
+            revenue_value = (revenue_value or "") + "（注：不适用科创属性营业收入指标，拟采用第五套上市标准）"
+    result["metrics"]["revenue"] = {"value": revenue_value, "met": revenue_met, "not_applicable": revenue_not_applicable}
+
+    # 判断是否全部满足
+    mets = [v["met"] for v in result["metrics"].values() if v["met"] is not None]
+    if mets:
+        result["all_met"] = all(mets)
+
+    # 简单判断是否适用例外条款
+    if "标准二" in section_one_line or "例外" in section_one_line or "五项" in section_one_line:
+        result["exceptional"] = True
+
+    return result
+
+
+def enrich_kcb_sci_tech(records: list[dict]) -> list[dict]:
+    """為科創板 IPO 受理企業補充科創屬性指標。"""
+    kcb_records = [r for r in records if r.get("exchange") == "科创板" and r.get("prospectus_url")]
+    if not kcb_records:
+        return records
+
+    print(f"[*] 正在提取 {len(kcb_records)} 家科創板企業的科創屬性指標...")
+    for i, record in enumerate(kcb_records, 1):
+        sci_tech = extract_kcb_sci_tech(record.get("prospectus_url"))
+        record["sci_tech"] = sci_tech
+        if i % 10 == 0 or i == len(kcb_records):
+            print(f"  科創屬性提取進度 {i}/{len(kcb_records)}")
+    return records
+
+
 def fetch_ipo_accepted(df: pd.DataFrame | None, since: str = None, until: str = None) -> list[dict]:
     """
     抓取 IPO 受理企业数据（含历史受理记录及当前最新状态）。
     使用 akshare 的 stock_register_all_em（来源：东方财富）。
-    返回字段：name, status, accept_date, exchange, industry, reg_address, sponsor, prospectus_url
+    返回字段：name, status, accept_date, exchange, industry, reg_address, sponsor, prospectus_url, sci_tech(科創板)
     """
     print("[*] 正在抓取 IPO 受理企业数据...")
     if df is None or df.empty:
@@ -626,6 +921,10 @@ def fetch_ipo_accepted(df: pd.DataFrame | None, since: str = None, until: str = 
 
     # 按受理日期降序
     records.sort(key=lambda x: x["accept_date"] or "0000-00-00", reverse=True)
+
+    # 為科創板企業補充科創屬性指標
+    records = enrich_kcb_sci_tech(records)
+
     print(f"[OK] IPO 受理企业共 {len(records)} 条")
     return records
 
