@@ -2066,6 +2066,19 @@
 
     function renderSTARSciTechSection(item) {
       const st = item.sci_tech;
+
+      // 已嘗試提取但失敗
+      if (st === null) {
+        return `
+          <div class="standard-section" style="margin-bottom:0.75rem;">
+            <div class="standard-section-title">🔬 科創板科創屬性評價指標（根據招股書提取）</div>
+            <div class="standard-hint" style="margin-bottom:0.5rem;">
+              未能從招股書中自動提取科創屬性指標，可能是 PDF 解析失敗、文件為掃描件或章節格式未識別。請點擊下方「查看招股說明書」查看原文。
+            </div>
+          </div>
+        `;
+      }
+
       const hasMetrics = st && st.metrics && Object.keys(st.metrics).length > 0;
 
       if (hasMetrics) {
@@ -2074,6 +2087,14 @@
         const personnel = m.rd_personnel || {};
         const patents = m.patents || {};
         const revenue = m.revenue || {};
+
+        const metBadge = (met) => {
+          if (met === true) return `<span class="status-tag status-passed">是</span>`;
+          if (met === false) return `<span class="status-tag status-terminated">否</span>`;
+          return `<span class="status-tag">未識別</span>`;
+        };
+
+        const valueOrMissing = (value) => escapeHtml(value || '未提取到 / 招股書未明確披露');
 
         return `
           <div class="standard-section" style="margin-bottom:0.75rem;">
@@ -2089,29 +2110,29 @@
                 <h4>1. 研發投入</h4>
                 <p style="margin:0;font-size:0.9rem;line-height:1.7;">
                   最近三年累計研發投入占營收比例 ≥5%，或金額 ≥8,000 萬元。</p>
-                <div class="info-row" style="margin-top:0.5rem;"><span>指標情況</span><span>${escapeHtml(rd.value || '-')}</span></div>
-                <div class="info-row"><span>是否符合</span><span class="${rd.met ? 'status-tag status-passed' : rd.met === false ? 'status-tag status-terminated' : 'status-tag'}">${rd.met === true ? '是' : rd.met === false ? '否' : '-'}</span></div>
+                <div class="info-row" style="margin-top:0.5rem;"><span>指標情況</span><span>${valueOrMissing(rd.value)}</span></div>
+                <div class="info-row"><span>是否符合</span>${metBadge(rd.met)}</div>
               </div>
               <div class="info-card">
                 <h4>2. 研發人員</h4>
                 <p style="margin:0;font-size:0.9rem;line-height:1.7;">
                   研發人員占當年員工總數比例 ≥10%。</p>
-                <div class="info-row" style="margin-top:0.5rem;"><span>指標情況</span><span>${escapeHtml(personnel.value || '-')}</span></div>
-                <div class="info-row"><span>是否符合</span><span class="${personnel.met ? 'status-tag status-passed' : personnel.met === false ? 'status-tag status-terminated' : 'status-tag'}">${personnel.met === true ? '是' : personnel.met === false ? '否' : '-'}</span></div>
+                <div class="info-row" style="margin-top:0.5rem;"><span>指標情況</span><span>${valueOrMissing(personnel.value)}</span></div>
+                <div class="info-row"><span>是否符合</span>${metBadge(personnel.met)}</div>
               </div>
               <div class="info-card">
                 <h4>3. 發明專利</h4>
                 <p style="margin:0;font-size:0.9rem;line-height:1.7;">
                   應用於主營業務並能夠產業化的發明專利 ≥7 項。</p>
-                <div class="info-row" style="margin-top:0.5rem;"><span>指標情況</span><span>${escapeHtml(patents.value || '-')}</span></div>
-                <div class="info-row"><span>是否符合</span><span class="${patents.met ? 'status-tag status-passed' : patents.met === false ? 'status-tag status-terminated' : 'status-tag'}">${patents.met === true ? '是' : patents.met === false ? '否' : '-'}</span></div>
+                <div class="info-row" style="margin-top:0.5rem;"><span>指標情況</span><span>${valueOrMissing(patents.value)}</span></div>
+                <div class="info-row"><span>是否符合</span>${metBadge(patents.met)}</div>
               </div>
               <div class="info-card">
                 <h4>4. 營業收入增長</h4>
                 <p style="margin:0;font-size:0.9rem;line-height:1.7;">
                   最近三年營業收入復合增長率 ≥25%，或最近一年營收 ≥3 億元。</p>
-                <div class="info-row" style="margin-top:0.5rem;"><span>指標情況</span><span>${escapeHtml(revenue.value || '-')}</span></div>
-                <div class="info-row"><span>是否符合</span><span class="${revenue.met ? 'status-tag status-passed' : revenue.met === false ? 'status-tag status-terminated' : 'status-tag'}">${revenue.met === true ? '是' : revenue.met === false ? '否' : '-'}</span></div>
+                <div class="info-row" style="margin-top:0.5rem;"><span>指標情況</span><span>${valueOrMissing(revenue.value)} ${revenue.not_applicable ? '<span class="status-tag status-passed">不適用（第五套標準）</span>' : ''}</span></div>
+                <div class="info-row"><span>是否符合</span>${revenue.not_applicable ? '<span class="status-tag status-passed">不適用</span>' : metBadge(revenue.met)}</div>
               </div>
             </div>
             ${st.exceptional ? `
@@ -2119,6 +2140,9 @@
                 <strong>例外條款：</strong>招股書中同時披露了適用科創屬性評價例外條款的情形（如國家戰略意義、國家科技獎、進口替代等），具體內容請查看招股書原文。
               </div>
             ` : ''}
+            <div class="standard-disclaimer" style="margin-top:0.5rem;">
+              以上指標由程序自動從招股書中提取，可能存在識別誤差，請以交易所審核披露及招股書原文為準。
+            </div>
           </div>
         `;
       }
