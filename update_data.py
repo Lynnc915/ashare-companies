@@ -711,6 +711,135 @@ def _check_met_by_context(section_one_line: str, keyword_pos: int, window_size: 
     return None
 
 
+# 科創屬性例外條款（《科創屬性評價指引（試行）》第二條）
+EXCEPTION_CLAUSE_PATTERNS: list[tuple[str, str, list[str]]] = [
+    (
+        "national_strategy",
+        "国家战略/国际领先技术",
+        [
+            r"核心技术.*?经国家主管部门认定",
+            r"国家主管部门.*?认定.*?国际领先",
+            r"国际领先|国际先进水平",
+            r"国家战略.*?重大意义",
+            r"对国家重大战略.*?重大意义",
+        ],
+    ),
+    (
+        "national_award",
+        "国家科学技术奖",
+        [
+            r"国家科技进步奖",
+            r"国家自然科学奖",
+            r"国家技术发明奖",
+            r"国家科学技术进步奖",
+            r"作为主要参与单位.*?获得.*?国家.*?奖",
+            r"核心技术人员.*?作为主要参与人员.*?国家.*?奖",
+        ],
+    ),
+    (
+        "national_project",
+        "国家重大科技专项",
+        [
+            r"国家重大科技专项",
+            r"国家科技重大专项",
+            r"国家重点研发计划",
+            r"独立或者牵头承担",
+            r"牵头承担.*?国家.*?专项",
+            r"独立承担.*?国家.*?专项",
+            r"承担.*?国家.*?重大科技项目",
+        ],
+    ),
+    (
+        "import_substitution",
+        "进口替代/关键领域突破",
+        [
+            r"进口替代",
+            r"关键设备|关键产品|关键零部件|关键材料",
+            r"国家鼓励、支持和推动",
+            r"打破.*?国外.*?垄断",
+            r"打破.*?垄断",
+            r"填补国内空白",
+            r"国产化替代",
+        ],
+    ),
+    (
+        "patents_50",
+        "50项以上发明专利",
+        [
+            r"形成核心技术和应用于主营业务.*?发明专利.*?50项",
+            r"形成核心技术和主营业务收入.*?发明专利.*?50项",
+            r"发明专利.*?50项以上",
+            r"发明专利.*?五十项",
+            r"能够产业化的发明专利.*?50项",
+            r"形成核心技术的发明专利.*?50项",
+        ],
+    ),
+]
+
+
+# 第五套上市标准相關表述
+LISTING_STANDARD_5_PATTERNS = [
+    r"第五套上市标准",
+    r"预计市值.*?(不低于|超过).*?人民币.*?(40亿|四十亿)",
+    r"第五套.*?(市值|上市)",
+    r"尚未盈利",
+    r"未盈利企业",
+]
+
+
+def _extract_text_excerpt(section_one_line: str, match_start: int, match_end: int, context: int = 80) -> str:
+    """根據匹配位置截取帶前後文的中文文本片段。"""
+    start = max(0, match_start - context)
+    end = min(len(section_one_line), match_end + context)
+    excerpt = section_one_line[start:end]
+    # 清理多餘空白
+    excerpt = re.sub(r"\s+", " ", excerpt).strip()
+    return excerpt
+
+
+def _extract_exception_clauses(section_one_line: str) -> tuple[list[dict[str, str]], str | None, bool]:
+    """
+    從科創屬性章節文本中提取例外條款、第五套上市標準及未盈利標記。
+    返回：(exceptional_clauses, listing_standard, unprofitable)
+    """
+    clauses: list[dict[str, str]] = []
+    listing_standard: str | None = None
+    unprofitable = False
+
+    # 先判斷是否存在例外語境（若無則降低誤報）
+    has_exception_context = bool(
+        re.search(r"例外|第二条|标准二|未同时满足上述指标|虽未同时满足", section_one_line)
+    )
+
+    # 匹配第五套上市標準
+    if re.search("|".join(LISTING_STANDARD_5_PATTERNS), section_one_line):
+        listing_standard = "第五套上市标准"
+        unprofitable = True
+
+    if not has_exception_context and not listing_standard:
+        return clauses, listing_standard, unprofitable
+
+    # 依次匹配 5 類例外條款
+    for category, label, patterns in EXCEPTION_CLAUSE_PATTERNS:
+        best_excerpt = ""
+        best_score = 0
+        for pattern in patterns:
+            for m in re.finditer(pattern, section_one_line):
+                # 簡單置信度：匹配越長、位置靠後（正文區域）分數略高
+                score = len(m.group(0))
+                if score > best_score:
+                    best_score = score
+                    best_excerpt = _extract_text_excerpt(section_one_line, m.start(), m.end())
+        if best_excerpt:
+            clauses.append({
+                "category": category,
+                "label": label,
+                "text": best_excerpt,
+            })
+
+    return clauses, listing_standard, unprofitable
+
+
 def _extract_kcb_sci_tech_impl(pdf_url: str) -> dict | None:
     """
     從科創板招股說明書 PDF 中提取科創屬性指標（內部實現）。
@@ -763,6 +892,9 @@ def _extract_kcb_sci_tech_impl(pdf_url: str) -> dict | None:
     result: dict[str, Any] = {
         "metrics": {},
         "exceptional": False,
+        "exceptional_clauses": [],
+        "listing_standard": None,
+        "unprofitable": False,
         "all_met": None,
     }
 
@@ -868,9 +1000,11 @@ def _extract_kcb_sci_tech_impl(pdf_url: str) -> dict | None:
             if amount is not None:
                 revenue_met = amount * unit >= 30000
     # 识别"不适用"（第五套标准等）
-    if re.search(r"不适用.*?关于营业收入的要求", section_one_line):
+    if re.search(r"不适用.*?关于营业收入的要求|第五套上市标准|尚未盈利|未盈利企业|预计市值.*?(不低于|超过).*?人民币.*?(40亿|四十亿)", section_one_line):
         revenue_not_applicable = True
         revenue_met = True
+        result["listing_standard"] = "第五套上市标准"
+        result["unprofitable"] = True
         if not revenue_value or "不适用" not in revenue_value:
             revenue_value = (revenue_value or "") + "（注：不适用科创属性营业收入指标，拟采用第五套上市标准）"
     result["metrics"]["revenue"] = {"value": revenue_value, "met": revenue_met, "not_applicable": revenue_not_applicable}
@@ -880,8 +1014,13 @@ def _extract_kcb_sci_tech_impl(pdf_url: str) -> dict | None:
     if mets:
         result["all_met"] = all(mets)
 
-    # 简单判断是否适用例外条款
-    if "标准二" in section_one_line or "例外" in section_one_line or "五项" in section_one_line:
+    # 提取例外條款及第五套上市標準
+    clauses, listing_standard, unprofitable = _extract_exception_clauses(section_one_line)
+    result["exceptional_clauses"] = clauses
+    if listing_standard:
+        result["listing_standard"] = listing_standard
+    result["unprofitable"] = unprofitable
+    if clauses or "标准二" in section_one_line or "例外" in section_one_line or "五项" in section_one_line:
         result["exceptional"] = True
 
     return result
@@ -920,11 +1059,25 @@ def enrich_kcb_sci_tech(records: list[dict]) -> list[dict]:
     return records
 
 
+def _get_ipo_source_url(exchange: str) -> str:
+    """根據擬上市地點返回交易所公開審核入口 URL。"""
+    mapping = {
+        "科创板": "http://kcb.sse.com.cn/renewal/",
+        "沪主板": "https://www.sse.com.cn/listing/renewal/ipo/",
+        "深主板": "http://www.szse.cn/market/listing/ipo/",
+        "创业板": "http://www.szse.cn/market/listing/ipo/",
+        "北交所": "http://www.bse.cn/",
+    }
+    return mapping.get(exchange, "https://data.eastmoney.com/xg/ipo/")
+
+
 def fetch_ipo_accepted(df: pd.DataFrame | None, since: str = None, until: str = None) -> list[dict]:
     """
     抓取 IPO 受理企业数据（含历史受理记录及当前最新状态）。
     使用 akshare 的 stock_register_all_em（来源：东方财富）。
-    返回字段：name, status, accept_date, exchange, industry, reg_address, sponsor, prospectus_url, sci_tech(科創板)
+    返回字段：name, status, accept_date, exchange, industry, reg_address, sponsor,
+              prospectus_url, prospectus_url_em, prospectus_source_name,
+              source_name, source_url, sci_tech(科創板)
     """
     print("[*] 正在抓取 IPO 受理企业数据...")
     if df is None or df.empty:
@@ -948,16 +1101,26 @@ def fetch_ipo_accepted(df: pd.DataFrame | None, since: str = None, until: str = 
     # 字段映射
     records = []
     for _, row in df.iterrows():
+        exchange = str(row.get("拟上市地点", "")).strip()
+        prospectus_url = str(row.get("招股说明书", "")).strip() or ""
         records.append({
             "name": str(row.get("企业名称", "")).strip(),
             "status": str(row.get("最新状态", "")).strip(),
             "accept_date": str(row.get("受理日期", "")).strip(),
-            "exchange": str(row.get("拟上市地点", "")).strip(),
+            "exchange": exchange,
             "industry": str(row.get("行业", "")).strip() or "-",
             "reg_address": str(row.get("注册地", "")).strip() or "-",
             "sponsor": str(row.get("保荐机构", "")).strip() or "-",
-            "prospectus_url": str(row.get("招股说明书", "")).strip() or "",
+            "prospectus_url": prospectus_url,
+            "prospectus_url_em": prospectus_url,
+            "prospectus_source_name": "东方财富" if prospectus_url else "-",
+            "source_name": "东方财富 IPO 数据中心",
+            "source_url": "https://data.eastmoney.com/xg/ipo/",
         })
+
+    # 為每條記錄補充交易所公開審核入口
+    for record in records:
+        record["source_url"] = _get_ipo_source_url(record.get("exchange"))
 
     # 按受理日期降序
     records.sort(key=lambda x: x["accept_date"] or "0000-00-00", reverse=True)
@@ -975,7 +1138,7 @@ def save_ipo_accepted(records: list[dict]) -> None:
     payload = {
         "update_time": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
         "count": len(records),
-        "source_name": "东方财富 IPO 数据中心",
+        "source_name": "东方财富 IPO 数据中心 / 巨潮资讯网 / 交易所公开审核信息",
         "source_url": "https://data.eastmoney.com/xg/ipo/",
         "data": records,
     }

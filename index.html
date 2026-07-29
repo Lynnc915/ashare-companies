@@ -1317,6 +1317,8 @@
           <h3 class="section-title">📋 IPO 受理企业</h3>
           <p class="section-source">
             数据来源：<a href="https://data.eastmoney.com/xg/ipo/" target="_blank" rel="noopener">东方财富 IPO 数据中心</a>
+            / <a href="http://www.cninfo.com.cn/" target="_blank" rel="noopener">巨潮资讯网</a>
+            / 上交所·深交所·北交所公开审核信息
             · 按受理日期统计，展示当前最新审核状态
           </p>
         </div>
@@ -2037,6 +2039,20 @@
       const statusClass = getIPOStatusClass(item.status);
       const sciTechHtml = board === '科创板' ? renderSTARSciTechSection(item) : '';
 
+      const prospectusBtn = item.prospectus_url
+        ? `<a class="btn btn-primary btn-sm" href="${escapeHtml(item.prospectus_url)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+            📄 查看招股说明书${item.prospectus_source_name ? '（' + escapeHtml(item.prospectus_source_name) + '）' : ''}
+           </a>`
+        : '';
+      const sourceBtn = item.source_url
+        ? `<a class="btn btn-outline btn-sm" href="${escapeHtml(item.source_url)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+            🏛️ ${escapeHtml(board || '交易所')}公开审核信息
+           </a>`
+        : '';
+      const emBtn = `<a class="btn btn-outline btn-sm" href="https://data.eastmoney.com/xg/ipo/" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+                       🔍 东方财富 IPO 数据中心
+                     </a>`;
+
       return `
         <div class="standard-section">
           <div class="standard-section-title">📋 ${escapeHtml(item.name)} · 受理与审核情况</div>
@@ -2056,9 +2072,9 @@
             <strong>上市标准预测：</strong>IPO 申报企业暂无公开财务数据，无法预测具体适用哪套标准，请以交易所审核披露为准。
           </div>
           <div class="detail-actions" style="margin-top:0.75rem;">
-            <a class="btn btn-outline btn-sm" href="https://data.eastmoney.com/xg/ipo/" target="_blank" rel="noopener" onclick="event.stopPropagation();">
-              🔍 东方财富 IPO 数据中心
-            </a>
+            ${prospectusBtn}
+            ${sourceBtn}
+            ${emBtn}
           </div>
         </div>
       `;
@@ -2135,9 +2151,30 @@
                 <div class="info-row"><span>是否符合</span>${revenue.not_applicable ? '<span class="status-tag status-passed">不適用</span>' : metBadge(revenue.met)}</div>
               </div>
             </div>
-            ${st.exceptional ? `
+            ${st.exceptional_clauses && st.exceptional_clauses.length ? `
               <div class="standard-hint" style="margin-top:0.5rem;">
-                <strong>例外條款：</strong>招股書中同時披露了適用科創屬性評價例外條款的情形（如國家戰略意義、國家科技獎、進口替代等），具體內容請查看招股書原文。
+                <strong>適用例外條款：</strong>
+                ${st.exceptional_clauses.map(c => `
+                  <div style="margin:0.35rem 0; padding:0.5rem; background:white; border-radius:0.35rem; border:1px solid var(--border);">
+                    <span class="status-tag status-passed">${escapeHtml(c.label)}</span>
+                    <div style="margin-top:0.35rem; font-size:0.85rem; color:var(--text);">${escapeHtml(c.text)}</div>
+                  </div>
+                `).join('')}
+              </div>
+            ` : (st.exceptional ? `
+              <div class="standard-hint" style="margin-top:0.5rem;">
+                <strong>例外條款：</strong>招股書中提及適用科創屬性評價例外條款，但未能自動識別具體類別，請查看招股書原文。
+              </div>
+            ` : '')}
+            ${st.listing_standard ? `
+              <div class="standard-hint" style="margin-top:0.5rem;">
+                <strong>上市標準：</strong><span class="status-tag status-passed">${escapeHtml(st.listing_standard)}</span>
+                ${st.unprofitable ? '（未盈利企业，不适用营业收入指标）' : ''}
+              </div>
+            ` : ''}
+            ${!st.all_met && !(st.exceptional_clauses && st.exceptional_clauses.length) && !st.listing_standard ? `
+              <div class="standard-hint" style="margin-top:0.5rem;">
+                <strong>提示：</strong>4 項常規指標未全部滿足，且未能自動識別具體例外情形或上市標準，請查看招股書原文。
               </div>
             ` : ''}
             <div class="standard-disclaimer" style="margin-top:0.5rem;">
