@@ -694,6 +694,31 @@ def _safe_float(text: str) -> float | None:
         return None
 
 
+def _clean_extracted_text(text: str | None) -> str | None:
+    """
+    清理從 PDF 中提取的文本：去除勾選框符號、多餘空白、換行殘留等。
+    """
+    if not text:
+        return None
+    # 去除常見勾選框與對勾符號
+    text = re.sub(r"[□√■☑▪◆◇]", "", text)
+    # 去除 "是 / 否" 殘留
+    text = re.sub(r"\b是\b|\b否\b", "", text)
+    # 將多個空白、製表符、換行統一為單個空格
+    text = re.sub(r"[\s\t\n\r]+", " ", text)
+    # 修復數字與單位/標點之間被插入的空格，如 "5,623 .67"、"3 億"、"2023 - 2025"
+    text = re.sub(r"(\d)\s+([\.億亿萬万元%\-])", r"\1\2", text)
+    text = re.sub(r"(\d{1,3}(?:,\d{3})*)\s+([\.億亿萬万元%\-])", r"\1\2", text)
+    # 修復中文詞內部空格，如 "產業 化"、"發明專 利"
+    text = re.sub(r"([一-龥])\s+([一-龥])", r"\1\2", text)
+    # 修復中英文標點周圍多餘空格
+    text = re.sub(r"\s*([，。、；：？！])\s*", r"\1", text)
+    # 去除末尾無意義標點
+    text = text.rstrip("，。、；： ")
+    text = text.strip()
+    return text if text else None
+
+
 def _check_met_by_context(section_one_line: str, keyword_pos: int, window_size: int = 120) -> bool | None:
     """根據關鍵詞後面的文本判斷是否符合。"""
     window = section_one_line[keyword_pos:keyword_pos + window_size]
@@ -788,13 +813,12 @@ LISTING_STANDARD_5_PATTERNS = [
 
 
 def _extract_text_excerpt(section_one_line: str, match_start: int, match_end: int, context: int = 80) -> str:
-    """根據匹配位置截取帶前後文的中文文本片段。"""
+    """根據匹配位置截取帶前後文的中文文本片段，並清理 PDF 雜訊。"""
     start = max(0, match_start - context)
     end = min(len(section_one_line), match_end + context)
     excerpt = section_one_line[start:end]
-    # 清理多餘空白
-    excerpt = re.sub(r"\s+", " ", excerpt).strip()
-    return excerpt
+    cleaned = _clean_extracted_text(excerpt)
+    return cleaned or excerpt
 
 
 def _extract_exception_clauses(section_one_line: str) -> tuple[list[dict[str, str]], str | None, bool]:
@@ -922,7 +946,7 @@ def _extract_kcb_sci_tech_impl(pdf_url: str) -> dict | None:
             rd_met = (rd_num is not None and rd_num >= 5) or _check_met_by_context(section_one_line, m.start()) is True
         else:
             rd_met = _check_met_by_context(section_one_line, m.start())
-    result["metrics"]["rd_investment"] = {"value": rd_value, "met": rd_met}
+    result["metrics"]["rd_investment"] = {"value": _clean_extracted_text(rd_value), "met": rd_met}
 
     # 2. 研发人员占比
     rd_person_value = None
@@ -936,7 +960,7 @@ def _extract_kcb_sci_tech_impl(pdf_url: str) -> dict | None:
             rd_person_met = context_met
         elif ratio is not None:
             rd_person_met = ratio >= 10
-    result["metrics"]["rd_personnel"] = {"value": rd_person_value, "met": rd_person_met}
+    result["metrics"]["rd_personnel"] = {"value": _clean_extracted_text(rd_person_value), "met": rd_person_met}
 
     # 3. 发明专利
     patent_value = None
@@ -959,7 +983,7 @@ def _extract_kcb_sci_tech_impl(pdf_url: str) -> dict | None:
             patent_met = context_met
         else:
             patent_met = count >= 7
-    result["metrics"]["patents"] = {"value": patent_value, "met": patent_met}
+    result["metrics"]["patents"] = {"value": _clean_extracted_text(patent_value), "met": patent_met}
 
     # 4. 营业收入增长
     revenue_value = None
@@ -1007,7 +1031,7 @@ def _extract_kcb_sci_tech_impl(pdf_url: str) -> dict | None:
         result["unprofitable"] = True
         if not revenue_value or "不适用" not in revenue_value:
             revenue_value = (revenue_value or "") + "（注：不适用科创属性营业收入指标，拟采用第五套上市标准）"
-    result["metrics"]["revenue"] = {"value": revenue_value, "met": revenue_met, "not_applicable": revenue_not_applicable}
+    result["metrics"]["revenue"] = {"value": _clean_extracted_text(revenue_value), "met": revenue_met, "not_applicable": revenue_not_applicable}
 
     # 判断是否全部满足
     mets = [v["met"] for v in result["metrics"].values() if v["met"] is not None]
