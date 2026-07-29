@@ -922,78 +922,125 @@ def _extract_kcb_sci_tech_impl(pdf_url: str) -> dict | None:
         "all_met": None,
     }
 
-    # 1. 研发投入：累计研发投入金额 或 研发投入占比
+    # 1. 研发投入：优先找实际金额/比例，而非仅阈值
     rd_value = None
     rd_met = None
-    # 优先找"累计研发投入"
-    m = re.search(r"累计研发投入(?:金额)?(?:为|分别)?\s*[≥≈]?\s*([\d,\.]+\s*(?:万元|亿元))[^。，]{0,80}?[，。]", section_one_line)
-    if not m:
-        m = re.search(r"研发投入(?:分别)?为\s*[≥≈]?\s*([\d,\.]+\s*(?:万元|亿元))[^。，]{0,120}?[，。]", section_one_line)
-    if not m:
-        # 找比例
-        m = re.search(r"研发投入占(?:最近三年累计)?营业收入比例\s*(?:为|≥|≈|不低于|达到)?\s*([\d\.]+%)", section_one_line)
-    if m:
-        rd_value = m.group(0).strip()
-        rd_num = _safe_float(m.group(1))
-        # 判断标准：金额 >= 8000万 或 比例 >= 5%
-        if "万元" in m.group(1) or "亿元" in m.group(1):
-            # 转成万元
-            unit = 1
-            if "亿" in m.group(1):
-                unit = 10000
-            rd_met = (rd_num is not None and rd_num * unit >= 8000) or _check_met_by_context(section_one_line, m.start()) is True
-        elif "%" in m.group(1):
-            rd_met = (rd_num is not None and rd_num >= 5) or _check_met_by_context(section_one_line, m.start()) is True
-        else:
-            rd_met = _check_met_by_context(section_one_line, m.start())
+    rd_patterns = [
+        # 实际三年研发投入金额（分别列示），允许词间空格
+        r"研发\s*投\s*入(?:分别)?为\s*([\d,\.]+\s*(?:万元|亿元))、\s*([\d,\.]+\s*(?:万元|亿元))(?:和|、)\s*([\d,\.]+\s*(?:万元|亿元))",
+        # 累计研发投入金额
+        r"累计研发\s*投\s*入(?:金额)?(?:为|分别)?\s*([\d,\.]+\s*(?:万元|亿元))[^。，]{0,80}?[，。]",
+        # 实际研发投入占比（多期表格：10.16% 11.04% 11.25%）
+        r"研发\s*投\s*入占(?:最近三年累计)?营业\s*收\s*入的?\s*比\s*例\s*([\d\.]+%)\s+([\d\.]+%)(?:\s+([\d\.]+%))?",
+        # 表格行：阈值 ≥5%  是/否  实际值 10.16%
+        r"研发\s*投\s*入占(?:最近三年累计)?营业\s*收\s*入的?\s*比\s*例\s*[≥≈]?\s*\d+(?:\.\d+)?%\s*[√■☑]?\s*是\s*([\d\.]+%)",
+        # 退而求其次：阈值表述
+        r"研发\s*投\s*入占(?:最近三年累计)?营业\s*收\s*入的?\s*比\s*例\s*(?:为|≥|≈|不低于|达到)?\s*([\d\.]+%)",
+    ]
+    for pattern in rd_patterns:
+        m = re.search(pattern, section_one_line)
+        if m:
+            rd_value = m.group(0).strip()
+            # 如果匹配到多期比例，取最后一期作为最新值展示
+            if len(m.groups()) >= 2 and all('%' in (g or '') for g in m.groups()):
+                percentages = [g for g in m.groups() if g and '%' in g]
+                if percentages:
+                    rd_value = f"研发投入占营业收入比例 {' / '.join(percentages)}"
+                    rd_num = _safe_float(percentages[-1])
+                else:
+                    rd_num = _safe_float(m.group(1))
+            else:
+                rd_num = _safe_float(m.group(1))
+            # 判断标准：金额 >= 8000万 或 比例 >= 5%
+            if "万元" in m.group(1) or "亿元" in m.group(1):
+                # 转成万元
+                unit = 1
+                if "亿" in m.group(1):
+                    unit = 10000
+                rd_met = (rd_num is not None and rd_num * unit >= 8000) or _check_met_by_context(section_one_line, m.start()) is True
+            elif "%" in m.group(1):
+                rd_met = (rd_num is not None and rd_num >= 5) or _check_met_by_context(section_one_line, m.start()) is True
+            else:
+                rd_met = _check_met_by_context(section_one_line, m.start())
+            break
     result["metrics"]["rd_investment"] = {"value": _clean_extracted_text(rd_value), "met": rd_met}
 
-    # 2. 研发人员占比
+    # 2. 研发人员占比：优先提取实际比例，而非阈值“≥10%”
     rd_person_value = None
     rd_person_met = None
-    m = re.search(r"研发人员占(?:当年)?员工总数\s*(?:的)?\s*比例\s*(?:为|是|不低于|达到|≥|≈)?\s*([\d\.]+%)", section_one_line)
-    if m:
-        rd_person_value = m.group(0).strip()
-        ratio = _safe_float(m.group(1))
-        context_met = _check_met_by_context(section_one_line, m.start())
-        if context_met is not None:
-            rd_person_met = context_met
-        elif ratio is not None:
-            rd_person_met = ratio >= 10
+    # 允许 PDF 提取后中文词内部出现单个空格
+    rd_person_patterns = [
+        # 截至某日期，公司研发人员占员工总数的比例为 15.32%
+        r"研发\s*人\s*员\s*占\s*(?:当\s*年)?\s*员\s*工\s*总\s*数\s*(?:的)?\s*比\s*例\s*(?:为|是)\s*([\d\.]+%)",
+        # 占员工总数比例为 15.32%（前面可能有人数）
+        r"占\s*员\s*工\s*总\s*数\s*比\s*例\s*(?:为|是)\s*([\d\.]+%)",
+        # 研发人员数量 X人，占员工总数比例为 Y%
+        r"研发\s*人\s*员\s*数\s*量\s*\d+\s*人\s*，\s*占\s*员\s*工\s*总\s*数\s*比\s*例\s*(?:为|是)\s*([\d\.]+%)",
+        # 研发人员占比 15.32%
+        r"研发\s*人\s*员\s*占\s*比\s*(?:为|是)?\s*([\d\.]+%)",
+        # 表格行：阈值 ≥10%   是/否   实际值 15.32%
+        r"研发\s*人\s*员\s*占\s*(?:当\s*年)?\s*员\s*工\s*总\s*数\s*(?:的)?\s*比\s*例\s*[≥≈]?\s*\d+(?:\.\d+)?%\s*[√■☑]?\s*是\s*([\d\.]+%)",
+    ]
+    for pattern in rd_person_patterns:
+        m = re.search(pattern, section_one_line)
+        if m:
+            ratio = _safe_float(m.group(1))
+            rd_person_value = f"研发人员占当年员工总数的比例为 {m.group(1)}"
+            rd_person_met = ratio is not None and ratio >= 10
+            break
+    if rd_person_value is None:
+        # 退而求其次：匹配阈值并依赖上下文勾选
+        m = re.search(r"研发\s*人\s*员\s*占\s*(?:当\s*年)?\s*员\s*工\s*总\s*数\s*(?:的)?\s*比\s*例\s*(?:为|是|不低于|达到|≥|≈)?\s*([\d\.]+%)", section_one_line)
+        if m:
+            ratio = _safe_float(m.group(1))
+            context_met = _check_met_by_context(section_one_line, m.start())
+            rd_person_value = m.group(0).strip()
+            if context_met is not None:
+                rd_person_met = context_met
+            elif ratio is not None:
+                rd_person_met = ratio >= 10
     result["metrics"]["rd_personnel"] = {"value": _clean_extracted_text(rd_person_value), "met": rd_person_met}
 
-    # 3. 发明专利
+    # 3. 发明专利：优先找实际数量，而非阈值“≥7项”
     patent_value = None
     patent_met = None
-    # 找"形成主营业务收入的发明专利"或"应用于公司主营业务的发明专利"
-    m = re.search(r"(?:形成主营业务收入|应用于公司主营业务).*?发明专[\s]*利(?:合计)?\s*(\d+)\s*项", section_one_line)
-    if not m:
-        m = re.search(r"发明专[\s]*利(?:合计)?\s*(\d+)\s*项[^。，]{0,60}(?:主营业务|产业化)", section_one_line)
-    if not m:
-        # 更宽松：找"授权发明专利 \d+ 项"、"发明专利 \d+ 项"等
-        m = re.search(r"(?:授权|发明)专[\s]*利(?:合计)?\s*(\d+)\s*项", section_one_line)
-    if not m:
-        # 有的写法是"\d+ 项授权发明专利"
-        m = re.search(r"(\d+)\s*项\s*(?:授权|发明)专[\s]*利", section_one_line)
-    if m:
-        patent_value = m.group(0).strip()
-        count = int(m.group(1))
-        context_met = _check_met_by_context(section_one_line, m.start())
-        if context_met is not None:
-            patent_met = context_met
-        else:
-            patent_met = count >= 7
+    patent_patterns = [
+        # 能够产业化的发明专利合计 119 项
+        r"(?:形成主营业务收入|应用于公司主营业务|能够产业化).*?发明专\s*利(?:合计)?\s*(\d+)\s*项",
+        # 公司共有发明专利 119 项
+        r"(?:公司共有|拥有).*?发明专\s*利\s*(\d+)\s*项",
+        # 应用于主营业务的发明专利 119 项
+        r"发明专\s*利(?:合计)?\s*(\d+)\s*项[^。，]{0,60}(?:主营业务|产业化)",
+        # 更宽松
+        r"(?:授权|发明)专\s*利(?:合计)?\s*(\d+)\s*项",
+        r"(\d+)\s*项\s*(?:授权|发明)专\s*利",
+    ]
+    for pattern in patent_patterns:
+        m = re.search(pattern, section_one_line)
+        if m:
+            patent_value = f"应用于公司主营业务并能够产业化的发明专利 {m.group(1)} 项"
+            count = int(m.group(1))
+            context_met = _check_met_by_context(section_one_line, m.start())
+            if context_met is not None:
+                patent_met = context_met
+            else:
+                patent_met = count >= 7
+            break
     result["metrics"]["patents"] = {"value": _clean_extracted_text(patent_value), "met": patent_met}
 
-    # 4. 营业收入增长
+    # 4. 营业收入增长：优先找实际复合增长率/营收金额
     revenue_value = None
     revenue_met = None
     revenue_not_applicable = False
-    m = re.search(r"营业收入复合增\s*长率\s*(?:为|≥|≈|不低于|达到)?\s*([\d\.]+%)", section_one_line)
+    # 实际营业收入复合增长率
+    m = re.search(r"营业收入复合增\s*长率(?:为|是)\s*([\d\.]+%)", section_one_line)
     if not m:
-        m = re.search(r"复合增\s*长率\s*(?:为|≥|≈|不低于|达到)?\s*([\d\.]+%)", section_one_line)
+        m = re.search(r"复合增\s*长率(?:为|是)\s*([\d\.]+%)", section_one_line)
+    if not m:
+        # 表格行：阈值 ≥25%  是/否  实际值 32.5%
+        m = re.search(r"营业收入复合增\s*长率\s*[≥≈]?\s*\d+(?:\.\d+)?%\s*[√■☑]?\s*是\s*([\d\.]+%)", section_one_line)
     if m:
-        revenue_value = m.group(0).strip()
+        revenue_value = f"营业收入复合增长率为 {m.group(1)}"
         growth = _safe_float(m.group(1))
         context_met = _check_met_by_context(section_one_line, m.start())
         if context_met is True:
