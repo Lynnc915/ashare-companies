@@ -1328,43 +1328,29 @@
         </div>
       </div>
       <div class="collapsible-content" id="ipoCompaniesContent">
-        <!-- 科创板科创属性与上市标准参考 -->
-        <div class="standard-section" style="margin:0.75rem 0;">
-          <div class="standard-section-title">📖 科创板科创属性与上市标准（参考）</div>
-          <div class="detail-grid">
-            <div class="info-card">
-              <h4>科创属性 · 4 项常规指标</h4>
-              <ol style="margin:0;padding-left:1.2rem;font-size:0.85rem;line-height:1.8;color:var(--text);">
-                <li>最近三年研发投入占营收比例 ≥5%，或累计研发投入 ≥8,000 万元。</li>
-                <li>研发人员占当年员工总数比例 ≥10%。</li>
-                <li>应用于主营业务并能够产业化的发明专利 ≥7 项。</li>
-                <li>最近三年营业收入复合增长率 ≥25%，或最近一年营收 ≥3 亿元。</li>
-              </ol>
-            </div>
-            <div class="info-card">
-              <h4>科创属性 · 5 条例外情形</h4>
-              <ol style="margin:0;padding-left:1.2rem;font-size:0.85rem;line-height:1.8;color:var(--text);">
-                <li>核心技术经国家主管部门认定具有国际领先/引领作用或对国家重大战略具有重大意义。</li>
-                <li>作为主要参与单位/人员获得国家科学技术奖，并将相关技术用于主营业务。</li>
-                <li>独立或牵头承担与主营业务和核心技术相关的国家重大科技专项。</li>
-                <li>主要产品属于国家鼓励推动的关键设备/零部件/材料等，并实现进口替代。</li>
-                <li>形成核心技术和应用于主营业务并能够产业化的发明专利（含国防专利）合计 ≥50 项。</li>
-              </ol>
-            </div>
-            <div class="info-card" style="grid-column:1 / -1;">
-              <h4>科创板上市标准（第 2.1.2 条）</h4>
-              <ol style="margin:0;padding-left:1.2rem;font-size:0.85rem;line-height:1.8;color:var(--text);">
-                <li><strong>第一套</strong>：预计市值 ≥10 亿元；最近两年净利润均为正且累计 ≥5,000 万元；或最近一年净利润为正且营收 ≥1 亿元。</li>
-                <li><strong>第二套</strong>：预计市值 ≥15 亿元；最近一年营收 ≥2 亿元；最近三年累计研发投入占营收比例 ≥15%。</li>
-                <li><strong>第三套</strong>：预计市值 ≥20 亿元；最近一年营收 ≥3 亿元；最近三年经营活动现金流净额累计 ≥1 亿元。</li>
-                <li><strong>第四套</strong>：预计市值 ≥30 亿元；最近一年营收 ≥3 亿元。</li>
-                <li><strong>第五套</strong>：预计市值 ≥40 亿元；主要业务或产品需经国家有关部门批准，市场空间大，已取得阶段性成果（医药企业需至少一项核心产品获准开展二期临床试验）。</li>
-              </ol>
-            </div>
-          </div>
-          <div class="standard-disclaimer" style="margin-top:0.5rem;">
-            以上内容为《科创属性评价指引（试行）》及《上海证券交易所科创板股票上市规则》第 2.1.2 条的一般性摘要，具体企业适用情况请以招股书及交易所审核披露为准。
-          </div>
+        <div class="toolbar" style="margin:0.75rem 0;">
+          <input type="text" id="ipoSearchName" placeholder="企业名称" />
+          <input type="text" id="ipoSearchIndustry" placeholder="所属行业" />
+          <select id="ipoFilterExchange">
+            <option value="">全部板块</option>
+            <option value="科创板">科创板</option>
+            <option value="创业板">创业板</option>
+            <option value="沪主板">沪主板</option>
+            <option value="深主板">深主板</option>
+            <option value="北交所">北交所</option>
+          </select>
+          <select id="ipoFilterStatus">
+            <option value="">全部状态</option>
+            <option value="已受理">已受理</option>
+            <option value="已问询">已问询</option>
+            <option value="通过">通过</option>
+            <option value="注册生效">注册生效</option>
+            <option value="终止">终止</option>
+            <option value="中止">中止</option>
+          </select>
+          <input type="text" id="ipoSearchSponsor" placeholder="保荐机构" />
+          <input type="date" id="ipoDateFrom" placeholder="受理日期起" />
+          <input type="date" id="ipoDateTo" placeholder="受理日期止" />
         </div>
         <div class="table-wrap">
           <div id="ipoContent">
@@ -1499,6 +1485,11 @@
         document.getElementById(id).addEventListener('input', applyFilters);
       });
 
+      ['ipoSearchName', 'ipoSearchIndustry', 'ipoFilterExchange', 'ipoFilterStatus', 'ipoSearchSponsor', 'ipoDateFrom', 'ipoDateTo'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', applyIPOFilters);
+      });
+
       document.getElementById('pageSize').addEventListener('change', (e) => {
         state.pageSize = parseInt(e.target.value, 10);
         state.currentPage = 1;
@@ -1587,22 +1578,49 @@
         return true;
       });
 
-      // 同步过滤 IPO 受理企业（仅按板块和受理日期）
-      state.ipoFilteredData = state.ipoAcceptedData.filter(item => {
-        if (board && mapExchangeToBoard(item.exchange) !== board) return false;
-        if (dateFrom && item.accept_date && item.accept_date < dateFrom) return false;
-        if (dateTo && item.accept_date && item.accept_date > dateTo) return false;
-        return true;
-      });
+      // 同步过滤 IPO 受理企业
+      applyIPOFilters(false);
 
       sortData();
       sortIPOData();
       state.currentPage = 1;
-      state.ipoCurrentPage = 1;
       renderBoardOverview();
       render();
-      renderIPOAcceptedTable();
       updateFilterURL();
+    }
+
+    function applyIPOFilters(updateUrl = true) {
+      const board = document.getElementById('filterBoard').value;
+      const dateFrom = document.getElementById('dateFrom').value;
+      const dateTo = document.getElementById('dateTo').value;
+
+      const ipoName = (document.getElementById('ipoSearchName')?.value || '').toLowerCase();
+      const ipoIndustry = (document.getElementById('ipoSearchIndustry')?.value || '').toLowerCase();
+      const ipoExchange = document.getElementById('ipoFilterExchange')?.value || '';
+      const ipoStatus = document.getElementById('ipoFilterStatus')?.value || '';
+      const ipoSponsor = (document.getElementById('ipoSearchSponsor')?.value || '').toLowerCase();
+      const ipoDateFrom = document.getElementById('ipoDateFrom')?.value || '';
+      const ipoDateTo = document.getElementById('ipoDateTo')?.value || '';
+
+      state.ipoFilteredData = state.ipoAcceptedData.filter(item => {
+        if (board && mapExchangeToBoard(item.exchange) !== board) return false;
+        if (dateFrom && item.accept_date && item.accept_date < dateFrom) return false;
+        if (dateTo && item.accept_date && item.accept_date > dateTo) return false;
+
+        if (ipoName && !String(item.name).toLowerCase().includes(ipoName)) return false;
+        if (ipoIndustry && !String(item.industry || '').toLowerCase().includes(ipoIndustry)) return false;
+        if (ipoExchange && item.exchange !== ipoExchange) return false;
+        if (ipoStatus && !String(item.status || '').includes(ipoStatus)) return false;
+        if (ipoSponsor && !String(item.sponsor || '').toLowerCase().includes(ipoSponsor)) return false;
+        if (ipoDateFrom && item.accept_date && item.accept_date < ipoDateFrom) return false;
+        if (ipoDateTo && item.accept_date && item.accept_date > ipoDateTo) return false;
+        return true;
+      });
+
+      sortIPOData();
+      state.ipoCurrentPage = 1;
+      renderIPOAcceptedTable();
+      if (updateUrl) updateFilterURL();
     }
 
     function updateFilterURL() {
@@ -1614,9 +1632,18 @@
         { key: 'board', id: 'filterBoard' },
         { key: 'from', id: 'dateFrom' },
         { key: 'to', id: 'dateTo' },
+        { key: 'ipo_name', id: 'ipoSearchName' },
+        { key: 'ipo_industry', id: 'ipoSearchIndustry' },
+        { key: 'ipo_exchange', id: 'ipoFilterExchange' },
+        { key: 'ipo_status', id: 'ipoFilterStatus' },
+        { key: 'ipo_sponsor', id: 'ipoSearchSponsor' },
+        { key: 'ipo_from', id: 'ipoDateFrom' },
+        { key: 'ipo_to', id: 'ipoDateTo' },
       ];
       fields.forEach(({ key, id }) => {
-        const value = document.getElementById(id).value.trim();
+        const el = document.getElementById(id);
+        if (!el) return;
+        const value = el.value.trim();
         if (value) params.set(key, value);
       });
 
@@ -1633,10 +1660,18 @@
         board: 'filterBoard',
         from: 'dateFrom',
         to: 'dateTo',
+        ipo_name: 'ipoSearchName',
+        ipo_industry: 'ipoSearchIndustry',
+        ipo_exchange: 'ipoFilterExchange',
+        ipo_status: 'ipoFilterStatus',
+        ipo_sponsor: 'ipoSearchSponsor',
+        ipo_from: 'ipoDateFrom',
+        ipo_to: 'ipoDateTo',
       };
       Object.entries(mapping).forEach(([param, id]) => {
         if (params.has(param)) {
-          document.getElementById(id).value = params.get(param);
+          const el = document.getElementById(id);
+          if (el) el.value = params.get(param);
         }
       });
     }
@@ -1681,7 +1716,7 @@
 
     function getBoardListingStandard(board) {
       const standards = {
-        '科创板': '科创板上市标准（五选一）：\n标准一：预计市值≥10亿元；最近两年净利润均为正且累计≥5000万元，或最近一年净利润为正且营收≥1亿元。\n标准二：预计市值≥15亿元；最近一年营收≥2亿元，且最近三年研发投入占营收比例累计≥15%。\n标准三：预计市值≥20亿元；最近一年营收≥3亿元，且最近三年经营活动现金流净额累计≥1亿元。\n标准四：预计市值≥30亿元；最近一年营收≥3亿元。\n标准五：预计市值≥40亿元；主要业务或产品需经国家有关部门批准，市场空间大，已取得阶段性成果（医药企业需至少一项核心产品进入二期临床）。\n\n具体企业使用哪一套标准，请查看其招股说明书。',
+        '科创板': '【科创属性评价指标】\n企业需同时满足以下 4 项常规指标；未同时满足的，可按《科创属性评价指引（试行）》第二条以 5 条例外情形论证。\n\n4 项常规指标：\n① 最近三年研发投入占营收比例 ≥5%，或累计研发投入 ≥8,000 万元。\n② 研发人员占当年员工总数比例 ≥10%。\n③ 应用于主营业务并能够产业化的发明专利 ≥7 项。\n④ 最近三年营业收入复合增长率 ≥25%，或最近一年营收 ≥3 亿元。\n\n5 条例外情形：\n① 核心技术经国家主管部门认定具有国际领先/引领作用或对国家重大战略具有重大意义。\n② 作为主要参与单位/人员获得国家科学技术奖，并将相关技术用于主营业务。\n③ 独立或牵头承担与主营业务和核心技术相关的国家重大科技专项。\n④ 主要产品属于国家鼓励推动的关键设备/零部件/材料等，并实现进口替代。\n⑤ 形成核心技术和应用于主营业务并能够产业化的发明专利（含国防专利）合计 ≥50 项。\n\n【科创板上市标准】（第 2.1.2 条，五选一）\n标准一：预计市值≥10亿元；最近两年净利润均为正且累计≥5000万元，或最近一年净利润为正且营收≥1亿元。\n标准二：预计市值≥15亿元；最近一年营收≥2亿元，且最近三年研发投入占营收比例累计≥15%。\n标准三：预计市值≥20亿元；最近一年营收≥3亿元，且最近三年经营活动现金流净额累计≥1亿元。\n标准四：预计市值≥30亿元；最近一年营收≥3亿元。\n标准五：预计市值≥40亿元；主要业务或产品需经国家有关部门批准，市场空间大，已取得阶段性成果（医药企业需至少一项核心产品进入二期临床）。\n\n具体企业使用哪一套标准，请查看其招股说明书。',
         '创业板': '创业板上市标准（四选一）：\n标准一：最近两年净利润均为正，累计净利润≥1亿元，且最近一年净利润≥6000万元。\n标准二：预计市值≥15亿元；最近一年净利润为正且营收≥4亿元。\n标准三：预计市值≥50亿元；最近一年营收≥3亿元。\n标准四（2026年4月新增）：面向新兴产业、未来产业中尚未盈利但高成长或高研发的优质创新创业企业，满足以下情形之一即可：\n  ① 高成长型：预计市值≥30亿元；最近一年营收≥2亿元；最近三年营收复合增长率≥30%。\n  ② 高研发型：预计市值≥40亿元；最近一年营收≥2亿元；最近三年累计研发投入≥1亿元，且占最近三年累计营收比例≥15%。\n\n具体企业使用哪一套标准，请查看其招股说明书。',
         '北交所': '北交所上市标准（四选一）：\n标准一：预计市值≥2亿元；最近两年净利润均≥1500万元，或最近一年净利润≥2500万元；且最近两年加权平均净资产收益率平均≥8%。\n标准二：预计市值≥4亿元；最近两年营收平均≥1亿元，且最近一年营收增长率≥30%，最近一年经营活动现金流净额为正。\n标准三：预计市值≥8亿元；最近一年营收≥2亿元，且最近两年研发投入合计占营收比例≥8%。\n标准四：预计市值≥15亿元；最近两年研发投入合计≥5000万元。\n\n具体企业使用哪一套标准，请查看其招股说明书。',
         '沪市主板': '沪市主板上市标准（三选一）：\n标准一：最近三年净利润均为正，且累计≥2亿元；最近一年净利润≥1亿元；最近三年经营活动现金流净额累计≥2亿元或营收累计≥15亿元。\n标准二：预计市值≥50亿元；最近一年净利润为正；最近三年经营活动现金流净额累计≥2.5亿元；最近一年营收≥6亿元。\n标准三：预计市值≥100亿元；最近一年净利润为正；最近一年营收≥10亿元。\n\n具体企业适用标准请查看招股说明书。',
@@ -2075,7 +2110,9 @@
     function renderIPOStandardSection(item) {
       const board = mapExchangeToBoard(item.exchange);
       const statusClass = getIPOStatusClass(item.status);
-      const sciTechHtml = board === '科创板' ? renderSTARSciTechSection(item) : '';
+
+      // 科创板 IPO 仅展示申报适用的上市标准，不再展示 4 项指标详情
+      const listingStandardHtml = board === '科创板' && item.sci_tech ? renderListingStandardOnly(item.sci_tech) : '';
 
       const prospectusBtn = item.prospectus_url
         ? `<a class="btn btn-primary btn-sm" href="${escapeHtml(item.prospectus_url)}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
@@ -2105,15 +2142,39 @@
               <div class="info-row"><span>保荐机构</span><span>${escapeHtml(item.sponsor || '-')}</span></div>
             </div>
           </div>
-          ${sciTechHtml}
-          <div class="standard-hint">
-            <strong>上市标准预测：</strong>IPO 申报企业暂无公开财务数据，无法预测具体适用哪套标准，请以交易所审核披露为准。
-          </div>
+          ${listingStandardHtml}
           <div class="detail-actions" style="margin-top:0.75rem;">
             ${prospectusBtn}
             ${sourceBtn}
             ${emBtn}
           </div>
+        </div>
+      `;
+    }
+
+    function renderListingStandardOnly(st) {
+      if (!st) return '';
+      if (st.listing_standard_detected) {
+        return `
+          <div class="standard-hint" style="background:#f0f9ff; border-color:#bae6fd;">
+            <strong>申报适用上市标准：${escapeHtml(st.listing_standard_detected.name)}</strong>
+            <div style="margin-top:0.35rem; font-size:0.85rem; color:var(--text); line-height:1.6;">
+              ${escapeHtml(st.listing_standard_detected.summary)}
+            </div>
+          </div>
+        `;
+      }
+      if (st.listing_standard) {
+        return `
+          <div class="standard-hint" style="background:#f0f9ff; border-color:#bae6fd;">
+            <strong>申报适用上市标准：${escapeHtml(st.listing_standard)}</strong>
+            ${st.unprofitable ? '<div style="margin-top:0.35rem; font-size:0.85rem;">未盈利企业，不适用营业收入指标。</div>' : ''}
+          </div>
+        `;
+      }
+      return `
+        <div class="standard-hint">
+          <strong>申报适用上市标准：</strong>未能自动识别，请查看招股书原文。
         </div>
       `;
     }
@@ -2579,6 +2640,38 @@
 
     function renderListingStandardSection(item) {
       const board = item.board || '未知';
+
+      // 仅科创板展示从招股书中提取的实际上市标准；其余板块退回到基于公开财务数据的粗略预测
+      const detected = board === '科创板' ? item.listing_standard_detected : null;
+      if (detected && detected.standard && detected.name) {
+        return `
+          <div class="detail-section">
+            <div class="detail-section-title">📋 上市标准</div>
+            <div class="standard-section">
+              <div class="standard-hint" style="background:#f0f9ff; border-color:#bae6fd;">
+                <strong>实际适用标准：</strong>
+                <span class="status-tag status-passed">${escapeHtml(detected.name)}</span>
+                <div style="margin-top:0.35rem; font-size:0.85rem; color:var(--text); line-height:1.6;">
+                  ${escapeHtml(detected.summary || '')}
+                </div>
+                ${detected.excerpt ? `
+                  <div style="margin-top:0.5rem; padding:0.5rem; background:#f8fafc; border-left:3px solid #38bdf8; border-radius:0.25rem; font-size:0.8rem; color:var(--muted); line-height:1.6;">
+                    <strong>招股书摘录：</strong>${escapeHtml(detected.excerpt)}
+                  </div>
+                ` : ''}
+              </div>
+              <div style="margin-top:0.5rem; font-size:0.85rem; color:var(--text);">
+                <strong>保荐机构：</strong>${escapeHtml(item.sponsor || '-')}
+              </div>
+              <div class="standard-disclaimer">
+                上市标准由程序自动从招股书中提取，可能存在识别误差，请以交易所审核披露及招股书原文为准。
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // 未提取到实际标准时，退回到基于公开财务数据的粗略预测
       const possible = inferPossibleStandards(item, board);
 
       let hint = '';
