@@ -802,14 +802,94 @@ EXCEPTION_CLAUSE_PATTERNS: list[tuple[str, str, list[str]]] = [
 ]
 
 
-# 第五套上市标准相關表述
-LISTING_STANDARD_5_PATTERNS = [
-    r"第五套上市标准",
-    r"预计市值.*?(不低于|超过).*?人民币.*?(40亿|四十亿)",
-    r"第五套.*?(市值|上市)",
-    r"尚未盈利",
-    r"未盈利企业",
-]
+# 科创板 5 套上市标准（《上海证券交易所科创板股票上市规则》第 2.1.2 条）
+LISTING_STANDARDS: dict[int, dict[str, str]] = {
+    1: {
+        "name": "第一套上市标准",
+        "summary": "预计市值 ≥10 亿元；最近两年净利润均为正且累计 ≥5000 万元；或最近一年净利润为正且营收 ≥1 亿元。",
+    },
+    2: {
+        "name": "第二套上市标准",
+        "summary": "预计市值 ≥15 亿元；最近一年营收 ≥2 亿元；最近三年累计研发投入占营收比例 ≥15%。",
+    },
+    3: {
+        "name": "第三套上市标准",
+        "summary": "预计市值 ≥20 亿元；最近一年营收 ≥3 亿元；最近三年经营活动现金流净额累计 ≥1 亿元。",
+    },
+    4: {
+        "name": "第四套上市标准",
+        "summary": "预计市值 ≥30 亿元；最近一年营收 ≥3 亿元。",
+    },
+    5: {
+        "name": "第五套上市标准",
+        "summary": "预计市值 ≥40 亿元；主要业务或产品需经国家有关部门批准，市场空间大，已取得阶段性成果（医药企业需至少一项核心产品获准开展二期临床试验）。",
+    },
+}
+
+
+def _extract_listing_standard(text: str) -> dict[str, Any] | None:
+    """
+    从招股書全文中提取企業申報的科創板上市標準（第 1-5 套）。
+    返回 {standard: int, name: str, summary: str, excerpt: str} 或 None。
+    """
+    if not text:
+        return None
+
+    one_line = re.sub(r"\s+", " ", text.replace("\n", " "))
+
+    # 優先匹配明確表述，如 "第 2.1.2 條第（一）項上市標準"、"第一套上市標準"
+    explicit_patterns = [
+        # 第 2.1.2 条第一款第（一）项
+        r"第\s*2\.1\.2\s*条\s*第\s*一\s*款\s*第\s*（\s*([一二三四五])\s*）\s*项",
+        # 第 2.1.2 条第（一）项 / 第 2.1.2 条第一项
+        r"第\s*2\.1\.2\s*条\s*第\s*（\s*([一二三四五])\s*）\s*项",
+        r"第\s*2\.1\.2\s*条\s*第\s*([一二三四五])\s*项",
+        # 上市规则第 2.1.2 条第（一）项
+        r"上市规则\s*第\s*2\.1\.2\s*条\s*第\s*（\s*([一二三四五])\s*）\s*项",
+        # 第一套上市标准
+        r"第\s*([一二三四五])\s*套\s*上\s*市\s*标\s*准",
+        # 选择第（一）项上市标准
+        r"选择\s*第\s*（\s*([一二三四五])\s*）\s*项\s*上市\s*标\s*准",
+        r"选择\s*第\s*([一二三四五])\s*套\s*上市\s*标\s*准",
+    ]
+
+    cn_to_arabic = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5}
+
+    for pattern in explicit_patterns:
+        for m in re.finditer(pattern, one_line):
+            raw = m.group(1).strip("() \t")
+            num = cn_to_arabic.get(raw)
+            if num and 1 <= num <= 5:
+                std = LISTING_STANDARDS[num]
+                return {
+                    "standard": num,
+                    "name": std["name"],
+                    "summary": std["summary"],
+                    "excerpt": _clean_extracted_text(one_line[m.start():m.end() + 80]),
+                }
+
+    # 次級匹配：關鍵數值組合（市值 + 營收/利潤/研發/現金流）
+    value_patterns = [
+        (1, r"预计市值.*?10\s*亿.*?净利润.*?5000\s*万|预计市值.*?10\s*亿.*?净利润为正.*?营业收入.*?1\s*亿"),
+        (2, r"预计市值.*?15\s*亿.*?营业收入.*?2\s*亿.*?研发投入.*?15%"),
+        (3, r"预计市值.*?20\s*亿.*?营业收入.*?3\s*亿.*?现金流.*?1\s*亿"),
+        (4, r"预计市值.*?30\s*亿.*?营业收入.*?3\s*亿"),
+        (5, r"预计市值.*?40\s*亿|第五套上市标准|国家有关部门批准|临床试验"),
+    ]
+
+    for num, pattern in value_patterns:
+        m = re.search(pattern, one_line)
+        if m:
+            std = LISTING_STANDARDS[num]
+            return {
+                "standard": num,
+                "name": std["name"],
+                "summary": std["summary"],
+                "excerpt": _clean_extracted_text(one_line[m.start():m.end()]),
+            }
+
+    return None
+
 
 
 def _extract_text_excerpt(section_one_line: str, match_start: int, match_end: int, context: int = 80) -> str:
@@ -835,8 +915,8 @@ def _extract_exception_clauses(section_one_line: str) -> tuple[list[dict[str, st
         re.search(r"例外|第二条|标准二|未同时满足上述指标|虽未同时满足", section_one_line)
     )
 
-    # 匹配第五套上市標準
-    if re.search("|".join(LISTING_STANDARD_5_PATTERNS), section_one_line):
+    # 匹配第五套上市標準（用於營收指標不適用邏輯）
+    if re.search(r"第五套上市标准|预计市值.*?(不低于|超过).*?人民币.*?(40亿|四十亿)|尚未盈利|未盈利企业", section_one_line):
         listing_standard = "第五套上市标准"
         unprofitable = True
 
@@ -1093,6 +1173,11 @@ def _extract_kcb_sci_tech_impl(pdf_url: str) -> dict | None:
     result["unprofitable"] = unprofitable
     if clauses or "标准二" in section_one_line or "例外" in section_one_line or "五项" in section_one_line:
         result["exceptional"] = True
+
+    # 提取企業實際申報的上市標準（第 1-5 套）
+    listing_std_detected = _extract_listing_standard(text)
+    if listing_std_detected:
+        result["listing_standard_detected"] = listing_std_detected
 
     return result
 
