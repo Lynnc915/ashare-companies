@@ -37,9 +37,21 @@ ROOT = Path(__file__).resolve().parent
 DATA_FILE = ROOT / "data" / "hk_data.json"
 
 BASE_URL = "https://33.push2.eastmoney.com/api/qt/clist/get"
-FS = "m:128"
+# 同时抓取香港主板与创业板（GEM）：m:128 为港股大市场，t:1/t:2 为主板相关，t:3/t:4 为创业板相关
+FS = "m:128+t:1,m:128+t:2,m:128+t:3,m:128+t:4"
 FIELDS = "f12,f14,f20,f26,f100"
 PAGE_SIZE = 100
+
+
+def classify_hk_board(code: str) -> str:
+    """根据港股代码判断板块：08xxx 归为创业板（GEM），其余为主板。"""
+    if not code:
+        return "主板"
+    c = str(code).strip().zfill(5)
+    # 港股创业板代码传统区间为 08000-08999
+    if c.startswith("08"):
+        return "创业板"
+    return "主板"
 
 
 def parse_date(value: Any) -> str | None:
@@ -231,7 +243,7 @@ def main():
             "name": row["name"],
             "name_en": None,
             "list_date": row["list_date"],
-            "board": "创业板" if str(row["code"]).startswith("08") else "主板",
+            "board": classify_hk_board(row["code"]),
             "industry": row["industry"] if row["industry"] and row["industry"] != "-" else "-",
             "main_business": "-",
             "market_cap": float(row["market_cap"]) if pd.notna(row["market_cap"]) else None,
