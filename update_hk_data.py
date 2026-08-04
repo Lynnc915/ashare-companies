@@ -2,66 +2,84 @@
 """
 抓取 2024 年以來香港新上市企業數據，生成 data/hk_data.json。
 
-數據源：東方財富香港全部股票批量接口（主板 + 創業板）
-- f12: 代碼
-- f14: 名稱
-- f20: 總市值（港元）
-- f26: 上市日期（YYYYMMDD）
-- f100: 所屬行業
+數據源：
+1. 東方財富港股新股上市頁面（HTML 表格）
+   https://hk.eastmoney.com/ipolist_1.html
+   字段：股票代码、股票名称、招股价、招股数、募集资金、招股日期、上市日期
+2. 東方財富港股 F10 公司資料接口（JSON API）
+   https://datacenter.eastmoney.com/securities/api/data/v1/get
+   字段：英文名称、所属行业、公司介绍（主营业务）
+3. 騰訊財經行情接口補充市值
+   https://qt.gtimg.cn/q=hk{code}
+   字段：總市值（港元）
+
+板塊劃分：
+- 代碼以 08 開頭歸為創業板（GEM）
+- 其餘為主板
 """
 
 from __future__ import annotations
 
 import argparse
 import concurrent.futures
-import functools
 import json
 import re
 import sys
 import warnings
 from datetime import datetime, timezone
+from functools import wraps
 from pathlib import Path
 from time import sleep
-from typing import Any
+from typing import Any, Callable
 
 warnings.filterwarnings("ignore")
 
 import pandas as pd
 import requests
+from bs4 import BeautifulSoup
 
-# 統一 session：不讀取環境/系統代理，避免本地代理工具未運行時連接失敗
+# 統一 session：不讀取環境/系統代理
 SESSION = requests.Session()
 SESSION.trust_env = False
 SESSION.headers.update({
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Referer": "https://quote.eastmoney.com/",
-    "Accept": "application/json, text/javascript, */*; q=0.01",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
 })
 
 ROOT = Path(__file__).resolve().parent
 DATA_FILE = ROOT / "data" / "hk_data.json"
 
-BASE_URL = "https://33.push2.eastmoney.com/api/qt/clist/get"
-BACKUP_HOSTS = [
-    "https://72.push2.eastmoney.com/api/qt/clist/get",
-    "https://73.push2.eastmoney.com/api/qt/clist/get",
-]
-# 同时抓取香港主板与创业板（GEM）：m:128 为港股大市场，t:1/t:2 为主板相关，t:3/t:4 为创业板相关
-# 注意 Eastmoney 接口要求子市场之间用空格分隔（与 akshare 保持一致）
-FS = "m:128 t:3,m:128 t:4,m:128 t:1,m:128 t:2"
-FIELDS = "f12,f14,f20,f26,f100"
-PAGE_SIZE = 100
+IPO_LIST_URL = "https://hk.eastmoney.com/ipolist_{page}.html"
+EASTMONEY_PROFILE_URL = "https://datacenter.eastmoney.com/securities/api/data/v1/get"
+TENCENT_QUOTE_URL = "https://qt.gtimg.cn/q="
+MAX_IPO_PAGES = 60
+MAX_WORKERS = 5
+RETRIES = 3
+BACKOFF_BASE = 2.0
 
 
-def classify_hk_board(code: str) -> str:
-    """根据港股代码判断板块：08xxx 归为创业板（GEM），其余为主板。"""
-    if not code:
-        return "主板"
-    c = str(code).strip().zfill(5)
-    # 港股创业板代码传统区间为 08000-08999
-    if c.startswith("08"):
-        return "创业板"
-    return "主板"
+def retry_on_failure(max_retries: int = RETRIES, backoff_base: float = BACKOFF_BASE):
+    """指數退避重試裝飾器。"""
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+        @wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            last_exception: Exception | None = None
+            for attempt in range(max_retries):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    last_exception = e
+                    if attempt < max_retries - 1:
+                        wait = backoff_base * (2 ** attempt)
+                        print(
+                            f"[WARN] {func.__name__} 第 {attempt + 1} 次失敗: {e}；{wait:.1f}s 后重試",
+                            file=sys.stderr,
+                        )
+                        sleep(wait)
+            raise last_exception
+        return wrapper
+    return decorator
 
 
 def parse_date(value: Any) -> str | None:
@@ -75,14 +93,12 @@ def parse_date(value: Any) -> str | None:
         try:
             return datetime.strptime(s, fmt).strftime("%Y-%m-%d")
         except ValueError:
-            # 對於純日期格式，嘗試只取前 10 個字元（去掉時間部分）
             if "%H" not in fmt:
                 try:
                     return datetime.strptime(s[:10], fmt).strftime("%Y-%m-%d")
                 except ValueError:
                     continue
             continue
-    # 嘗試只取日期部分
     m = re.search(r"(\d{4})[-/](\d{1,2})[-/](\d{1,2})", s)
     if m:
         try:
@@ -92,145 +108,161 @@ def parse_date(value: Any) -> str | None:
     return None
 
 
-def retry(max_attempts: int = 3, base_delay: float = 1.0):
-    """簡單的指數退避重試裝飾器。"""
-
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            for attempt in range(1, max_attempts + 1):
-                try:
-                    return func(*args, **kwargs)
-                except Exception as e:
-                    if attempt == max_attempts:
-                        raise
-                    sleep_time = base_delay * (2 ** (attempt - 1))
-                    print(
-                        f"[WARN] {func.__name__} 第 {attempt} 次失敗: {e}；{sleep_time:.1f}s 后重試",
-                        file=sys.stderr,
-                    )
-                    sleep(sleep_time)
-
-        return wrapper
-
-    return decorator
+def classify_hk_board(code: str) -> str:
+    """根据港股代码判断板块：08xxx 归为创业板（GEM），其余为主板。"""
+    if not code:
+        return "主板"
+    c = str(code).strip().zfill(5)
+    if c.startswith("08"):
+        return "创业板"
+    return "主板"
 
 
-def _fetch_base_list_one_host(url: str) -> list[dict[str, Any]]:
-    """從指定 Eastmoney 主機抓取全部港股列表（分頁）。"""
-    records: list[dict[str, Any]] = []
-    page = 1
-    while True:
-        params = {
-            "pn": page,
-            "pz": PAGE_SIZE,
-            "po": 1,
-            "np": 1,
-            "ut": "bd1d9ddb04089700cf9c27f6f7426281",
-            "fltt": 2,
-            "fid": "f12",
-            "fs": FS,
-            "fields": FIELDS,
-            "_": int(datetime.now().timestamp() * 1000),
-        }
-        res = SESSION.get(url, params=params, timeout=30)
-        res.raise_for_status()
-        payload = res.json()
-        diff = payload.get("data", {}).get("diff", [])
-        if not diff:
-            break
+def clean_text(value: Any) -> str | None:
+    """清理文本字段，空值返回 None。"""
+    if value is None:
+        return None
+    s = str(value).strip()
+    if not s or s == "-":
+        return None
+    return s
 
-        for item in diff:
-            records.append({
-                "code": str(item.get("f12", "")).strip().zfill(5),
-                "name": str(item.get("f14", "")).strip(),
-                "market_cap": item.get("f20"),
-                "list_date_raw": item.get("f26"),
-                "industry": str(item.get("f100", "")).strip() or None,
-            })
 
-        if len(diff) < PAGE_SIZE:
-            break
-        page += 1
-        sleep(0.3)
+@retry_on_failure()
+def fetch_ipo_list_page(page: int) -> list[dict[str, Any]]:
+    """抓取東方財富港股新股列表的某一頁。"""
+    url = IPO_LIST_URL.format(page=page)
+    res = SESSION.get(url, timeout=30)
+    res.raise_for_status()
+    res.encoding = "utf-8"
+    soup = BeautifulSoup(res.text, "html.parser")
+    table = soup.find("table")
+    if not table:
+        return []
+
+    records = []
+    rows = table.find_all("tr")[1:]  # 跳過表頭
+    for row in rows:
+        cells = [td.get_text(strip=True) for td in row.find_all("td")]
+        if len(cells) < 8:
+            continue
+        # cells: 序号, 股票代码, 股票名称, 招股价, 招股数, 募集资金, 招股日期, 上市日期
+        code_raw = cells[1]
+        name = cells[2]
+        issue_price = cells[3]
+        issue_shares = cells[4]
+        raise_amount = cells[5]
+        subscribe_date_raw = cells[6]
+        list_date_raw = cells[7]
+        code = re.sub(r"[^0-9]", "", code_raw)
+        if not code:
+            continue
+        records.append({
+            "code": code.zfill(5),
+            "name": name,
+            "list_date": parse_date(list_date_raw),
+            "subscribe_date": parse_date(subscribe_date_raw),
+            "issue_price": clean_text(issue_price),
+            "issue_shares": clean_text(issue_shares),
+            "raise_amount": clean_text(raise_amount),
+        })
     return records
 
 
-@retry(max_attempts=2, base_delay=2.0)
-def fetch_base_list() -> pd.DataFrame:
-    """通過東方財富批量接口獲取全部香港上市公司基本信息（主板 + 創業板）。
-
-    依次嘗試多個 Eastmoney push2 主機，任一主機成功即返回。
-    """
-    last_error: Exception | None = None
-    for url in [BASE_URL] + BACKUP_HOSTS:
+def fetch_all_ipo_listings() -> list[dict[str, Any]]:
+    """抓取東方財富港股新股全部頁面。"""
+    all_records: list[dict[str, Any]] = []
+    for page in range(1, MAX_IPO_PAGES + 1):
         try:
-            print(f"[*] 嘗試從 {url} 獲取港股列表...")
-            records = _fetch_base_list_one_host(url)
-            print(f"[*] 從 {url} 獲取 {len(records)} 條記錄")
-            if records:
-                df = pd.DataFrame(records)
-                df["market_cap"] = pd.to_numeric(df["market_cap"], errors="coerce")
-                df["list_date"] = df["list_date_raw"].apply(parse_date)
-                df["industry"] = df["industry"].fillna("-").replace("", "-")
-                return df[["code", "name", "market_cap", "list_date", "industry"]]
+            records = fetch_ipo_list_page(page)
         except Exception as e:
-            last_error = e
-            print(f"[WARN] {url} 獲取失敗: {e}", file=sys.stderr)
-            continue
-    raise last_error or ConnectionError("所有 Eastmoney 主機均無法獲取港股列表")
+            print(f"[WARN] 第 {page} 页抓取失败: {e}", file=sys.stderr)
+            records = []
+        if not records:
+            break
+        all_records.extend(records)
+        print(f"[*] 第 {page} 页: {len(records)} 条")
+        sleep(0.3)
+    return all_records
 
 
-@retry(max_attempts=3, base_delay=2.0)
-def fetch_financial_data(code: str) -> dict[str, dict[str, float | None]]:
-    """通過東方財富數據中心獲取港股年度營收/淨利潤。"""
-    url = "https://datacenter.eastmoney.com/api/data/v1/get"
+@retry_on_failure()
+def fetch_company_profile(code: str) -> dict[str, Any] | None:
+    """通過東方財富 F10 接口獲取港股公司資料。
+
+    返回：{name_en, industry, main_business}
+    """
     params = {
-        "reportName": "RPT_HKF10_FN_GMAININDICATOR",
-        "columns": "ALL",
+        "reportName": "RPT_HKF10_INFO_ORGPROFILE",
+        "columns": "ORG_NAME,ORG_EN_ABBR,BELONG_INDUSTRY,ORG_PROFILE",
         "filter": f'(SECUCODE="{code}.HK")',
-        "pageNumber": 1,
-        "pageSize": 12,
-        "sortColumns": "REPORT_DATE",
-        "sortTypes": "-1",
+        "pageNumber": "1",
+        "pageSize": "200",
+        "source": "F10",
+        "client": "PC",
     }
-    res = SESSION.get(url, params=params, timeout=20)
+    res = SESSION.get(EASTMONEY_PROFILE_URL, params=params, timeout=30)
     res.raise_for_status()
-    payload = res.json()
-    items = payload.get("result", {}).get("data", [])
-
-    finance: dict[str, dict[str, float | None]] = {}
-    for item in items:
-        report_date = str(item.get("REPORT_DATE", ""))[:10]
-        date_type = str(item.get("DATE_TYPE", ""))
-        if not report_date:
-            continue
-        # 只取年報數據（DATE_TYPE 為年報，或報告期為 12-31）
-        if date_type != "年报" and not report_date.endswith("12-31"):
-            continue
-        year = report_date[:4]
-        revenue = item.get("OPERATE_INCOME")
-        profit = item.get("HOLDER_PROFIT")
-        if revenue is None and profit is None:
-            continue
-        finance[year] = {
-            "revenue": float(revenue) if revenue is not None else None,
-            "profit": float(profit) if profit is not None else None,
-        }
-    return finance
+    data = res.json()
+    if not data.get("result") or not data["result"].get("data"):
+        return None
+    item = data["result"]["data"][0]
+    return {
+        "name_en": clean_text(item.get("ORG_EN_ABBR")),
+        "industry": clean_text(item.get("BELONG_INDUSTRY")),
+        "main_business": clean_text(item.get("ORG_PROFILE")),
+    }
 
 
-def enrich_finance(record: dict[str, Any]) -> dict[str, Any]:
-    """為單條記錄補充財務數據。"""
-    code = record["code"]
-    try:
-        finance = fetch_financial_data(code)
-        record["finance"] = finance
-    except Exception as e:
-        print(f"[WARN] {code} 財務數據獲取失敗: {e}", file=sys.stderr)
-        record["finance"] = {}
-    sleep(0.15)
-    return record
+def fetch_all_company_profiles(codes: list[str]) -> dict[str, dict[str, Any]]:
+    """並發獲取所有港股公司資料。"""
+    profiles: dict[str, dict[str, Any]] = {}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        future_to_code = {executor.submit(fetch_company_profile, code): code for code in codes}
+        for i, future in enumerate(concurrent.futures.as_completed(future_to_code), 1):
+            code = future_to_code[future]
+            try:
+                profile = future.result()
+                if profile:
+                    profiles[code] = profile
+            except Exception as e:
+                print(f"[WARN] 获取 {code} 公司资料失败: {e}", file=sys.stderr)
+            if i % 20 == 0 or i == len(codes):
+                print(f"  公司资料进度 {i}/{len(codes)}")
+    return profiles
+
+
+def fetch_tencent_market_caps(codes: list[str]) -> dict[str, float | None]:
+    """通過騰訊接口批量獲取港股總市值（港元）。
+
+    返回：{code: market_cap_hkd}
+    """
+    if not codes:
+        return {}
+
+    # 騰訊接口需要保留港股代碼前導零（如 03308），去掉前導零會導致無匹配
+    symbols = ",".join(f"hk{code}" for code in codes)
+    url = f"{TENCENT_QUOTE_URL}{symbols}"
+    res = SESSION.get(url, timeout=30)
+    res.encoding = "gbk"
+    text = res.text
+
+    caps: dict[str, float | None] = {}
+    pattern = re.compile(r'v_hk(\d+)="([^"]*)"')
+    for m in pattern.finditer(text):
+        raw_code = m.group(1)
+        fields = m.group(2).split("~")
+        # 字段 69 为总市值（港元）
+        cap = None
+        if len(fields) > 69:
+            try:
+                cap = float(fields[69])
+            except (ValueError, TypeError):
+                cap = None
+        # raw_code 已經包含完整前導零
+        code5 = raw_code.zfill(5)
+        caps[code5] = cap
+    return caps
 
 
 def main():
@@ -254,73 +286,78 @@ def main():
         print(f"[ERROR] --since 日期格式無法識別: {args.since}", file=sys.stderr)
         sys.exit(1)
 
-    print("[*] 正在獲取香港上市公司列表...")
-    base_df = fetch_base_list()
-    if base_df.empty:
-        print("[ERROR] 未獲取到任何數據", file=sys.stderr)
-        sys.exit(1)
+    print("[*] 正在抓取東方財富港股新股列表...")
+    records = fetch_all_ipo_listings()
+    print(f"[*] 共抓取 {len(records)} 條港股新股記錄")
 
-    print(f"[*] 共 {len(base_df)} 只股票待處理")
-
-    records: list[dict[str, Any]] = []
-    for _, row in base_df.iterrows():
-        records.append({
-            "code": row["code"],
-            "name": row["name"],
-            "name_en": None,
-            "list_date": row["list_date"],
-            "board": classify_hk_board(row["code"]),
-            "industry": row["industry"] if row["industry"] and row["industry"] != "-" else "-",
-            "main_business": "-",
-            "market_cap": float(row["market_cap"]) if pd.notna(row["market_cap"]) else None,
-            "market_cap_currency": "HKD",
-        })
-
-    # 按上市日期過濾，僅保留 2024 年以來的新上市公司
-    filtered = [r for r in records if r.get("list_date") and r["list_date"] >= since]
-    if len(filtered) != len(records):
-        print(f"[*] 按上市日期 {since} 過濾后保留 {len(filtered)} 條記錄")
-    records = filtered
+    # 過濾上市日期
+    records = [r for r in records if r.get("list_date") and r["list_date"] >= since]
+    print(f"[*] 上市日期在 {since} 之后：{len(records)} 條")
 
     if args.limit:
-        records = records[:args.limit]
+        records = records[: args.limit]
 
-    # 補充年度財務數據
-    print("[*] 正在補充財務數據...")
-    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-        future_to_code = {executor.submit(enrich_finance, r): r["code"] for r in records}
-        for i, future in enumerate(concurrent.futures.as_completed(future_to_code), 1):
-            code = future_to_code[future]
-            try:
-                future.result()
-            except Exception as e:
-                print(f"[WARN] {code} 財務數據處理失敗: {e}", file=sys.stderr)
-            if i % 20 == 0 or i == len(records):
-                print(f"  財務進度 {i}/{len(records)}")
+    codes = [r["code"] for r in records]
 
-    records.sort(key=lambda r: r["code"])
+    # 補充公司資料
+    print("[*] 正在通過東方財富 F10 接口補充公司資料...")
+    profiles = fetch_all_company_profiles(codes)
+    print(f"[*] 成功獲取 {len(profiles)} 條公司資料")
 
-    # 收集所有財務年份
-    years = sorted({
-        year
-        for r in records
-        for year in (r.get("finance") or {}).keys()
-    })
+    # 補充市值
+    print("[*] 正在通過騰訊行情接口補充市值...")
+    caps: dict[str, float | None] = {}
+    batch_size = 50
+    for i in range(0, len(codes), batch_size):
+        batch = codes[i : i + batch_size]
+        batch_caps = fetch_tencent_market_caps(batch)
+        caps.update(batch_caps)
+        print(f"  市值進度 {min(i + batch_size, len(codes))}/{len(codes)}")
+        sleep(0.3)
+
+    # 組合最終記錄
+    final_records: list[dict[str, Any]] = []
+    for r in records:
+        code = r["code"]
+        profile = profiles.get(code, {})
+        cap = caps.get(code)
+        final_records.append({
+            "code": code,
+            "name": r["name"],
+            "name_en": profile.get("name_en"),
+            "list_date": r["list_date"],
+            "subscribe_date": r.get("subscribe_date"),
+            "issue_price": r.get("issue_price"),
+            "issue_shares": r.get("issue_shares"),
+            "raise_amount": r.get("raise_amount"),
+            "board": classify_hk_board(code),
+            "industry": profile.get("industry") or "-",
+            "main_business": profile.get("main_business"),
+            "market_cap": cap,
+            "market_cap_currency": "HKD" if cap is not None else None,
+        })
+
+    final_records.sort(key=lambda r: r["list_date"] or "", reverse=True)
+
+    # 統計板塊
+    main_count = sum(1 for r in final_records if r["board"] == "主板")
+    gem_count = sum(1 for r in final_records if r["board"] == "创业板")
+    print(f"[*] 主板: {main_count}，创业板: {gem_count}")
 
     payload = {
         "update_time": datetime.now(timezone.utc).astimezone().isoformat(),
-        "count": len(records),
-        "source_name": "东方财富 / akshare / HKEX",
-        "source_url": "https://www.hkex.com.hk",
-        "years": years,
-        "data": records,
+        "count": len(final_records),
+        "source_name": "东方财富港股新股 / 东方财富 F10 / 腾讯财经",
+        "source_url": "https://hk.eastmoney.com/ipolist_1.html",
+        "years": [],
+        "data": final_records,
     }
 
     DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
-    print(f"[OK] 已保存 {len(records)} 條記錄到 {DATA_FILE}")
+    print(f"[OK] 已保存 {len(final_records)} 條記錄到 {DATA_FILE}")
 
 
 if __name__ == "__main__":
