@@ -46,14 +46,14 @@ def extract_one(record: dict, max_pages: int) -> dict | None:
     return _extract_listing_standard(text, board=board)
 
 
-def phase_one_worker(args: tuple[int, dict, int]) -> tuple[int, dict, dict | None, str]:
+def phase_one_worker(args: tuple[int, dict, int, bool]) -> tuple[int, dict, dict | None, str]:
     """阶段 1 工作线程。"""
-    i, record, total = args
+    i, record, total, force = args
     name = record.get("name", "")
     board = record.get("board", "")
 
     existing = record.get("listing_standard_detected")
-    if existing and existing.get("standard"):
+    if existing and existing.get("standard") and not force:
         safe_print(f"  进度 {i}/{total} - {name} ({board}) SKIP")
         return i, record, existing, "skip"
 
@@ -100,6 +100,11 @@ def main() -> None:
         default=None,
         help="只处理指定板块（如 科创板），默认处理所有板块",
     )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="强制重新识别，覆盖已有 listing_standard_detected",
+    )
     args = parser.parse_args()
 
     print(f"[*] 读取 {DATA_FILE}")
@@ -117,7 +122,7 @@ def main() -> None:
     print("[*] 阶段 1：快速识别（120 页，5 线程）")
     with ThreadPoolExecutor(max_workers=5) as executor:
         futures = {
-            executor.submit(phase_one_worker, (i, r, total)): (i, r)
+            executor.submit(phase_one_worker, (i, r, total, args.force)): (i, r)
             for i, r in enumerate(target_records, 1)
         }
         for future in as_completed(futures):

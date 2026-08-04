@@ -696,12 +696,14 @@ def _safe_float(text: str) -> float | None:
 
 def _clean_extracted_text(text: str | None) -> str | None:
     """
-    清理從 PDF 中提取的文本：去除勾選框符號、多餘空白、換行殘留等。
+    清理從 PDF 中提取的文本：去除勾選框符號、PUA 字符、多餘空白、換行殘留等。
     """
     if not text:
         return None
     # 去除常見勾選框與對勾符號
     text = re.sub(r"[□√■☑▪◆◇]", "", text)
+    # 去除 Unicode Private Use Area（PDF 表格複選框等佔位符）
+    text = re.sub(r"[-]", "", text)
     # 去除 "是 / 否" 殘留
     text = re.sub(r"\b是\b|\b否\b", "", text)
     # 將多個空白、製表符、換行統一為單個空格
@@ -717,6 +719,59 @@ def _clean_extracted_text(text: str | None) -> str | None:
     text = text.rstrip("，。、；： ")
     text = text.strip()
     return text if text else None
+
+
+def _extract_sentence_excerpt(one_line: str, match_start: int, match_end: int, context: int = 80, max_len: int = 160) -> str | None:
+    """
+    從 one_line 文本中提取包含匹配區域的完整句子/語句片段，並做清理。
+    優先保留包含匹配位置的整句；若句子過長則在合理標點處截斷，確保摘錄簡潔。
+    """
+    if not one_line or match_start < 0 or match_end > len(one_line):
+        return None
+
+    # 擴展上下文窗口
+    window_start = max(0, match_start - context)
+    window_end = min(len(one_line), match_end + context)
+    window = one_line[window_start:window_end]
+
+    # 把窗口按中文句子結尾拆分，定位包含匹配區域的句子
+    sentence_end_re = re.compile(r"[。；！？]")
+    ends = [m.end() for m in sentence_end_re.finditer(window)]
+    starts = [0] + ends
+
+    rel_match_start = match_start - window_start
+    rel_match_end = match_end - window_start
+    chosen_start = 0
+    chosen_end = len(window)
+    for i, s in enumerate(starts[:-1]):
+        e = starts[i + 1]
+        if s <= rel_match_start < e or s <= rel_match_end <= e:
+            chosen_start = s
+            chosen_end = e
+            break
+
+    excerpt = window[chosen_start:chosen_end]
+
+    # 若句子過長，圍繞匹配位置截斷到 max_len 以內
+    if len(excerpt) > max_len:
+        # 計算匹配在 excerpt 中的相對位置
+        match_rel_start = max(0, rel_match_start - chosen_start)
+        match_rel_end = min(len(excerpt), rel_match_end - chosen_start)
+        half = max_len // 2
+        left = max(0, match_rel_start - half)
+        right = min(len(excerpt), match_rel_end + half)
+        # 盡量向左右擴展到標點或空格，避免截斷詞語
+        if left > 0:
+            next_punct = re.search(r"[，。、；：？！\s]", excerpt[left:right])
+            if next_punct:
+                left += next_punct.start()
+        if right < len(excerpt):
+            prev_punct = re.search(r"[，。、；：？！\s]", excerpt[left:right])
+            if prev_punct:
+                right = left + prev_punct.start()
+        excerpt = excerpt[left:right]
+
+    return _clean_extracted_text(excerpt)
 
 
 def _check_met_by_context(section_one_line: str, keyword_pos: int, window_size: int = 120) -> bool | None:
@@ -946,17 +1001,65 @@ def _extract_listing_standard(text: str, board: str = "科创板") -> dict[str, 
 
     cn_to_arabic = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5}
 
+    # 最优先：从“发行人选择的具体上市标准”专属章节提取（最准确）
+    # 排除目录中的标题行（目录行后面跟着“···· 页码”），要求标题后紧跟正文内容
+    section_match = re.search(r"发行人选择的具体上市标准(?![^一-龥]{0,60}\d+)([^。；！？]{0,40}?[\s\S]*?)(?:第[一二三四五]节|下一章|募集资金|公司治理)", one_line)
+    if not section_match:
+        section_match = re.search(r"选择的具体上市标准(?![^一-龥]{0,60}\d+)([^。；！？]{0,40}?[\s\S]*?)(?:第[一二三四五]节|下一章|募集资金|公司治理)", one_line)
+    if section_match:
+        section_text = section_match.group(1)
+        # 兼容 “第 2.1.2 条...第（X）项” 以及 “第 2.1.2 款中第（X）项” 等变体
+        m = re.search(rf"第\s*{article_re}\s*(?:条|款).*?第\s*（\s*([一二三四五])\s*）\s*项.*?上市标准", section_text)
+        if not m:
+            m = re.search(r"第\s*([一二三四五])\s*套上市标准", section_text)
+        if m:
+            raw = m.group(1).strip("() \t")
+            num = cn_to_arabic.get(raw)
+            if num and 1 <= num <= max_standard:
+                std = board_standards[num]
+                sec_start = section_match.start(1)
+                return {
+                    "standard": num,
+                    "name": std["name"],
+                    "summary": std["summary"],
+                    "excerpt": _extract_sentence_excerpt(one_line, sec_start + m.start(), sec_start + m.end()),
+                }
+
     # 优先匹配带规则条文的明确表述，如 "第 2.1.2 条第（一）项上市标准"
+    # 公司/发行人明确声明采用/选择某套标准的完整表述（限制跨度，避免从目录跨到正文）
+    explicit_adopt_patterns = [
+        rf"(?:公司|发行人)(?:选择|拟选择|采用|拟采用)[^。；！？]{{0,60}}第\s*{article_re}\s*(?:条|款)第[一]?款第\s*（\s*([一二三四五])\s*）\s*项(?:规定)?的?上市标准",
+        rf"(?:公司|发行人)(?:选择|拟选择|采用|拟采用)[^。；！？]{{0,60}}第\s*{article_re}\s*(?:条|款).*?第\s*（\s*([一二三四五])\s*）\s*项(?:规定)?的?上市标准",
+        rf"(?:公司|发行人)(?:选择|拟选择|采用|拟采用)[^。；！？]{{0,40}}第\s*([一二三四五])\s*套上市标准",
+    ]
+
+    for pattern in explicit_adopt_patterns:
+        for m in re.finditer(pattern, one_line):
+            raw = m.group(1).strip("() \t")
+            num = cn_to_arabic.get(raw)
+            if num and 1 <= num <= max_standard:
+                std = board_standards[num]
+                excerpt = _extract_sentence_excerpt(one_line, m.start(), m.end())
+                # 排除科创属性章节里的例外表述
+                if excerpt and re.search(r"可不适用本规定|不适用该指标|科创属性评价", excerpt):
+                    continue
+                return {
+                    "standard": num,
+                    "name": std["name"],
+                    "summary": std["summary"],
+                    "excerpt": excerpt,
+                }
+
     article_patterns = [
         # 第 x.x.x 条第一款第（一）项
         rf"第\s*{article_re}\s*条\s*第\s*一\s*款\s*第\s*（\s*([一二三四五])\s*）\s*项",
         # 第 x.x.x 条第一款上市标准（创业板/北交所常见）
         rf"第\s*{article_re}\s*条\s*第\s*([一二三四五])\s*款\s*上市\s*标\s*准",
-        # 第 x.x.x 条第（一）项 / 第 x.x.x 条第一项
-        rf"第\s*{article_re}\s*条\s*第\s*（\s*([一二三四五])\s*）\s*项",
-        rf"第\s*{article_re}\s*条\s*第\s*([一二三四五])\s*项",
-        # 第 x.x.x 条第（一）款（沪市主板常见）
-        rf"第\s*{article_re}\s*条\s*第\s*（\s*([一二三四五])\s*）\s*款",
+        # 第 x.x.x 条/款第（一）项 / 第 x.x.x 条/款第一项
+        rf"第\s*{article_re}\s*(?:条|款)\s*第\s*（\s*([一二三四五])\s*）\s*项",
+        rf"第\s*{article_re}\s*(?:条|款)\s*第\s*([一二三四五])\s*项",
+        # 第 x.x.x 条/款第（一）款（沪市主板常见）
+        rf"第\s*{article_re}\s*(?:条|款)\s*第\s*（\s*([一二三四五])\s*）\s*款",
         # 上市规则第 x.x.x 条第（一）项
         rf"上市规则\s*第\s*{article_re}\s*条\s*第\s*（\s*([一二三四五])\s*）\s*项",
     ]
@@ -967,11 +1070,15 @@ def _extract_listing_standard(text: str, board: str = "科创板") -> dict[str, 
             num = cn_to_arabic.get(raw)
             if num and 1 <= num <= max_standard:
                 std = board_standards[num]
+                excerpt = _extract_sentence_excerpt(one_line, m.start(), m.end())
+                # 排除科创属性章节里的例外表述
+                if excerpt and re.search(r"可不适用本规定|不适用该指标|科创属性评价", excerpt):
+                    continue
                 return {
                     "standard": num,
                     "name": std["name"],
                     "summary": std["summary"],
-                    "excerpt": _clean_extracted_text(one_line[m.start():m.end() + 80]),
+                    "excerpt": excerpt,
                 }
 
     # 通用表述：第一套/第二套/.../上市标准；选择第 x 套/第（x）项上市标准
@@ -993,7 +1100,7 @@ def _extract_listing_standard(text: str, board: str = "科创板") -> dict[str, 
                     "standard": num,
                     "name": std["name"],
                     "summary": std["summary"],
-                    "excerpt": _clean_extracted_text(one_line[m.start():m.end() + 80]),
+                    "excerpt": _extract_sentence_excerpt(one_line, m.start(), m.end()),
                 }
 
     # 次级匹配：关键数值组合（按板块分别配置）
@@ -1040,11 +1147,46 @@ def _extract_listing_standard(text: str, board: str = "科创板") -> dict[str, 
                 "standard": num,
                 "name": std["name"],
                 "summary": std["summary"],
-                "excerpt": _clean_extracted_text(one_line[m.start():m.end()]),
+                "excerpt": _extract_sentence_excerpt(one_line, m.start(), m.end()),
             }
 
     return None
 
+
+
+def _extract_expected_market_cap(text: str | None) -> dict[str, Any] | None:
+    """
+    从招股书全文中提取预计市值/估值信息。
+    返回 {value: str, amount: float|None, unit: str} 或 None。
+    """
+    if not text:
+        return None
+
+    one_line = re.sub(r"\s+", " ", text.replace("\n", " "))
+
+    # 限制通配跨度，避免从封面跨到正文
+    patterns = [
+        r"(?:本次发行后?|预计|对应|测算)[^。；！？]{0,40}市值(?:\s*不\s*低\s*于|\s*不\s*少\s*于|\s*约\s*为|\s*达\s*到|\s*超\s*过|\s*≈|\s*≥)?\s*人\s*民\s*币\s*([\d,\.]+)\s*(亿|万)\s*元",
+        r"预计市值(?:\s*不\s*低\s*于|\s*不\s*少\s*于|\s*约\s*为|\s*达\s*到|\s*超\s*过|\s*≈|\s*≥)?\s*([\d,\.]+)\s*(亿|万)\s*元",
+    ]
+
+    for pattern in patterns:
+        m = re.search(pattern, one_line)
+        if m:
+            raw_num = m.group(1)
+            unit_cn = m.group(2)
+            amount = _safe_float(raw_num)
+            unit = "亿元" if "亿" in unit_cn else "万元"
+            amount_yi = amount if unit == "亿元" else (amount / 10000 if amount else None)
+            has_threshold = bool(re.search(r"不低于|不少于|超过|≥", m.group(0)))
+            value = f"预计市值不低于人民币 {raw_num}{unit}" if has_threshold else f"预计市值约 {raw_num}{unit}"
+            return {
+                "value": _clean_extracted_text(value),
+                "amount": amount_yi,
+                "unit": "亿元",
+                "raw": _extract_sentence_excerpt(one_line, m.start(), m.end()),
+            }
+    return None
 
 
 def _extract_text_excerpt(section_one_line: str, match_start: int, match_end: int, context: int = 80) -> str:
@@ -1334,6 +1476,11 @@ def _extract_kcb_sci_tech_impl(pdf_url: str) -> dict | None:
     if listing_std_detected:
         result["listing_standard_detected"] = listing_std_detected
 
+    # 提取预计市值/估值
+    expected_market_cap = _extract_expected_market_cap(text)
+    if expected_market_cap:
+        result["expected_market_cap"] = expected_market_cap
+
     return result
 
 
@@ -1347,26 +1494,83 @@ def extract_kcb_sci_tech(pdf_url: str) -> dict | None:
 
 
 def enrich_kcb_sci_tech(records: list[dict]) -> list[dict]:
-    """為科創板 IPO 受理企業補充科創屬性指標。"""
+    """為科創板 IPO 受理企業補充科創屬性指標，並為全部 IPO 企業補充招股書摘要信息。"""
     kcb_records = [r for r in records if r.get("exchange") == "科创板" and r.get("prospectus_url")]
-    if not kcb_records:
-        return records
+    all_records = [r for r in records if r.get("prospectus_url")]
 
-    print(f"[*] 正在提取 {len(kcb_records)} 家科創板企業的科創屬性指標...")
-    success = 0
-    failed = 0
-    for i, record in enumerate(kcb_records, 1):
-        sci_tech = extract_kcb_sci_tech(record.get("prospectus_url"))
-        record["sci_tech"] = sci_tech
-        if sci_tech and sci_tech.get("metrics"):
-            success += 1
-        else:
-            failed += 1
-        if i % 10 == 0 or i == len(kcb_records):
-            print(f"  科創屬性提取進度 {i}/{len(kcb_records)}，成功 {success}，失敗 {failed}")
-        if i < len(kcb_records):
-            time.sleep(0.5)
-    print(f"[OK] 科創屬性提取完成，成功 {success}，失敗 {failed}")
+    # 1. 科創板科創屬性（單線程，避免對交易所/巨潮造成過大壓力）
+    if kcb_records:
+        print(f"[*] 正在提取 {len(kcb_records)} 家科創板企業的科創屬性指標...")
+        success = 0
+        failed = 0
+        for i, record in enumerate(kcb_records, 1):
+            sci_tech = extract_kcb_sci_tech(record.get("prospectus_url"))
+            record["sci_tech"] = sci_tech
+            if sci_tech and sci_tech.get("metrics"):
+                success += 1
+            else:
+                failed += 1
+            if i % 10 == 0 or i == len(kcb_records):
+                print(f"  科創屬性提取進度 {i}/{len(kcb_records)}，成功 {success}，失敗 {failed}")
+            if i < len(kcb_records):
+                time.sleep(0.5)
+        print(f"[OK] 科創屬性提取完成，成功 {success}，失敗 {failed}")
+
+    # 2. 全部 IPO 企業：上市標準 + 预计市值（多線程提速）
+    if all_records:
+        print(f"[*] 正在提取 {len(all_records)} 家 IPO 企業的上市標準與预计市值...")
+        success_std = 0
+        success_val = 0
+        failed = 0
+        print_lock = threading.Lock()
+
+        def _ipo_summary_worker(args: tuple[int, dict, int]) -> tuple[int, bool, bool]:
+            nonlocal failed
+            i, record, total = args
+            url = record.get("prospectus_url")
+            board = record.get("exchange") or "科创板"
+            try:
+                res = PDF_SESSION.get(url, timeout=(10, 30))
+                res.raise_for_status()
+                text = extract_pdf_text(res.content, max_pages=120)
+                has_std = False
+                has_val = False
+                if text:
+                    std = _extract_listing_standard(text, board=board)
+                    if std:
+                        record["listing_standard_detected"] = std
+                        has_std = True
+                    val = _extract_expected_market_cap(text)
+                    if val:
+                        record["expected_market_cap"] = val
+                        has_val = True
+                if not (has_std or has_val):
+                    with print_lock:
+                        failed += 1
+                with print_lock:
+                    if i % 10 == 0 or i == total:
+                        print(f"  IPO 摘要提取進度 {i}/{total}，上市標準 {success_std}，预计市值 {success_val}，失敗 {failed}")
+                return i, has_std, has_val
+            except Exception as e:
+                with print_lock:
+                    failed += 1
+                    if i % 10 == 0 or i == total:
+                        print(f"  IPO 摘要提取進度 {i}/{total}，上市標準 {success_std}，预计市值 {success_val}，失敗 {failed}")
+                    print(f"[WARN] 提取 {record.get('name')} ({board}) 招股書摘要失败: {e}")
+                return i, False, False
+
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            futures = {
+                executor.submit(_ipo_summary_worker, (i, r, len(all_records))): (i, r)
+                for i, r in enumerate(all_records, 1)
+            }
+            for future in as_completed(futures):
+                i, has_std, has_val = future.result()
+                if has_std:
+                    success_std += 1
+                if has_val:
+                    success_val += 1
+        print(f"[OK] IPO 摘要提取完成，上市標準 {success_std}，预计市值 {success_val}，失敗 {failed}")
     return records
 
 
