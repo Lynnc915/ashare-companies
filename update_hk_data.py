@@ -32,13 +32,23 @@ import requests
 # 統一 session：不讀取環境/系統代理，避免本地代理工具未運行時連接失敗
 SESSION = requests.Session()
 SESSION.trust_env = False
+SESSION.headers.update({
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Referer": "https://quote.eastmoney.com/",
+    "Accept": "application/json, text/javascript, */*; q=0.01",
+})
 
 ROOT = Path(__file__).resolve().parent
 DATA_FILE = ROOT / "data" / "hk_data.json"
 
 BASE_URL = "https://33.push2.eastmoney.com/api/qt/clist/get"
+BACKUP_HOSTS = [
+    "https://72.push2.eastmoney.com/api/qt/clist/get",
+    "https://73.push2.eastmoney.com/api/qt/clist/get",
+]
 # 同时抓取香港主板与创业板（GEM）：m:128 为港股大市场，t:1/t:2 为主板相关，t:3/t:4 为创业板相关
-FS = "m:128+t:1,m:128+t:2,m:128+t:3,m:128+t:4"
+# 注意 Eastmoney 接口要求子市场之间用空格分隔（与 akshare 保持一致）
+FS = "m:128 t:3,m:128 t:4,m:128 t:1,m:128 t:2"
 FIELDS = "f12,f14,f20,f26,f100"
 PAGE_SIZE = 100
 
@@ -106,9 +116,8 @@ def retry(max_attempts: int = 3, base_delay: float = 1.0):
     return decorator
 
 
-@retry(max_attempts=3, base_delay=2.0)
-def fetch_base_list() -> pd.DataFrame:
-    """通過東方財富批量接口獲取全部香港上市公司基本信息（主板 + 創業板）。"""
+def _fetch_base_list_one_host(url: str) -> list[dict[str, Any]]:
+    """從指定 Eastmoney 主機抓取全部港股列表（分頁）。"""
     records: list[dict[str, Any]] = []
     page = 1
     while True:
@@ -124,7 +133,7 @@ def fetch_base_list() -> pd.DataFrame:
             "fields": FIELDS,
             "_": int(datetime.now().timestamp() * 1000),
         }
-        res = SESSION.get(BASE_URL, params=params, timeout=30)
+        res = SESSION.get(url, params=params, timeout=30)
         res.raise_for_status()
         payload = res.json()
         diff = payload.get("data", {}).get("diff", [])
@@ -144,15 +153,32 @@ def fetch_base_list() -> pd.DataFrame:
             break
         page += 1
         sleep(0.3)
+    return records
 
-    df = pd.DataFrame(records)
-    if df.empty:
-        return df
 
-    df["market_cap"] = pd.to_numeric(df["market_cap"], errors="coerce")
-    df["list_date"] = df["list_date_raw"].apply(parse_date)
-    df["industry"] = df["industry"].fillna("-").replace("", "-")
-    return df[["code", "name", "market_cap", "list_date", "industry"]]
+@retry(max_attempts=2, base_delay=2.0)
+def fetch_base_list() -> pd.DataFrame:
+    """通過東方財富批量接口獲取全部香港上市公司基本信息（主板 + 創業板）。
+
+    依次嘗試多個 Eastmoney push2 主機，任一主機成功即返回。
+    """
+    last_error: Exception | None = None
+    for url in [BASE_URL] + BACKUP_HOSTS:
+        try:
+            print(f"[*] 嘗試從 {url} 獲取港股列表...")
+            records = _fetch_base_list_one_host(url)
+            print(f"[*] 從 {url} 獲取 {len(records)} 條記錄")
+            if records:
+                df = pd.DataFrame(records)
+                df["market_cap"] = pd.to_numeric(df["market_cap"], errors="coerce")
+                df["list_date"] = df["list_date_raw"].apply(parse_date)
+                df["industry"] = df["industry"].fillna("-").replace("", "-")
+                return df[["code", "name", "market_cap", "list_date", "industry"]]
+        except Exception as e:
+            last_error = e
+            print(f"[WARN] {url} 獲取失敗: {e}", file=sys.stderr)
+            continue
+    raise last_error or ConnectionError("所有 Eastmoney 主機均無法獲取港股列表")
 
 
 @retry(max_attempts=3, base_delay=2.0)
