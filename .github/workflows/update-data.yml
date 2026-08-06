@@ -43,6 +43,9 @@ jobs:
       - name: Update HK data
         run: python update_hk_data.py
 
+      - name: Update HK applications
+        run: python update_hk_applications.py
+
       - name: Check for data changes
         id: diff
         run: |

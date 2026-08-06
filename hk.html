@@ -790,6 +790,68 @@
 
     .ai-suggestions button:hover { background: #dbeafe; }
 
+    /* 上市申请板块 */
+    .ipo-section {
+      background: var(--card);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow);
+    }
+
+    .section-source {
+      margin: 0.25rem 0 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .section-source a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .section-source a:hover {
+      text-decoration: underline;
+    }
+
+    .section-count {
+      background: #eff6ff;
+      color: var(--primary);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .doc-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .doc-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0.5rem;
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      border-radius: 0.35rem;
+      font-size: 0.78rem;
+      color: var(--primary-dark);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .doc-links a:hover {
+      background: #dbeafe;
+    }
+
+    .doc-links a::after {
+      content: '↗';
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
+
     @media (max-width: 768px) {
       header h1 { font-size: 1.4rem; }
       th, td { padding: 0.65rem 0.5rem; font-size: 0.85rem; }
@@ -935,6 +997,42 @@
 
       <div class="pagination" id="pagination"></div>
     </div>
+
+    <div class="section-divider"></div>
+
+    <div class="ipo-section" id="applicationsSection">
+      <div class="section-header collapsible-header" id="applicationsHeader" onclick="toggleSection('applications')">
+        <div>
+          <h3 class="section-title">📋 上市申请企业</h3>
+          <p class="section-source">
+            数据来源：<a href="https://www1.hkexnews.hk/app/appindex.html" target="_blank" rel="noopener">香港交易所披露易</a>
+            · 展示港交所正在处理中的主板 / 创业板上市申请
+          </p>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div class="section-count" id="applicationsCount">0 家</div>
+          <span class="toggle-icon">▲</span>
+        </div>
+      </div>
+      <div class="collapsible-content" id="applicationsContent">
+        <div class="toolbar" style="margin:0.75rem 0;">
+          <input type="text" id="appSearchName" placeholder="企业名称" />
+          <select id="appFilterBoard">
+            <option value="">全部板块</option>
+            <option value="主板">主板</option>
+            <option value="创业板">创业板</option>
+          </select>
+          <input type="date" id="appDateFrom" placeholder="申请日期起" />
+          <input type="date" id="appDateTo" placeholder="申请日期止" />
+        </div>
+        <div class="table-wrap">
+          <div id="applicationsTable">
+            <div class="loading">正在加载上市申请数据…</div>
+          </div>
+        </div>
+        <div class="pagination" id="applicationsPagination"></div>
+      </div>
+    </div>
   </div>
 
   <footer>
@@ -1019,6 +1117,16 @@
         boardOverview: false,
         industryOverview: true,
         listedCompanies: false,
+        applications: false,
+      },
+      applications: {
+        allData: [],
+        filteredData: [],
+        currentPage: 1,
+        pageSize: 50,
+        sortKey: 'apply_date',
+        sortDesc: true,
+        updateTime: '未知',
       },
     };
 
@@ -1029,11 +1137,16 @@
     const statsTilesEl = document.getElementById('statsTiles');
     const boardOverviewEl = document.getElementById('boardOverview');
 
+    const applicationsTableEl = document.getElementById('applicationsTable');
+    const applicationsPaginationEl = document.getElementById('applicationsPagination');
+    const applicationsCountEl = document.getElementById('applicationsCount');
+
     document.addEventListener('DOMContentLoaded', () => {
       try {
         bindEvents();
         restoreFiltersFromURL();
         loadData();
+        loadApplications();
       } catch (err) {
         console.error('初始化失败:', err);
         const el = document.getElementById('pageError');
@@ -1055,7 +1168,14 @@
         render();
       });
 
-      document.getElementById('refreshBtn').addEventListener('click', () => loadData(true));
+      document.getElementById('refreshBtn').addEventListener('click', () => {
+        loadData(true);
+        loadApplications(true);
+      });
+
+      ['appSearchName', 'appFilterBoard', 'appDateFrom', 'appDateTo'].forEach(id => {
+        document.getElementById(id).addEventListener('input', applyApplicationFilters);
+      });
     }
 
     async function loadData(force = false) {
@@ -1085,6 +1205,173 @@
         resultCountEl.textContent = '';
         paginationEl.innerHTML = '';
       }
+    }
+
+    async function loadApplications(force = false) {
+      applicationsTableEl.innerHTML = renderSkeleton();
+      try {
+        const suffix = force ? '?_=' + Date.now() : '';
+        const res = await fetch('./data/hk_applications.json' + suffix);
+        if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        const payload = await res.json();
+        state.applications.allData = payload.data || [];
+        state.applications.updateTime = payload.update_time || '未知';
+        applyApplicationFilters();
+      } catch (err) {
+        console.error(err);
+        applicationsTableEl.innerHTML = `
+          <div class="error">
+            <p>加载上市申请数据失败：${err.message}</p>
+            <p>请检查是否已运行 <code>python3 update_hk_applications.py</code> 生成 data/hk_applications.json</p>
+          </div>
+        `;
+        applicationsCountEl.textContent = '0 家';
+        applicationsPaginationEl.innerHTML = '';
+      }
+    }
+
+    function applyApplicationFilters() {
+      const name = document.getElementById('appSearchName').value.trim().toLowerCase();
+      const board = document.getElementById('appFilterBoard').value;
+      const dateFrom = document.getElementById('appDateFrom').value;
+      const dateTo = document.getElementById('appDateTo').value;
+
+      state.applications.filteredData = state.applications.allData.filter(item => {
+        if (name && !String(item.name).toLowerCase().includes(name)) return false;
+        if (board && item.board !== board) return false;
+        if (dateFrom && item.apply_date && item.apply_date < dateFrom) return false;
+        if (dateTo && item.apply_date && item.apply_date > dateTo) return false;
+        return true;
+      });
+
+      sortApplications();
+      state.applications.currentPage = 1;
+      renderApplications();
+    }
+
+    function sortApplications() {
+      const key = state.applications.sortKey;
+      state.applications.filteredData.sort((a, b) => {
+        let va = a[key];
+        let vb = b[key];
+        if (va === null || va === undefined || va === '-') va = '';
+        if (vb === null || vb === undefined || vb === '-') vb = '';
+
+        if (key === 'apply_date') {
+          const da = va || '0000-00-00';
+          const db = vb || '0000-00-00';
+          return state.applications.sortDesc ? db.localeCompare(da) : da.localeCompare(db);
+        }
+
+        const sa = String(va).toLowerCase();
+        const sb = String(vb).toLowerCase();
+        return state.applications.sortDesc ? sb.localeCompare(sa) : sa.localeCompare(sb);
+      });
+    }
+
+    function setApplicationSort(key) {
+      if (state.applications.sortKey === key) {
+        state.applications.sortDesc = !state.applications.sortDesc;
+      } else {
+        state.applications.sortKey = key;
+        state.applications.sortDesc = true;
+      }
+      sortApplications();
+      state.applications.currentPage = 1;
+      renderApplications();
+    }
+
+    function renderApplications() {
+      const data = state.applications.filteredData;
+      const total = data.length;
+      const pageSize = state.applications.pageSize;
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+      let page = state.applications.currentPage;
+      if (page > totalPages) page = totalPages;
+      if (page < 1) page = 1;
+      state.applications.currentPage = page;
+
+      applicationsCountEl.textContent = `${total.toLocaleString()} 家`;
+
+      if (total === 0) {
+        applicationsTableEl.innerHTML = '<div class="empty">没有找到匹配的上市申请企业</div>';
+        applicationsPaginationEl.innerHTML = '';
+        return;
+      }
+
+      const start = (page - 1) * pageSize;
+      const pageData = data.slice(start, start + pageSize);
+
+      const headers = [
+        { key: 'apply_date', label: '申请日期' },
+        { key: 'name', label: '企业名称' },
+        { key: 'board', label: '板块' },
+        { key: 'status_desc', label: '状态' },
+        { key: 'documents', label: '相关文件' },
+      ];
+
+      let html = '<table><thead><tr>';
+      headers.forEach(h => {
+        const active = state.applications.sortKey === h.key;
+        const indicator = active ? (state.applications.sortDesc ? '▼' : '▲') : '⇅';
+        const onclick = ['apply_date', 'name', 'board'].includes(h.key) ? `onclick="setApplicationSort('${h.key}')"` : '';
+        const cursor = onclick ? 'cursor:pointer;' : '';
+        html += `<th class="${active ? 'sorted' : ''}" ${onclick} style="${cursor}">${h.label}<span class="sort-indicator">${indicator}</span></th>`;
+      });
+      html += '</tr></thead><tbody>';
+
+      pageData.forEach(item => {
+        const tagClass = item.board === '创业板' ? 'tag tag-gem' : 'tag';
+        const docLinks = (item.documents || []).map(d =>
+          `<a href="${escapeHtml(d.url)}" target="_blank" rel="noopener" title="${escapeHtml(d.date || '')} ${escapeHtml(d.name || '')}">${escapeHtml(d.name)}</a>`
+        ).join('');
+        html += `
+          <tr class="main-row">
+            <td>${escapeHtml(item.apply_date || '-')}</td>
+            <td>${escapeHtml(item.name)}</td>
+            <td><span class="${tagClass}">${escapeHtml(item.board || '-')}</span></td>
+            <td>${escapeHtml(item.status_desc || '-')}</td>
+            <td><div class="doc-links">${docLinks}</div></td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      applicationsTableEl.innerHTML = html;
+      renderApplicationsPagination(totalPages);
+    }
+
+    function renderApplicationsPagination(totalPages) {
+      if (totalPages <= 1) {
+        applicationsPaginationEl.innerHTML = '';
+        return;
+      }
+      const page = state.applications.currentPage;
+      let html = `
+        <button onclick="goApplicationPage(1)" ${page === 1 ? 'disabled' : ''}>首页</button>
+        <button onclick="goApplicationPage(${page - 1})" ${page === 1 ? 'disabled' : ''}>上一页</button>
+      `;
+      const maxButtons = 7;
+      let startPage = Math.max(1, page - Math.floor(maxButtons / 2));
+      let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+      if (endPage - startPage + 1 < maxButtons) {
+        startPage = Math.max(1, endPage - maxButtons + 1);
+      }
+      for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="${i === page ? 'active' : ''}" onclick="goApplicationPage(${i})">${i}</button>`;
+      }
+      html += `
+        <button onclick="goApplicationPage(${page + 1})" ${page === totalPages ? 'disabled' : ''}>下一页</button>
+        <button onclick="goApplicationPage(${totalPages})" ${page === totalPages ? 'disabled' : ''}>末页</button>
+        <span style="color: var(--muted); font-size: 0.9rem;">第 ${page} / ${totalPages} 页</span>
+      `;
+      applicationsPaginationEl.innerHTML = html;
+    }
+
+    function goApplicationPage(page) {
+      state.applications.currentPage = page;
+      renderApplications();
+      document.getElementById('applicationsHeader').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function populateBoardFilter() {
@@ -1646,6 +1933,8 @@
     window.toggleSection = toggleSection;
     window.toggleIndustryBlock = toggleIndustryBlock;
     window.filterByCompanyName = filterByCompanyName;
+    window.setApplicationSort = setApplicationSort;
+    window.goApplicationPage = goApplicationPage;
 
     // ================== AI 助手 ==================
     (function initAI() {
