@@ -128,6 +128,77 @@ def clean_text(value: Any) -> str | None:
     return s
 
 
+def summarize_main_business(text: str | None, max_length: int = 180) -> str | None:
+    """從東方財富 F10 公司介紹中提取最貼近主營業務的簡短描述。
+
+    策略：
+    1. 若原文已足夠短，直接保留。
+    2. 否則按句拆分，根據業務關鍵詞打分，選出最能說明「做什麼」的 1–2 句。
+       打分會懲罰歷史沿革、榮譽資質、設備羅列、願景口號等無關句子，並適度獎勵靠前的句子。
+    3. 最終長度控制在 max_length 左右，超出時以「…」截斷。
+    """
+    if not text:
+        return None
+    s = re.sub(r"\s+", "", str(text).strip())
+    if len(s) <= max_length:
+        return s
+
+    # 中文句子拆分（優先按句號，其次按分號/驚嘆號/問號）
+    sentences = [seg.strip() for seg in re.split(r"[。！？；]", s) if len(seg.strip()) >= 8]
+    if not sentences:
+        return s[:max_length] + "…"
+
+    positive_keywords = [
+        "主營", "主营", "業務", "业务", "產品", "产品", "服務", "服务",
+        "提供", "研發", "研发", "生產", "生产", "銷售", "销售", "製造", "制造",
+        "解決方案", "解决方案", "專注於", "专注于", "致力於", "致力于",
+        "主要從事", "主要从事", "從事", "从事", "經營", "经营", "供應", "供应",
+        "產業鏈", "产业链",
+    ]
+    negative_keywords = [
+        "成立於", "成立于", "始建於", "始建于", "創辦", "创办",
+        "榮獲", "荣获", "獲得", "获得", "稱號", "称号", "獎項", "奖项", "榮譽", "荣誉", "資質", "资质",
+        "願景", "愿景", "使命", "戰略", "战略", "未來", "未来", "規劃", "规划",
+        "A+H", "掛牌上市", "挂牌上市", "交易所", "股份代號", "股份代号",
+        "進口了", "进口了", "設備", "设备", "磨床", "檢測儀", "检测仪",
+        "測量儀", "测量仪", "生產線", "生产线", "基地", "廠房", "厂房",
+        "500強", "500强", "排名", "入選", "入选", "認定", "认定", "鏈主", "链主",
+    ]
+
+    def score(idx: int, sentence: str) -> int:
+        pos = sum(1 for kw in positive_keywords if kw in sentence)
+        neg = sum(1 for kw in negative_keywords if kw in sentence)
+        # 業務詞加分，歷史/設備/願景詞減分；靠前的句子給予適度位置獎勵
+        position_bonus = max(0, 3 - idx) if idx <= 2 else 0
+        return pos * 3 - neg * 2 + position_bonus
+
+    ranked = sorted(
+        enumerate(sentences),
+        key=lambda x: score(x[0], x[1]),
+        reverse=True,
+    )
+    best = ranked[0][1]
+    # 若首句過短，嘗試補充第二句（業務相關性最高的另一句）
+    if len(best) < 50 and len(ranked) > 1:
+        second = ranked[1][1]
+        if best != second:
+            combined = f"{best}。{second}"
+            if len(combined) <= max_length:
+                best = combined
+
+    if len(best) > max_length:
+        # 嘗試在 max_length 前找一個句號或逗號截斷
+        truncate_pos = max_length
+        for punct in ["，", "、", "；"]:
+            idx = best.rfind(punct, max_length // 2, max_length)
+            if idx > 0:
+                truncate_pos = idx
+                break
+        best = best[:truncate_pos] + "…"
+
+    return best
+
+
 @retry_on_failure()
 def fetch_ipo_list_page(page: int) -> list[dict[str, Any]]:
     """抓取東方財富港股新股列表的某一頁。"""
@@ -210,7 +281,7 @@ def fetch_company_profile(code: str) -> dict[str, Any] | None:
     return {
         "name_en": clean_text(item.get("ORG_EN_ABBR")),
         "industry": clean_text(item.get("BELONG_INDUSTRY")),
-        "main_business": clean_text(item.get("ORG_PROFILE")),
+        "main_business": summarize_main_business(item.get("ORG_PROFILE")),
     }
 
 
