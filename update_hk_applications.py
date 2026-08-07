@@ -59,7 +59,11 @@ def parse_hkex_date(value: Any) -> str | None:
 
 
 def build_document_url(path: str | None) -> str | None:
-    """補全港交所文件相對路徑為完整 URL。"""
+    """補全港交所文件相對路徑為完整 URL。
+
+    披露易上市申請頁面的基礎路徑為 /app/，因此相對路徑需解析為
+    https://www1.hkexnews.hk/app/{path}。
+    """
     if not path:
         return None
     p = str(path).strip()
@@ -67,7 +71,7 @@ def build_document_url(path: str | None) -> str | None:
         return None
     if p.startswith("http"):
         return p
-    return f"{BASE_URL}/{p.lstrip('/')}"
+    return f"{BASE_URL}/app/{p.lstrip('/')}"
 
 
 def fetch_board_applications(board: str, path: str) -> list[dict[str, Any]]:
