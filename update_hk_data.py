@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-抓取 2024 年以來香港新上市企業數據，生成 data/hk_data.json。
+抓取 2023 年以來香港新上市企業數據，生成 data/hk_data.json。
 
 數據源：
 1. 東方財富港股新股上市頁面（HTML 表格）
@@ -347,8 +347,8 @@ def main():
     parser.add_argument(
         "--since",
         type=str,
-        default="2024-01-01",
-        help="僅保留上市日期在此日期之后的新上市公司，默認 2024-01-01",
+        default="2023-01-01",
+        help="僅保留上市日期在此日期之后的新上市公司，默認 2023-01-01",
     )
     args = parser.parse_args()
 
