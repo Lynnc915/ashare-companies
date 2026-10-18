@@ -16,6 +16,7 @@ import concurrent.futures
 import json
 import re
 import sys
+import threading
 import time
 from datetime import datetime, timezone
 from difflib import SequenceMatcher
@@ -1559,12 +1560,12 @@ def enrich_kcb_sci_tech(records: list[dict]) -> list[dict]:
                     print(f"[WARN] 提取 {record.get('name')} ({board}) 招股書摘要失败: {e}")
                 return i, False, False
 
-        with ThreadPoolExecutor(max_workers=8) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
             futures = {
                 executor.submit(_ipo_summary_worker, (i, r, len(all_records))): (i, r)
                 for i, r in enumerate(all_records, 1)
             }
-            for future in as_completed(futures):
+            for future in concurrent.futures.as_completed(futures):
                 i, has_std, has_val = future.result()
                 if has_std:
                     success_std += 1

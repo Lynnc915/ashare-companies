@@ -1,29 +1,1639 @@
 {
-  "update_time": "2026-08-07T15:27:29.409605+08:00",
-  "source_date": "07/08/2026",
-  "count": 354,
+  "update_time": "2026-10-18T16:25:35.501997+08:00",
+  "source_date": "15/10/2026",
+  "count": 364,
   "source_name": "香港交易所披露易（HKEXnews）",
   "source_url": "https://www1.hkexnews.hk/app/appindex.html",
   "data": [
     {
+      "id": 108946,
+      "name": "山東信得科技股份有限公司",
+      "apply_date": "2026-10-14",
+      "posting_date": "Oct 14, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108946/documents/warn26101400163_c.pdf",
+      "documents": [
+        {
+          "date": "2026-10-14",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108946/documents/sehk26101400239_c.pdf"
+        },
+        {
+          "date": "2026-10-14",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108946/documents/sehk26101400165_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108908,
+      "name": "北京九章雲極科技股份有限公司",
+      "apply_date": "2026-10-12",
+      "posting_date": "Oct 12, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108908/documents/warn26092900929.pdf",
+      "documents": [
+        {
+          "date": "2026-10-12",
+          "name": "整體協調人公告－委任（經修訂）",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108908/documents/sehk26101200231_c.pdf"
+        },
+        {
+          "date": "2026-09-29",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108908/documents/sehk26092900993.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108906,
+      "name": "上海寅家電子科技股份有限公司",
+      "apply_date": "2026-10-12",
+      "posting_date": "Oct 12, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108906/documents/warn26092700043.pdf",
+      "documents": [
+        {
+          "date": "2026-10-12",
+          "name": "整體協調人公告－委任（經修訂）",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108906/documents/sehk26101201197_c.pdf"
+        },
+        {
+          "date": "2026-09-27",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108906/documents/sehk26092700111.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108926,
+      "name": "Pinnacle Marine Holdings Ltd",
+      "apply_date": "2026-10-08",
+      "posting_date": "Oct 8, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108926/documents/warn26100801231.pdf",
+      "documents": [
+        {
+          "date": "2026-10-08",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108926/documents/sehk26100801299.pdf"
+        },
+        {
+          "date": "2026-10-08",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108926/documents/sehk26100801297.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108912,
+      "name": "基滙資本房地產私募債務開放式基金型公司",
+      "apply_date": "2026-10-02",
+      "posting_date": "Oct 2, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108912/documents/warn26100203507.pdf",
+      "documents": [
+        {
+          "date": "2026-10-02",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108912/documents/sehk26100203579.pdf"
+        },
+        {
+          "date": "2026-10-02",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108912/documents/sehk26100203577.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108910,
+      "name": "北京百普賽斯生物科技股份有限公司",
+      "apply_date": "2026-09-30",
+      "posting_date": "Sep 30, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108910/documents/warn26093002649_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-30",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108910/documents/sehk26093002757_c.pdf"
+        },
+        {
+          "date": "2026-09-30",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108910/documents/sehk26093002651_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108909,
+      "name": "柳道實業控股有限公司",
+      "apply_date": "2026-09-29",
+      "posting_date": "Sep 29, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108909/documents/warn26092902075_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-29",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108909/documents/sehk26092902157_c.pdf"
+        },
+        {
+          "date": "2026-09-29",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108909/documents/sehk26092902077_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108907,
+      "name": "山東力諾醫藥包裝股份有限公司",
+      "apply_date": "2026-09-28",
+      "posting_date": "Sep 28, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108907/documents/warn26092800293_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-28",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108907/documents/sehk26092800365_c.pdf"
+        },
+        {
+          "date": "2026-09-28",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108907/documents/sehk26092800295_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108867,
+      "name": "廣東微電新能源股份有限公司",
+      "apply_date": "2026-09-24",
+      "posting_date": "Sep 24, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108867/documents/warn26091001723_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-24",
+          "name": "整體協調人公告－委任（經修訂）",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108867/documents/sehk26092400450_c.pdf"
+        },
+        {
+          "date": "2026-09-10",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108867/documents/sehk26091001725_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108890,
+      "name": "奧比中光科技集團股份有限公司 - W",
+      "apply_date": "2026-09-24",
+      "posting_date": "Sep 24, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108890/documents/warn26092401154.pdf",
+      "documents": [
+        {
+          "date": "2026-09-24",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108890/documents/sehk26092401235_c.pdf"
+        },
+        {
+          "date": "2026-09-24",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108890/documents/sehk26092401220.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108889,
+      "name": "廣州文石信息科技股份有限公司",
+      "apply_date": "2026-09-23",
+      "posting_date": "Sep 23, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108889/documents/warn26092301799_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-23",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108889/documents/sehk26092301869_c.pdf"
+        },
+        {
+          "date": "2026-09-23",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108889/documents/sehk26092301863_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108440,
+      "name": "晶晨半導體（上海）股份有限公司",
+      "apply_date": "2026-09-22",
+      "posting_date": "Sep 22, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108440/documents/warn26041200321_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-22",
+          "name": "整體協調人公告－退任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108440/documents/sehk26092201093_c.pdf"
+        },
+        {
+          "date": "2026-04-12",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108440/documents/sehk26041200323_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108888,
+      "name": "廣東省廣晟大寶山銅業股份有限公司",
+      "apply_date": "2026-09-22",
+      "posting_date": "Sep 22, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108888/documents/warn26092201467.pdf",
+      "documents": [
+        {
+          "date": "2026-09-22",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108888/documents/sehk26092201545.pdf"
+        },
+        {
+          "date": "2026-09-22",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108888/documents/sehk26092201539.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108887,
+      "name": "超穎電子電路股份有限公司",
+      "apply_date": "2026-09-21",
+      "posting_date": "Sep 21, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108887/documents/warn26092101143_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-21",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108887/documents/sehk26092101221_c.pdf"
+        },
+        {
+          "date": "2026-09-21",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108887/documents/sehk26092101145_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108870,
+      "name": "深圳市海柔創新智能科技集團股份有限公司 - W",
+      "apply_date": "2026-09-21",
+      "posting_date": "Sep 21, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108870/documents/warn26091300121_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-21",
+          "name": "整體協調人公告－委任（經修訂）",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108870/documents/sehk26092101519_c.pdf"
+        },
+        {
+          "date": "2026-09-13",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108870/documents/sehk26091300123_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108886,
+      "name": "浙江京新藥業股份有限公司",
+      "apply_date": "2026-09-18",
+      "posting_date": "Sep 18, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108886/documents/warn26091801772.pdf",
+      "documents": [
+        {
+          "date": "2026-09-18",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108886/documents/sehk26091801854.pdf"
+        },
+        {
+          "date": "2026-09-18",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108886/documents/sehk26091801842.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108850,
+      "name": "浙江海亮股份有限公司",
+      "apply_date": "2026-09-11",
+      "posting_date": "Sep 11, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108850/documents/warn26083000487_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-11",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108850/documents/sehk26091100273_c.pdf"
+        },
+        {
+          "date": "2026-08-30",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108850/documents/sehk26083000489_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108868,
+      "name": "翱捷科技股份有限公司",
+      "apply_date": "2026-09-11",
+      "posting_date": "Sep 11, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108868/documents/warn26091101557_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-11",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108868/documents/sehk26091101673_c.pdf"
+        },
+        {
+          "date": "2026-09-11",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108868/documents/sehk26091101555_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108869,
+      "name": "浙江和夏科技股份有限公司",
+      "apply_date": "2026-09-11",
+      "posting_date": "Sep 11, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "创业板",
+      "warning_url": "https://www1.hkexnews.hk/app/gem/2026/108869/documents/warn26091101853.pdf",
+      "documents": [
+        {
+          "date": "2026-09-11",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/gem/2026/108869/documents/gem26091101927.pdf"
+        },
+        {
+          "date": "2026-09-11",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/gem/2026/108869/documents/gem26091101921.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108822,
+      "name": "上海劇星傳媒股份有限公司",
+      "apply_date": "2026-09-10",
+      "posting_date": "Sep 10, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108822/documents/warn26082701841_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-10",
+          "name": "整體協調人公告－委任（經修訂）",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108822/documents/sehk26091000989_c.pdf"
+        },
+        {
+          "date": "2026-08-27",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108822/documents/sehk26082701843_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108827,
+      "name": "杭州糖吉醫療科技股份有限公司 - B",
+      "apply_date": "2026-09-10",
+      "posting_date": "Sep 10, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108827/documents/warn26082803554_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-10",
+          "name": "整體協調人公告－委任（經修訂）",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108827/documents/sehk26091001651_c.pdf"
+        },
+        {
+          "date": "2026-08-28",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108827/documents/sehk26082803556_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108866,
+      "name": "河北聯吉啟成產業園區運營管理股份有限公司",
+      "apply_date": "2026-09-10",
+      "posting_date": "Sep 10, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "创业板",
+      "warning_url": "https://www1.hkexnews.hk/app/gem/2026/108866/documents/warn26091001165.pdf",
+      "documents": [
+        {
+          "date": "2026-09-10",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/gem/2026/108866/documents/gem26091001167.pdf"
+        },
+        {
+          "date": "2026-09-10",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/gem/2026/108866/documents/gem26091001157.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108812,
+      "name": "珠海金智維人工智能股份有限公司",
+      "apply_date": "2026-09-04",
+      "posting_date": "Sep 4, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108812/documents/warn26082102361_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-04",
+          "name": "整體協調人公告－委任（經修訂）",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108812/documents/sehk26090401356_c.pdf"
+        },
+        {
+          "date": "2026-08-21",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108812/documents/sehk26082102363_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108857,
+      "name": "深圳歐稅通控股股份有限公司",
+      "apply_date": "2026-09-03",
+      "posting_date": "Sep 3, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108857/documents/warn26090300173_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-03",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108857/documents/sehk26090300249_c.pdf"
+        },
+        {
+          "date": "2026-09-03",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108857/documents/sehk26090300175_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108858,
+      "name": "深圳信立泰药业股份有限公司",
+      "apply_date": "2026-09-03",
+      "posting_date": "Sep 3, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108858/documents/warn26090301637_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-03",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108858/documents/sehk26090301729_c.pdf"
+        },
+        {
+          "date": "2026-09-03",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108858/documents/sehk26090301639_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108797,
+      "name": "湖南裕能新能源電池材料股份有限公司",
+      "apply_date": "2026-09-01",
+      "posting_date": "Sep 1, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108797/documents/warn26081700007_c.pdf",
+      "documents": [
+        {
+          "date": "2026-09-01",
+          "name": "整體協調人公告－委任（經修訂）",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108797/documents/sehk26090100015_c.pdf"
+        },
+        {
+          "date": "2026-08-17",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108797/documents/sehk26081700009_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108851,
+      "name": "廣西玉柴船電動力股份有限公司",
+      "apply_date": "2026-08-31",
+      "posting_date": "Aug 31, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108851/documents/warn26083101791.pdf",
+      "documents": [
+        {
+          "date": "2026-08-31",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108851/documents/sehk26083101793.pdf"
+        },
+        {
+          "date": "2026-08-31",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108851/documents/sehk26083101779.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108853,
+      "name": "浙江迦智科技股份有限公司",
+      "apply_date": "2026-08-31",
+      "posting_date": "Aug 31, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108853/documents/warn26083102099_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-31",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108853/documents/sehk26083102181_c.pdf"
+        },
+        {
+          "date": "2026-08-31",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108853/documents/sehk26083102165_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108852,
+      "name": "御康諾國際健康有限公司",
+      "apply_date": "2026-08-31",
+      "posting_date": "Aug 31, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108852/documents/warn26083102477.pdf",
+      "documents": [
+        {
+          "date": "2026-08-31",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108852/documents/sehk26083102545.pdf"
+        },
+        {
+          "date": "2026-08-31",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108852/documents/sehk26083102543.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108854,
+      "name": "寧波舜宇智行科技股份有限公司",
+      "apply_date": "2026-08-31",
+      "posting_date": "Aug 31, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108854/documents/warn26083102565_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-31",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108854/documents/sehk26083102663_c.pdf"
+        },
+        {
+          "date": "2026-08-31",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108854/documents/sehk26083102635_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108855,
+      "name": "江西铜博科技股份有限公司",
+      "apply_date": "2026-08-31",
+      "posting_date": "Aug 31, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108855/documents/warn26083102729_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-31",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108855/documents/sehk26083102839_c.pdf"
+        },
+        {
+          "date": "2026-08-31",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108855/documents/sehk26083102793_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108856,
+      "name": "普萊醫藥(江蘇)股份有限公司 - B",
+      "apply_date": "2026-08-31",
+      "posting_date": "Aug 31, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108856/documents/warn26083102863_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-31",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108856/documents/sehk26083102955_c.pdf"
+        },
+        {
+          "date": "2026-08-31",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108856/documents/sehk26083102865_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108847,
+      "name": "杭州邦順製藥股份有限公司 - B",
+      "apply_date": "2026-08-30",
+      "posting_date": "Aug 30, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108847/documents/warn26083000263_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-30",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108847/documents/sehk26083000335_c.pdf"
+        },
+        {
+          "date": "2026-08-30",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108847/documents/sehk26083000265_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108849,
+      "name": "北京星辰天合科技股份有限公司",
+      "apply_date": "2026-08-30",
+      "posting_date": "Aug 30, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108849/documents/warn26083000405_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-30",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108849/documents/sehk26083000481_c.pdf"
+        },
+        {
+          "date": "2026-08-30",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108849/documents/sehk26083000407_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108846,
+      "name": "博安通物聯科技洛陽股份公司",
+      "apply_date": "2026-08-30",
+      "posting_date": "Aug 30, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "创业板",
+      "warning_url": "https://www1.hkexnews.hk/app/gem/2026/108846/documents/warn26083000169_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-30",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/gem/2026/108846/documents/gem26083000245_c.pdf"
+        },
+        {
+          "date": "2026-08-30",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/gem/2026/108846/documents/gem26083000171_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108805,
+      "name": "鎮江貝斯特新材料股份有限公司",
+      "apply_date": "2026-08-28",
+      "posting_date": "Aug 28, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108805/documents/warn26082101573_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-28",
+          "name": "整體協調人公告－委任（經修訂）",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108805/documents/sehk26082801121_c.pdf"
+        },
+        {
+          "date": "2026-08-21",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108805/documents/sehk26082101575_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108824,
+      "name": "深圳新宙邦科技股份有限公司",
+      "apply_date": "2026-08-28",
+      "posting_date": "Aug 28, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108824/documents/warn26082802196_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-28",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108824/documents/sehk26082802306_c.pdf"
+        },
+        {
+          "date": "2026-08-28",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108824/documents/sehk26082802198_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108825,
+      "name": "維眸生物科技（浙江）股份有限公司 - B",
+      "apply_date": "2026-08-28",
+      "posting_date": "Aug 28, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108825/documents/warn26082802474_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-28",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108825/documents/sehk26082802566_c.pdf"
+        },
+        {
+          "date": "2026-08-28",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108825/documents/sehk26082802476_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108826,
+      "name": "浙江正泰電器股份有限公司",
+      "apply_date": "2026-08-28",
+      "posting_date": "Aug 28, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108826/documents/warn26082803132.pdf",
+      "documents": [
+        {
+          "date": "2026-08-28",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108826/documents/sehk26082803432_c.pdf"
+        },
+        {
+          "date": "2026-08-28",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108826/documents/sehk26082803206.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108828,
+      "name": "Frontera Therapeutics - B",
+      "apply_date": "2026-08-28",
+      "posting_date": "Aug 28, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108828/documents/warn26082803702_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-28",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108828/documents/sehk26082803836_c.pdf"
+        },
+        {
+          "date": "2026-08-28",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108828/documents/sehk26082803704_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108829,
+      "name": "貝達藥業股份有限公司",
+      "apply_date": "2026-08-28",
+      "posting_date": "Aug 28, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108829/documents/warn26082803858_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-28",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108829/documents/sehk26082804012_c.pdf"
+        },
+        {
+          "date": "2026-08-28",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108829/documents/sehk26082803860_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108831,
+      "name": "地中海度假集團",
+      "apply_date": "2026-08-28",
+      "posting_date": "Aug 28, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108831/documents/warn26082803938_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-28",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108831/documents/sehk26082804022_c.pdf"
+        },
+        {
+          "date": "2026-08-28",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108831/documents/sehk26082803940_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108832,
+      "name": "Exegenesis Bio Inc. - B",
+      "apply_date": "2026-08-28",
+      "posting_date": "Aug 28, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108832/documents/warn26082804040_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-28",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108832/documents/sehk26082804132_c.pdf"
+        },
+        {
+          "date": "2026-08-28",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108832/documents/sehk26082804042_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108833,
+      "name": "南京諾令生物科技股份有限公司 - B",
+      "apply_date": "2026-08-28",
+      "posting_date": "Aug 28, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108833/documents/warn26082804158_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-28",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108833/documents/sehk26082804244_c.pdf"
+        },
+        {
+          "date": "2026-08-28",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108833/documents/sehk26082804160_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108798,
+      "name": "深圳易慕峰生物科技股份有限公司 - B",
+      "apply_date": "2026-08-27",
+      "posting_date": "Aug 27, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108798/documents/warn26081800033_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-27",
+          "name": "整體協調人公告－委任（經修訂）",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108798/documents/sehk26082700306_c.pdf"
+        },
+        {
+          "date": "2026-08-18",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108798/documents/sehk26081800035_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108823,
+      "name": "迪哲（江蘇）醫藥股份有限公司",
+      "apply_date": "2026-08-27",
+      "posting_date": "Aug 27, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108823/documents/warn26082702219_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-27",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108823/documents/sehk26082702305_c.pdf"
+        },
+        {
+          "date": "2026-08-27",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108823/documents/sehk26082702221_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108821,
+      "name": "征祥醫藥（南京）集團股份有限公司 - B",
+      "apply_date": "2026-08-26",
+      "posting_date": "Aug 26, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108821/documents/warn26082601971_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-26",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108821/documents/sehk26082602051_c.pdf"
+        },
+        {
+          "date": "2026-08-26",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108821/documents/sehk26082601973_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108818,
+      "name": "深圳市綠聯科技股份有限公司",
+      "apply_date": "2026-08-25",
+      "posting_date": "Aug 25, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108818/documents/warn26082500273_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-25",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108818/documents/sehk26082500339_c.pdf"
+        },
+        {
+          "date": "2026-08-25",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108818/documents/sehk26082500275_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108820,
+      "name": "山東卓創資訊股份有限公司",
+      "apply_date": "2026-08-25",
+      "posting_date": "Aug 25, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108820/documents/warn26082501995_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-25",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108820/documents/sehk26082502073_c.pdf"
+        },
+        {
+          "date": "2026-08-25",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108820/documents/sehk26082502061_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108819,
+      "name": "焯力國際控股有限公司",
+      "apply_date": "2026-08-25",
+      "posting_date": "Aug 25, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "创业板",
+      "warning_url": "https://www1.hkexnews.hk/app/gem/2026/108819/documents/warn26082502231_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-25",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/gem/2026/108819/documents/gem26082502303.pdf"
+        },
+        {
+          "date": "2026-08-25",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/gem/2026/108819/documents/gem26082502233_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108815,
+      "name": "浙江榮泰電工器材股份有限公司",
+      "apply_date": "2026-08-24",
+      "posting_date": "Aug 24, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108815/documents/warn26082401769_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-24",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108815/documents/sehk26082401869_c.pdf"
+        },
+        {
+          "date": "2026-08-24",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108815/documents/sehk26082401771_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108816,
+      "name": "上海移芯通信科技股份有限公司",
+      "apply_date": "2026-08-24",
+      "posting_date": "Aug 24, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108816/documents/warn26082402031_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-24",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108816/documents/sehk26082402105_c.pdf"
+        },
+        {
+          "date": "2026-08-24",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108816/documents/sehk26082402033_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108790,
+      "name": "深圳市遠信儲能技術股份有限公司",
+      "apply_date": "2026-08-21",
+      "posting_date": "Aug 21, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108790/documents/warn26080900117_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-21",
+          "name": "整體協調人公告－委任（經修訂）",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108790/documents/sehk26082101085_c.pdf"
+        },
+        {
+          "date": "2026-08-09",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108790/documents/sehk26080900119_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108804,
+      "name": "錢大媽國際控股有限公司",
+      "apply_date": "2026-08-21",
+      "posting_date": "Aug 21, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108804/documents/warn26082101795.pdf",
+      "documents": [
+        {
+          "date": "2026-08-21",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108804/documents/sehk26082101869_c.pdf"
+        },
+        {
+          "date": "2026-08-21",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108804/documents/sehk26082101861.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108806,
+      "name": "益方生物科技（上海）股份有限公司 - B",
+      "apply_date": "2026-08-21",
+      "posting_date": "Aug 21, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108806/documents/warn26082101885_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-21",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108806/documents/sehk26082101967_c.pdf"
+        },
+        {
+          "date": "2026-08-21",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108806/documents/sehk26082101887_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108809,
+      "name": "Tyligand Bioscience Ltd. - B",
+      "apply_date": "2026-08-21",
+      "posting_date": "Aug 21, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108809/documents/warn26082102079_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-21",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108809/documents/sehk26082102151_c.pdf"
+        },
+        {
+          "date": "2026-08-21",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108809/documents/sehk26082102081_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108811,
+      "name": "昆侖新能源材料技術（宜昌）股份有限公司",
+      "apply_date": "2026-08-21",
+      "posting_date": "Aug 21, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108811/documents/warn26082102275_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-21",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108811/documents/sehk26082102353_c.pdf"
+        },
+        {
+          "date": "2026-08-21",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108811/documents/sehk26082102277_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108813,
+      "name": "伊戈爾電氣股份有限公司",
+      "apply_date": "2026-08-21",
+      "posting_date": "Aug 21, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108813/documents/warn26082102531_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-21",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108813/documents/sehk26082102601_c.pdf"
+        },
+        {
+          "date": "2026-08-21",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108813/documents/sehk26082102533_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108807,
+      "name": "興明亞洲控股有限公司",
+      "apply_date": "2026-08-21",
+      "posting_date": "Aug 21, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "创业板",
+      "warning_url": "https://www1.hkexnews.hk/app/gem/2026/108807/documents/warn26082102251.pdf",
+      "documents": [
+        {
+          "date": "2026-08-21",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/gem/2026/108807/documents/gem26082102253.pdf"
+        },
+        {
+          "date": "2026-08-21",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/gem/2026/108807/documents/gem26082102245.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108802,
+      "name": "君樂寶乳業集團股份有限公司",
+      "apply_date": "2026-08-20",
+      "posting_date": "Aug 20, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108802/documents/warn26082000217_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-20",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108802/documents/sehk26082000298_c.pdf"
+        },
+        {
+          "date": "2026-08-20",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108802/documents/sehk26082000219_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
       "id": 108787,
       "name": "四川百利天恒藥業股份有限公司 - B",
-      "apply_date": "2026-08-06",
-      "posting_date": "Aug 6, 2026",
+      "apply_date": "2026-08-20",
+      "posting_date": "Aug 20, 2026",
       "status": "A",
       "status_desc": "處理中",
       "board": "主板",
       "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108787/documents/warn26080601691_c.pdf",
       "documents": [
         {
-          "date": "2026-08-06",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108787/documents/sehk26080601771_c.pdf"
+          "date": "2026-08-20",
+          "name": "整體協調人公告－委任（經修訂）",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108787/documents/sehk26082000330_c.pdf"
         },
         {
           "date": "2026-08-06",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108787/documents/sehk26080601693_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108803,
+      "name": "博納西亞（杭州）醫藥科技股份有限公司",
+      "apply_date": "2026-08-20",
+      "posting_date": "Aug 20, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108803/documents/warn26082001765_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-20",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108803/documents/sehk26082001843_c.pdf"
+        },
+        {
+          "date": "2026-08-20",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108803/documents/sehk26082001767_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108801,
+      "name": "未來穿戴健康科技股份有限公司",
+      "apply_date": "2026-08-19",
+      "posting_date": "Aug 19, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108801/documents/warn26081901721_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-19",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108801/documents/sehk26081901789_c.pdf"
+        },
+        {
+          "date": "2026-08-19",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108801/documents/sehk26081901723_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108799,
+      "name": "天津辰星技術股份有限公司 (前稱為天津阿童木機器人股份有限公司)",
+      "apply_date": "2026-08-18",
+      "posting_date": "Aug 18, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108799/documents/warn26081801655_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-18",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108799/documents/sehk26081801741_c.pdf"
+        },
+        {
+          "date": "2026-08-18",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108799/documents/sehk26081801657_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108795,
+      "name": "深圳市沃客非凡科技股份有限公司",
+      "apply_date": "2026-08-14",
+      "posting_date": "Aug 14, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108795/documents/warn26081402021_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-14",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108795/documents/sehk26081402097_c.pdf"
+        },
+        {
+          "date": "2026-08-14",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108795/documents/sehk26081402023_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108793,
+      "name": "蘇州澤璟生物製藥股份有限公司",
+      "apply_date": "2026-08-12",
+      "posting_date": "Aug 12, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108793/documents/warn26081201413_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-12",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108793/documents/sehk26081201485_c.pdf"
+        },
+        {
+          "date": "2026-08-12",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108793/documents/sehk26081201415_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108792,
+      "name": "杭州熱聯集團股份有限公司",
+      "apply_date": "2026-08-11",
+      "posting_date": "Aug 11, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108792/documents/warn26081100439_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-11",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108792/documents/sehk26081100533_c.pdf"
+        },
+        {
+          "date": "2026-08-11",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108792/documents/sehk26081100441_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108771,
+      "name": "深圳粵十控股股份有限公司 (前稱為深圳粵十數智股份有限公司)",
+      "apply_date": "2026-08-10",
+      "posting_date": "Aug 10, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108771/documents/warn26072900636_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-10",
+          "name": "整體協調人公告－委任（經修訂）",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108771/documents/sehk26081000372_c.pdf"
+        },
+        {
+          "date": "2026-07-29",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108771/documents/sehk26072900704_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108791,
+      "name": "Ever Glory United Holdings Limited",
+      "apply_date": "2026-08-10",
+      "posting_date": "Aug 10, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108791/documents/warn26081001280_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-10",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108791/documents/sehk26081001352.pdf"
+        },
+        {
+          "date": "2026-08-10",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108791/documents/sehk26081001282_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108788,
+      "name": "浙江浙能邁領綠航科技股份有限公司",
+      "apply_date": "2026-08-07",
+      "posting_date": "Aug 7, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108788/documents/warn26080701051_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-07",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108788/documents/sehk26080701133_c.pdf"
+        },
+        {
+          "date": "2026-08-07",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108788/documents/sehk26080701053_c.pdf"
+        }
+      ],
+      "has_phip": false
+    },
+    {
+      "id": 108789,
+      "name": "勤浩醫藥（蘇州）股份有限公司 - B",
+      "apply_date": "2026-08-07",
+      "posting_date": "Aug 7, 2026",
+      "status": "A",
+      "status_desc": "處理中",
+      "board": "主板",
+      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108789/documents/warn26080701535_c.pdf",
+      "documents": [
+        {
+          "date": "2026-08-07",
+          "name": "整體協調人公告－委任",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108789/documents/sehk26080701603.pdf"
+        },
+        {
+          "date": "2026-08-07",
+          "name": "全文檔案",
+          "url": "https://www1.hkexnews.hk/app/sehk/2026/108789/documents/sehk26080701537_c.pdf"
         }
       ],
       "has_phip": false
@@ -121,29 +1731,6 @@
       "has_phip": false
     },
     {
-      "id": 108777,
-      "name": "北京奕斯偉計算技術股份有限公司",
-      "apply_date": "2026-07-31",
-      "posting_date": "Jul 31, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108777/documents/warn26073102101_c.pdf",
-      "documents": [
-        {
-          "date": "2026-07-31",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108777/documents/sehk26073102179_c.pdf"
-        },
-        {
-          "date": "2026-07-31",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108777/documents/sehk26073102103_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
       "id": 108770,
       "name": "哈爾濱譽研堂中醫門診集團股份有限公司",
       "apply_date": "2026-07-30",
@@ -208,29 +1795,6 @@
           "date": "2026-07-30",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108775/documents/sehk26073002143_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108771,
-      "name": "深圳粵十控股股份有限公司 (前稱為深圳粵十數智股份有限公司)",
-      "apply_date": "2026-07-29",
-      "posting_date": "Jul 29, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108771/documents/warn26072900636_c.pdf",
-      "documents": [
-        {
-          "date": "2026-07-29",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108771/documents/sehk26072900776_c.pdf"
-        },
-        {
-          "date": "2026-07-29",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108771/documents/sehk26072900704_c.pdf"
         }
       ],
       "has_phip": false
@@ -1087,29 +2651,6 @@
       "has_phip": false
     },
     {
-      "id": 108727,
-      "name": "深圳四方精創資訊股份有限公司",
-      "apply_date": "2026-07-05",
-      "posting_date": "Jul 5, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108727/documents/warn26070500109_c.pdf",
-      "documents": [
-        {
-          "date": "2026-07-05",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108727/documents/sehk26070500183_c.pdf"
-        },
-        {
-          "date": "2026-07-05",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108727/documents/sehk26070500111_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
       "id": 108712,
       "name": "深圳宏芯宇電子股份有限公司",
       "apply_date": "2026-07-03",
@@ -1151,29 +2692,6 @@
           "date": "2026-07-03",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108713/documents/sehk26070302613_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108714,
-      "name": "深圳市景旺電子股份有限公司",
-      "apply_date": "2026-07-03",
-      "posting_date": "Jul 3, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108714/documents/warn26070302687_c.pdf",
-      "documents": [
-        {
-          "date": "2026-07-03",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108714/documents/sehk26070302759_c.pdf"
-        },
-        {
-          "date": "2026-07-03",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108714/documents/sehk26070302689_c.pdf"
         }
       ],
       "has_phip": false
@@ -1266,29 +2784,6 @@
           "date": "2026-06-30",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108698/documents/sehk26063000821_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108210,
-      "name": "山東信得科技股份有限公司",
-      "apply_date": "2026-06-30",
-      "posting_date": "Jun 30, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108210/documents/warn26021600141_c.pdf",
-      "documents": [
-        {
-          "date": "2026-06-30",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108210/documents/sehk26063001534_c.pdf"
-        },
-        {
-          "date": "2026-02-16",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108210/documents/sehk26021600143_c.pdf"
         }
       ],
       "has_phip": false
@@ -2168,29 +3663,6 @@
       "has_phip": false
     },
     {
-      "id": 108656,
-      "name": "深圳傳音控股股份有限公司",
-      "apply_date": "2026-06-18",
-      "posting_date": "Jun 18, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108656/documents/warn26061801812_c.pdf",
-      "documents": [
-        {
-          "date": "2026-06-18",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108656/documents/sehk26061801880_c.pdf"
-        },
-        {
-          "date": "2026-06-18",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108656/documents/sehk26061801814_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
       "id": 108657,
       "name": "廣州知易生物科技股份有限公司 - B",
       "apply_date": "2026-06-18",
@@ -2301,29 +3773,6 @@
           "date": "2026-06-16",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108647/documents/sehk26061600483_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108575,
-      "name": "浙江濤濤車業股份有限公司",
-      "apply_date": "2026-06-16",
-      "posting_date": "Jun 16, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108575/documents/warn26061600792_c.pdf",
-      "documents": [
-        {
-          "date": "2026-06-16",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108575/documents/sehk26061600794_c.pdf"
-        },
-        {
-          "date": "2026-05-26",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108575/documents/sehk26052602234_c.pdf"
         }
       ],
       "has_phip": false
@@ -2531,29 +3980,6 @@
           "date": "2026-05-29",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108601/documents/sehk26052903332_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108594,
-      "name": "深圳市江波龙电子股份有限公司",
-      "apply_date": "2026-06-12",
-      "posting_date": "Jun 12, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108594/documents/warn26052902004_c.pdf",
-      "documents": [
-        {
-          "date": "2026-06-12",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108594/documents/sehk26061201328_c.pdf"
-        },
-        {
-          "date": "2026-05-29",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108594/documents/sehk26052902006_c.pdf"
         }
       ],
       "has_phip": false
@@ -3548,29 +4974,6 @@
       "has_phip": false
     },
     {
-      "id": 108576,
-      "name": "上海睿觸機器人股份有限公司 - B",
-      "apply_date": "2026-05-27",
-      "posting_date": "May 27, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108576/documents/warn26052700025_c.pdf",
-      "documents": [
-        {
-          "date": "2026-05-27",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108576/documents/sehk26052700095_c.pdf"
-        },
-        {
-          "date": "2026-05-27",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108576/documents/sehk26052700027_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
       "id": 108577,
       "name": "浙江晶通新材料集團股份有限公司",
       "apply_date": "2026-05-27",
@@ -3612,29 +5015,6 @@
           "date": "2026-05-27",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108580/documents/sehk26052701980_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108571,
-      "name": "北京君正集成電路股份有限公司",
-      "apply_date": "2026-05-26",
-      "posting_date": "May 26, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108571/documents/warn26052601124_c.pdf",
-      "documents": [
-        {
-          "date": "2026-05-26",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108571/documents/sehk26052601208_c.pdf"
-        },
-        {
-          "date": "2026-05-26",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108571/documents/sehk26052601126_c.pdf"
         }
       ],
       "has_phip": false
@@ -3704,29 +5084,6 @@
           "date": "2026-05-25",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108566/documents/sehk26052500247.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108568,
-      "name": "閃回科技有限公司",
-      "apply_date": "2026-05-25",
-      "posting_date": "May 25, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108568/documents/warn26052500263_c.pdf",
-      "documents": [
-        {
-          "date": "2026-05-25",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108568/documents/sehk26052500329_c.pdf"
-        },
-        {
-          "date": "2026-05-25",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108568/documents/sehk26052500265_c.pdf"
         }
       ],
       "has_phip": false
@@ -4072,29 +5429,6 @@
       "has_phip": false
     },
     {
-      "id": 108550,
-      "name": "蘇州東山精密製造股份有限公司",
-      "apply_date": "2026-05-19",
-      "posting_date": "May 19, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108550/documents/warn26051901433_c.pdf",
-      "documents": [
-        {
-          "date": "2026-05-19",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108550/documents/sehk26051901517_c.pdf"
-        },
-        {
-          "date": "2026-05-19",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108550/documents/sehk26051901435_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
       "id": 108546,
       "name": "浙江時邁藥業股份有限公司 - B",
       "apply_date": "2026-05-18",
@@ -4366,29 +5700,6 @@
           "date": "2026-04-30",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108487/documents/sehk26043002707_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108535,
-      "name": "羅博特科智能科技股份有限公司",
-      "apply_date": "2026-05-13",
-      "posting_date": "May 13, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108535/documents/warn26051301400.pdf",
-      "documents": [
-        {
-          "date": "2026-05-13",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108535/documents/sehk26051301484_c.pdf"
-        },
-        {
-          "date": "2026-05-13",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108535/documents/sehk26051301470.pdf"
         }
       ],
       "has_phip": false
@@ -4946,29 +6257,6 @@
       "has_phip": false
     },
     {
-      "id": 108444,
-      "name": "江蘇華盛鋰電材料股份有限公司",
-      "apply_date": "2026-04-29",
-      "posting_date": "Apr 29, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108444/documents/warn26041601920_c.pdf",
-      "documents": [
-        {
-          "date": "2026-04-29",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108444/documents/sehk26042903647_c.pdf"
-        },
-        {
-          "date": "2026-04-16",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108444/documents/sehk26041601922_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
       "id": 108458,
       "name": "Nanjing Lingxing Technology Co., Ltd.",
       "apply_date": "2026-04-29",
@@ -5470,29 +6758,6 @@
       "has_phip": false
     },
     {
-      "id": 108431,
-      "name": "深圳市歡創科技股份有限公司",
-      "apply_date": "2026-04-22",
-      "posting_date": "Apr 22, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108431/documents/warn26040802598_c.pdf",
-      "documents": [
-        {
-          "date": "2026-04-22",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108431/documents/sehk26042201622_c.pdf"
-        },
-        {
-          "date": "2026-04-08",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108431/documents/sehk26040802600_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
       "id": 108457,
       "name": "湖南明珠礦用化工科技股份有限公司",
       "apply_date": "2026-04-22",
@@ -5792,52 +7057,6 @@
       "has_phip": false
     },
     {
-      "id": 108382,
-      "name": "賽美特信息集團股份有限公司",
-      "apply_date": "2026-04-13",
-      "posting_date": "Apr 13, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108382/documents/warn26033103259_c.pdf",
-      "documents": [
-        {
-          "date": "2026-04-13",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108382/documents/sehk26041301326_c.pdf"
-        },
-        {
-          "date": "2026-03-31",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108382/documents/sehk26033103261_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108366,
-      "name": "Aqara International Ltd",
-      "apply_date": "2026-04-12",
-      "posting_date": "Apr 12, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108366/documents/warn26032900565_c.pdf",
-      "documents": [
-        {
-          "date": "2026-04-12",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108366/documents/sehk26041200009_c.pdf"
-        },
-        {
-          "date": "2026-03-29",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108366/documents/sehk26032900567_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
       "id": 108437,
       "name": "惠州市德賽西威汽車電子股份有限公司",
       "apply_date": "2026-04-12",
@@ -5879,52 +7098,6 @@
           "date": "2026-04-12",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108439/documents/sehk26041200177_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108440,
-      "name": "晶晨半導體（上海）股份有限公司",
-      "apply_date": "2026-04-12",
-      "posting_date": "Apr 12, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108440/documents/warn26041200321_c.pdf",
-      "documents": [
-        {
-          "date": "2026-04-12",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108440/documents/sehk26041200393_c.pdf"
-        },
-        {
-          "date": "2026-04-12",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108440/documents/sehk26041200323_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108344,
-      "name": "深圳小闊日化股份有限公司",
-      "apply_date": "2026-04-10",
-      "posting_date": "Apr 10, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108344/documents/warn26032704330.pdf",
-      "documents": [
-        {
-          "date": "2026-04-10",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108344/documents/sehk26041000822.pdf"
-        },
-        {
-          "date": "2026-03-27",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108344/documents/sehk26032704284.pdf"
         }
       ],
       "has_phip": false
@@ -6068,29 +7241,6 @@
       "has_phip": false
     },
     {
-      "id": 108331,
-      "name": "星環信息科技（上海）股份有限公司",
-      "apply_date": "2026-04-07",
-      "posting_date": "Apr 7, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108331/documents/warn26032502121_c.pdf",
-      "documents": [
-        {
-          "date": "2026-04-07",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108331/documents/sehk26040700223_c.pdf"
-        },
-        {
-          "date": "2026-03-25",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108331/documents/sehk26032502123_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
       "id": 108428,
       "name": "武漢艾米森生命科技股份有限公司 - B",
       "apply_date": "2026-04-07",
@@ -6109,29 +7259,6 @@
           "date": "2026-04-07",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108428/documents/sehk26040700273_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108398,
-      "name": "自然堂全球控股有限公司",
-      "apply_date": "2026-04-02",
-      "posting_date": "Apr 2, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108398/documents/warn26040201996_c.pdf",
-      "documents": [
-        {
-          "date": "2026-04-02",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108398/documents/sehk26040202088_c.pdf"
-        },
-        {
-          "date": "2026-04-02",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108398/documents/sehk26040201998_c.pdf"
         }
       ],
       "has_phip": false
@@ -6252,29 +7379,6 @@
       "has_phip": false
     },
     {
-      "id": 108413,
-      "name": "上海易景信息科技股份有限公司",
-      "apply_date": "2026-04-02",
-      "posting_date": "Apr 2, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108413/documents/warn26040203822_c.pdf",
-      "documents": [
-        {
-          "date": "2026-04-02",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108413/documents/sehk26040203850_c.pdf"
-        },
-        {
-          "date": "2026-04-02",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108413/documents/sehk26040203820_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
       "id": 108414,
       "name": "廣東潮宏基實業股份有限公司",
       "apply_date": "2026-04-02",
@@ -6367,29 +7471,6 @@
       "has_phip": false
     },
     {
-      "id": 108395,
-      "name": "XREAL Ltd.",
-      "apply_date": "2026-04-01",
-      "posting_date": "Apr 1, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108395/documents/warn26040104412_c.pdf",
-      "documents": [
-        {
-          "date": "2026-04-01",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108395/documents/sehk26040104482_c.pdf"
-        },
-        {
-          "date": "2026-04-01",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108395/documents/sehk26040104414_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
       "id": 108397,
       "name": "深圳宜美智科技股份有限公司",
       "apply_date": "2026-04-01",
@@ -6408,52 +7489,6 @@
           "date": "2026-04-01",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108397/documents/sehk26040104508_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108373,
-      "name": "江苏瘦西湖文化旅游股份有限公司",
-      "apply_date": "2026-03-31",
-      "posting_date": "Mar 31, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108373/documents/warn26033100109.pdf",
-      "documents": [
-        {
-          "date": "2026-03-31",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108373/documents/sehk26033100111.pdf"
-        },
-        {
-          "date": "2026-03-30",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108373/documents/sehk26033004448_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108374,
-      "name": "常州微億智造科技股份有限公司",
-      "apply_date": "2026-03-31",
-      "posting_date": "Mar 31, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108374/documents/warn26033100287_c.pdf",
-      "documents": [
-        {
-          "date": "2026-03-31",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108374/documents/sehk26033100371_c.pdf"
-        },
-        {
-          "date": "2026-03-31",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108374/documents/sehk26033100289_c.pdf"
         }
       ],
       "has_phip": false
@@ -6781,29 +7816,6 @@
       "has_phip": false
     },
     {
-      "id": 108340,
-      "name": "廣州天賜高新材料股份有限公司",
-      "apply_date": "2026-03-27",
-      "posting_date": "Mar 27, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108340/documents/warn26032701226_c.pdf",
-      "documents": [
-        {
-          "date": "2026-03-27",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108340/documents/sehk26032701319_c.pdf"
-        },
-        {
-          "date": "2026-03-27",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108340/documents/sehk26032701228_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
       "id": 108341,
       "name": "星宸科技股份有限公司",
       "apply_date": "2026-03-27",
@@ -6960,29 +7972,6 @@
           "date": "2026-03-26",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108334/documents/sehk26032602242_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108336,
-      "name": "廣州極飛科技股份有限公司",
-      "apply_date": "2026-03-26",
-      "posting_date": "Mar 26, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108336/documents/warn26032603174_c.pdf",
-      "documents": [
-        {
-          "date": "2026-03-26",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108336/documents/sehk26032603270_c.pdf"
-        },
-        {
-          "date": "2026-03-26",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108336/documents/sehk26032603176_c.pdf"
         }
       ],
       "has_phip": false
@@ -7241,75 +8230,6 @@
       "has_phip": false
     },
     {
-      "id": 108249,
-      "name": "山東漢方製藥股份有限公司",
-      "apply_date": "2026-03-11",
-      "posting_date": "Mar 11, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108249/documents/warn26022500778_c.pdf",
-      "documents": [
-        {
-          "date": "2026-03-11",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108249/documents/sehk26031101040_c.pdf"
-        },
-        {
-          "date": "2026-02-25",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108249/documents/sehk26022500846_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108289,
-      "name": "深圳麥科田生物醫療技術股份有限公司",
-      "apply_date": "2026-03-11",
-      "posting_date": "Mar 11, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108289/documents/warn26031101258_c.pdf",
-      "documents": [
-        {
-          "date": "2026-03-11",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108289/documents/sehk26031101324_c.pdf"
-        },
-        {
-          "date": "2026-03-11",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108289/documents/sehk26031101322_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108286,
-      "name": "正品控股有限公司",
-      "apply_date": "2026-03-09",
-      "posting_date": "Mar 9, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108286/documents/warn26030900940.pdf",
-      "documents": [
-        {
-          "date": "2026-03-09",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108286/documents/sehk26030901004.pdf"
-        },
-        {
-          "date": "2026-03-09",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108286/documents/sehk26030901002.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
       "id": 108266,
       "name": "華明電力裝備股份有限公司",
       "apply_date": "2026-03-06",
@@ -7328,98 +8248,6 @@
           "date": "2026-03-06",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108266/documents/sehk26030600645_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108253,
-      "name": "鈦動科技股份有限公司",
-      "apply_date": "2026-03-06",
-      "posting_date": "Mar 6, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108253/documents/warn26022701226_c.pdf",
-      "documents": [
-        {
-          "date": "2026-03-06",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108253/documents/sehk26030601579_c.pdf"
-        },
-        {
-          "date": "2026-02-27",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108253/documents/sehk26022701228_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108264,
-      "name": "納真科技公司",
-      "apply_date": "2026-03-05",
-      "posting_date": "Mar 5, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108264/documents/warn26030502132_c.pdf",
-      "documents": [
-        {
-          "date": "2026-03-05",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108264/documents/sehk26030502204_c.pdf"
-        },
-        {
-          "date": "2026-03-05",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108264/documents/sehk26030502134_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108203,
-      "name": "南京諾令生物科技股份有限公司 - B",
-      "apply_date": "2026-03-01",
-      "posting_date": "Mar 1, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108203/documents/warn26021301323_c.pdf",
-      "documents": [
-        {
-          "date": "2026-03-01",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108203/documents/sehk26030100101_c.pdf"
-        },
-        {
-          "date": "2026-02-13",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108203/documents/sehk26021301325_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108254,
-      "name": "Pinnacle Marine Holdings Ltd",
-      "apply_date": "2026-02-27",
-      "posting_date": "Feb 27, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108254/documents/warn26022701772_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-27",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108254/documents/sehk26022701850_c.pdf"
-        },
-        {
-          "date": "2026-02-27",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108254/documents/sehk26022701774_c.pdf"
         }
       ],
       "has_phip": false
@@ -7471,29 +8299,6 @@
       "has_phip": false
     },
     {
-      "id": 108258,
-      "name": "安徽希磁科技股份有限公司",
-      "apply_date": "2026-02-27",
-      "posting_date": "Feb 27, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108258/documents/warn26022702038_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-27",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108258/documents/sehk26022702198_c.pdf"
-        },
-        {
-          "date": "2026-02-27",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108258/documents/sehk26022702040_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
       "id": 108260,
       "name": "中文在線集團股份有限公司",
       "apply_date": "2026-02-27",
@@ -7535,581 +8340,6 @@
           "date": "2026-02-26",
           "name": "全文檔案",
           "url": "https://www1.hkexnews.hk/app/sehk/2026/108252/documents/sehk26022601053_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108195,
-      "name": "思源電氣股份有限公司",
-      "apply_date": "2026-02-25",
-      "posting_date": "Feb 25, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108195/documents/warn26021100426.pdf",
-      "documents": [
-        {
-          "date": "2026-02-25",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108195/documents/sehk26022500193_c.pdf"
-        },
-        {
-          "date": "2026-02-11",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108195/documents/sehk26021100490.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108198,
-      "name": "蘇州引航生物科技股份有限公司",
-      "apply_date": "2026-02-25",
-      "posting_date": "Feb 25, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108198/documents/warn26021201162_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-25",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108198/documents/sehk26022500471_c.pdf"
-        },
-        {
-          "date": "2026-02-12",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108198/documents/sehk26021201164_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108196,
-      "name": "浙江京新藥業股份有限公司",
-      "apply_date": "2026-02-25",
-      "posting_date": "Feb 25, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108196/documents/warn26021101166.pdf",
-      "documents": [
-        {
-          "date": "2026-02-25",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108196/documents/sehk26022501034_c.pdf"
-        },
-        {
-          "date": "2026-02-11",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108196/documents/sehk26021101236.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108251,
-      "name": "錦欣康養產業集團有限公司",
-      "apply_date": "2026-02-25",
-      "posting_date": "Feb 25, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108251/documents/warn26022501100_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-25",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108251/documents/sehk26022501176_c.pdf"
-        },
-        {
-          "date": "2026-02-25",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108251/documents/sehk26022501102_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108191,
-      "name": "為恒智能科技股份有限公司",
-      "apply_date": "2026-02-24",
-      "posting_date": "Feb 24, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108191/documents/warn26020901438_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-24",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108191/documents/sehk26022400632.pdf"
-        },
-        {
-          "date": "2026-02-09",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108191/documents/sehk26020901440_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108206,
-      "name": "Zaihui Inc.",
-      "apply_date": "2026-02-24",
-      "posting_date": "Feb 24, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108206/documents/warn26021301839_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-24",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108206/documents/sehk26022400927_c.pdf"
-        },
-        {
-          "date": "2026-02-13",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108206/documents/sehk26021301841_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108247,
-      "name": "上海華依科技集團股份有限公司",
-      "apply_date": "2026-02-24",
-      "posting_date": "Feb 24, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108247/documents/warn26022400945_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-24",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108247/documents/sehk26022401017_c.pdf"
-        },
-        {
-          "date": "2026-02-24",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108247/documents/sehk26022400947_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108192,
-      "name": "浙江和夏科技股份有限公司",
-      "apply_date": "2026-02-24",
-      "posting_date": "Feb 24, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "创业板",
-      "warning_url": "https://www1.hkexnews.hk/app/gem/2026/108192/documents/warn26021001258.pdf",
-      "documents": [
-        {
-          "date": "2026-02-24",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/gem/2026/108192/documents/gem26022400741.pdf"
-        },
-        {
-          "date": "2026-02-10",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/gem/2026/108192/documents/gem26021001326.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108188,
-      "name": "杭州糖吉醫療科技股份有限公司 - B",
-      "apply_date": "2026-02-23",
-      "posting_date": "Feb 23, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108188/documents/warn26020901128_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-23",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108188/documents/sehk26022300794_c.pdf"
-        },
-        {
-          "date": "2026-02-09",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108188/documents/sehk26020901130_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108226,
-      "name": "杭州綠雲軟件股份有限公司",
-      "apply_date": "2026-02-20",
-      "posting_date": "Feb 20, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108226/documents/warn26022000706.pdf",
-      "documents": [
-        {
-          "date": "2026-02-20",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108226/documents/sehk26022000774.pdf"
-        },
-        {
-          "date": "2026-02-20",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108226/documents/sehk26022000772.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108207,
-      "name": "上海哥瑞利軟件股份有限公司",
-      "apply_date": "2026-02-15",
-      "posting_date": "Feb 15, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108207/documents/warn26021500039_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-15",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108207/documents/sehk26021500111_c.pdf"
-        },
-        {
-          "date": "2026-02-15",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108207/documents/sehk26021500041_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108208,
-      "name": "深圳市德蘭明海新能源股份有限公司",
-      "apply_date": "2026-02-15",
-      "posting_date": "Feb 15, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108208/documents/warn26021500189_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-15",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108208/documents/sehk26021500261_c.pdf"
-        },
-        {
-          "date": "2026-02-15",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108208/documents/sehk26021500259_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108209,
-      "name": "深圳宏業基岩土科技股份有限公司",
-      "apply_date": "2026-02-15",
-      "posting_date": "Feb 15, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108209/documents/warn26021500269_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-15",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108209/documents/sehk26021500343_c.pdf"
-        },
-        {
-          "date": "2026-02-15",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108209/documents/sehk26021500271_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108200,
-      "name": "深圳易慕峰生物科技股份有限公司 - B",
-      "apply_date": "2026-02-13",
-      "posting_date": "Feb 13, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108200/documents/warn26021300025_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-13",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108200/documents/sehk26021300099_c.pdf"
-        },
-        {
-          "date": "2026-02-13",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108200/documents/sehk26021300027_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108201,
-      "name": "維眸生物科技（浙江）股份有限公司 - B",
-      "apply_date": "2026-02-13",
-      "posting_date": "Feb 13, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108201/documents/warn26021300209_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-13",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108201/documents/sehk26021300277_c.pdf"
-        },
-        {
-          "date": "2026-02-13",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108201/documents/sehk26021300211_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108202,
-      "name": "深圳市海柔創新智能科技集團股份有限公司 - W",
-      "apply_date": "2026-02-13",
-      "posting_date": "Feb 13, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108202/documents/warn26021300407_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-13",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108202/documents/sehk26021300473_c.pdf"
-        },
-        {
-          "date": "2026-02-13",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108202/documents/sehk26021300409_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108187,
-      "name": "彤程新材料集團股份有限公司",
-      "apply_date": "2026-02-13",
-      "posting_date": "Feb 13, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108187/documents/warn26020800043_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-13",
-          "name": "整體協調人公告－委任（經修訂）",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108187/documents/sehk26021301681.pdf"
-        },
-        {
-          "date": "2026-02-08",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108187/documents/sehk26020800045_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108205,
-      "name": "湖南軍信環保股份有限公司",
-      "apply_date": "2026-02-13",
-      "posting_date": "Feb 13, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108205/documents/warn26021301597_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-13",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108205/documents/sehk26021301685_c.pdf"
-        },
-        {
-          "date": "2026-02-13",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108205/documents/sehk26021301599_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108204,
-      "name": "普萊醫藥(江蘇)股份有限公司 - B",
-      "apply_date": "2026-02-13",
-      "posting_date": "Feb 13, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108204/documents/warn26021301409_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-13",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108204/documents/sehk26021301963_c.pdf"
-        },
-        {
-          "date": "2026-02-13",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108204/documents/sehk26021301411_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108199,
-      "name": "深圳信立泰药业股份有限公司",
-      "apply_date": "2026-02-12",
-      "posting_date": "Feb 12, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108199/documents/warn26021201238_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-12",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108199/documents/sehk26021201310_c.pdf"
-        },
-        {
-          "date": "2026-02-12",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108199/documents/sehk26021201240_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108197,
-      "name": "博納西亞（杭州）醫藥科技股份有限公司",
-      "apply_date": "2026-02-11",
-      "posting_date": "Feb 11, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108197/documents/warn26021101264_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-11",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108197/documents/sehk26021101338_c.pdf"
-        },
-        {
-          "date": "2026-02-11",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108197/documents/sehk26021101266_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108193,
-      "name": "ICS Corporate Services Group Inc.",
-      "apply_date": "2026-02-10",
-      "posting_date": "Feb 10, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108193/documents/warn26021001356.pdf",
-      "documents": [
-        {
-          "date": "2026-02-10",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108193/documents/sehk26021001428.pdf"
-        },
-        {
-          "date": "2026-02-10",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108193/documents/sehk26021001422.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108194,
-      "name": "深圳第零智能科技股份有限公司",
-      "apply_date": "2026-02-10",
-      "posting_date": "Feb 10, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108194/documents/warn26021001438_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-10",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108194/documents/sehk26021001514_c.pdf"
-        },
-        {
-          "date": "2026-02-10",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108194/documents/sehk26021001440_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108189,
-      "name": "杭州熱聯集團股份有限公司",
-      "apply_date": "2026-02-09",
-      "posting_date": "Feb 9, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108189/documents/warn26020901282_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-09",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108189/documents/sehk26020901434_c.pdf"
-        },
-        {
-          "date": "2026-02-09",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108189/documents/sehk26020901284_c.pdf"
-        }
-      ],
-      "has_phip": false
-    },
-    {
-      "id": 108190,
-      "name": "維達力科技股份有限公司",
-      "apply_date": "2026-02-09",
-      "posting_date": "Feb 9, 2026",
-      "status": "A",
-      "status_desc": "處理中",
-      "board": "主板",
-      "warning_url": "https://www1.hkexnews.hk/app/sehk/2026/108190/documents/warn26020901358_c.pdf",
-      "documents": [
-        {
-          "date": "2026-02-09",
-          "name": "整體協調人公告－委任",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108190/documents/sehk26020901506_c.pdf"
-        },
-        {
-          "date": "2026-02-09",
-          "name": "全文檔案",
-          "url": "https://www1.hkexnews.hk/app/sehk/2026/108190/documents/sehk26020901360_c.pdf"
         }
       ],
       "has_phip": false
